@@ -18,7 +18,7 @@ export const Home = () => {
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				minHeight: "100vh",
+				minHeight: "110vh",
 			}}
 		>
 			<Header />
