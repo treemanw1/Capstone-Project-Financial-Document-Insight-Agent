@@ -34,11 +34,4 @@ const Header = ({}) => {
 	);
 };
 
-const buttonStyle = {
-	color: "black",
-	textTransform: "none",
-	fontSize: "15px",
-	p: 0,
-};
-
 export default Header;

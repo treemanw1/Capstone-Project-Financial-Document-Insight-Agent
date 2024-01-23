@@ -1,34 +1,85 @@
-import React from "react";
-import {
-	Select,
-	MenuItem,
-	FormControl,
-	InputLabel,
-	NativeSelect,
-} from "@mui/material";
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { Box, Typography } from "@mui/material";
 
-const RoundedDropdown = ({ label, options, value, onChange }) => {
-	return (
-		<Box>
-			<TextField
-				select
-				label={label}
-				value={value}
-				onChange={onChange}
-				variant="outlined"
-				fullWidth
-				sx={{
-					borderRadius: "10px", // Adjust the border-radius as needed
-				}}
-			>
-				{options.map((option) => (
-					<MenuItem key={option.value} value={option.value}>
-						{option.label}
-					</MenuItem>
-				))}
-			</TextField>
-		</Box>
-	);
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+	PaperProps: {
+		style: {
+			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+			width: 250,
+		},
+	},
 };
 
-export default RoundedDropdown;
+function getStyles(name, personName, theme) {
+	return {
+		fontWeight:
+			personName.indexOf(name) === -1
+				? theme.typography.fontWeightRegular
+				: theme.typography.fontWeightMedium,
+	};
+}
+
+export default function MultipleSelectPlaceholder({
+	headerText,
+	placeHolder,
+	options,
+	width,
+}) {
+	const theme = useTheme();
+	const [personName, setPersonName] = React.useState([]);
+
+	const handleChange = (event) => {
+		const {
+			target: { value },
+		} = event;
+		setPersonName(
+			// On autofill we get a stringified value.
+			typeof value === "string" ? value.split(",") : value
+		);
+	};
+
+	return (
+		<Box sx={{ backgroundColor: "", width: width }}>
+			<Typography sx={{ fontSize: "15px", color: "#757575" }}>
+				{headerText}
+			</Typography>
+			<FormControl sx={{ width: "300px", mt: "5px" }}>
+				<Select
+					displayEmpty
+					value={personName}
+					onChange={handleChange}
+					input={<OutlinedInput />}
+					renderValue={(selected) => {
+						if (selected.length === 0) {
+							return placeHolder;
+						}
+						return selected.join(", ");
+					}}
+					MenuProps={MenuProps}
+					inputProps={{ "aria-label": "Without label" }}
+					sx={{ borderRadius: "50px" }}
+				>
+					<MenuItem disabled value="">
+						<em>{placeHolder}</em>
+					</MenuItem>
+					{options.map((name) => (
+						<MenuItem
+							key={name}
+							value={name}
+							style={getStyles(name, personName, theme)}
+						>
+							{name}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+		</Box>
+	);
+}
