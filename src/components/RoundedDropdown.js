@@ -47,10 +47,10 @@ export default function MultipleSelectPlaceholder({
 
 	return (
 		<Box sx={{ backgroundColor: "", width: width }}>
-			<Typography sx={{ fontSize: "15px", color: "#757575" }}>
+			<Typography sx={{ fontSize: "12px", color: "#757575" }}>
 				{headerText}
 			</Typography>
-			<FormControl sx={{ width: "300px", mt: "5px" }}>
+			<FormControl sx={{ width: "100%", mt: "5px" }}>
 				<Select
 					displayEmpty
 					value={personName}
@@ -64,7 +64,11 @@ export default function MultipleSelectPlaceholder({
 					}}
 					MenuProps={MenuProps}
 					inputProps={{ "aria-label": "Without label" }}
-					sx={{ borderRadius: "50px" }}
+					sx={{
+						borderRadius: "50px",
+						height: "40px",
+						fontSize: "14px",
+					}}
 				>
 					<MenuItem disabled value="">
 						<em>{placeHolder}</em>

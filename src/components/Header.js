@@ -10,7 +10,7 @@ const Header = ({}) => {
 					sx={{
 						display: "flex",
 						alignItems: "center",
-						height: "10vh",
+						height: "8vh",
 					}}
 				>
 					<Box

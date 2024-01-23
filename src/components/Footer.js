@@ -11,7 +11,7 @@ const Footer = () => {
 					mx: globalStyles.mx,
 					display: "flex",
 					alignItems: "center",
-					height: "10vh",
+					height: "7vh",
 					justifyContent: "space-between",
 					backgroundColor: "",
 				}}
@@ -20,7 +20,7 @@ const Footer = () => {
 					sx={{
 						backgroundColor: "",
 						width: "400px",
-						fontSize: "16px",
+						fontSize: "13px",
 					}}
 				>
 					Copyright © 2023 DC Frontiers. All rights reserved.
@@ -33,45 +33,21 @@ const Footer = () => {
 						backgroundColor: "",
 					}}
 				>
-					<Typography>Terms of Use</Typography>
+					<Typography sx={{ fontSize: "13px" }}>
+						Terms of Use
+					</Typography>
 					<Divider sx={{ width: "15px", height: 0 }} />
-					<Typography>Privacy Policy</Typography>
+					<Typography sx={{ fontSize: "13px" }}>
+						Privacy Policy
+					</Typography>
 				</Box>
-				<Typography align="right" sx={{ width: "400px" }}>
+				<Typography
+					align="right"
+					sx={{ fontSize: "13px", width: "400px" }}
+				>
 					Powered by Handshakes
 				</Typography>
 			</Box>
-			{/* <Grid
-				container
-				direction="row"
-				sx={{
-					height: "75px",
-					mx: globalStyles.mx,
-					backgroundColor: "pink",
-				}}
-			>
-				<Grid item xs={4}>
-					<Typography>
-						Copyright © 2023 DC Frontiers. All rights reserved.
-					</Typography>
-				</Grid>
-				<Grid item xs={4} sx={{ justifySelf: "center" }}>
-					<Box
-						sx={{
-							justifySelf: "center",
-							display: "flex",
-							backgroundColor: "blue",
-						}}
-					>
-						<Typography>Terms of Use</Typography>
-						<Divider sx={{ width: "15px", height: 0 }} />
-						<Typography>Privacy Policy</Typography>
-					</Box>
-				</Grid>
-				<Grid item xs={4}>
-					<Typography>Powered by Handshakes</Typography>
-				</Grid>
-			</Grid> */}
 		</>
 	);
 };
