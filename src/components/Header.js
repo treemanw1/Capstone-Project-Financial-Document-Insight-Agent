@@ -10,7 +10,7 @@ const Header = ({}) => {
 					sx={{
 						display: "flex",
 						alignItems: "center",
-						height: "10vh",
+						height: "8vh",
 					}}
 				>
 					<Box
@@ -32,13 +32,6 @@ const Header = ({}) => {
 			<Divider />
 		</>
 	);
-};
-
-const buttonStyle = {
-	color: "black",
-	textTransform: "none",
-	fontSize: "15px",
-	p: 0,
 };
 
 export default Header;
