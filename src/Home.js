@@ -40,7 +40,7 @@ export const Home = () => {
 					<Box
 						sx={{
 							width: "750px",
-							mt: "2.5vh",
+							mt: "3.5vh",
 							backgroundColor: "",
 						}}
 					>

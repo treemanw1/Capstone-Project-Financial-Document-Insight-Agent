@@ -33,10 +33,9 @@ const Footer = () => {
 						backgroundColor: "",
 					}}
 				>
-					<Typography sx={{ fontSize: "13px" }}>
+					<Typography sx={{ fontSize: "13px", mr: "15px" }}>
 						Terms of Use
 					</Typography>
-					<Divider sx={{ width: "15px", height: 0 }} />
 					<Typography sx={{ fontSize: "13px" }}>
 						Privacy Policy
 					</Typography>

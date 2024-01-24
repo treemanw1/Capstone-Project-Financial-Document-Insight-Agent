@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Box, Typography } from "@mui/material";
+import makeStyles from "@mui/material/styles";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -13,18 +14,11 @@ const MenuProps = {
 		style: {
 			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
 			width: 250,
+			backgroundColor: "#F1F1F1",
+			borderRadius: "15px",
 		},
 	},
 };
-
-function getStyles(name, personName, theme) {
-	return {
-		fontWeight:
-			personName.indexOf(name) === -1
-				? theme.typography.fontWeightRegular
-				: theme.typography.fontWeightMedium,
-	};
-}
 
 export default function MultipleSelectPlaceholder({
 	headerText,
@@ -50,7 +44,7 @@ export default function MultipleSelectPlaceholder({
 			<Typography sx={{ fontSize: "12px", color: "#757575" }}>
 				{headerText}
 			</Typography>
-			<FormControl sx={{ width: "100%", mt: "5px" }}>
+			<FormControl sx={{ width: "100%", mt: "5px", backgroundColor: "" }}>
 				<Select
 					displayEmpty
 					value={personName}
@@ -68,6 +62,7 @@ export default function MultipleSelectPlaceholder({
 						borderRadius: "50px",
 						height: "40px",
 						fontSize: "14px",
+						backgroundColor: "",
 					}}
 				>
 					<MenuItem disabled value="">
@@ -75,9 +70,10 @@ export default function MultipleSelectPlaceholder({
 					</MenuItem>
 					{options.map((name) => (
 						<MenuItem
+							sx={{ backgroundColor: "" }}
 							key={name}
 							value={name}
-							style={getStyles(name, personName, theme)}
+							// style={getStyles(name, personName, theme)}
 						>
 							{name}
 						</MenuItem>
