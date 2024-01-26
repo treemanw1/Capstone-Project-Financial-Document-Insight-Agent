@@ -13,13 +13,10 @@ const router = createBrowserRouter([
 		element: <Home />,
 	},
 	{
-		path: "/header",
-		element: <Header />,
-	},
-	{
 		path: "/advanced-search",
 		element: <AdvancedSearch />,
-	}
+	},
+	{},
 ]);
 
 function App() {
