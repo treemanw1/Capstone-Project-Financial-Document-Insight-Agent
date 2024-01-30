@@ -4,15 +4,7 @@ import Footer from "./components/Footer";
 import RoundedDropdown from "./components/RoundedDropdown";
 import RoundButton from "./components/RoundButton";
 import ReportButton from "./components/ReportButton";
-import {
-	Box,
-	Divider,
-	Typography,
-	FormControl,
-	InputLabel,
-	NativeSelect,
-	TextField,
-} from "@mui/material";
+import { Box, Divider, Typography, TextField } from "@mui/material";
 import { globalStyles } from "./GlobalStyles";
 
 export const Home = () => {
@@ -23,6 +15,7 @@ export const Home = () => {
 				flexDirection: "column",
 				minHeight: "100vh",
 				backgroundColor: "",
+				justifyContent: "space-between",
 			}}
 		>
 			<Header />
@@ -30,8 +23,8 @@ export const Home = () => {
 				sx={{
 					mx: globalStyles.mx,
 					backgroundColor: "",
-					flex: 1,
 					display: "flex",
+					flexGrow: 1,
 					flexDirection: "column",
 					justifyContent: "space-between",
 				}}
@@ -72,6 +65,7 @@ export const Home = () => {
 							placeHolder={"Document Type"}
 							options={["Type 1", "Type 2", "Type 3"]}
 							width="25%"
+							height="40px"
 						/>
 						<Divider sx={{ width: 0, ml: "20px" }} />
 						<Box
@@ -100,7 +94,6 @@ export const Home = () => {
 						</Box>
 					</Box>
 				</Box>
-
 				<Box sx={{ backgroundColor: "", mb: "30px" }}>
 					<Box sx={{ backgroundColor: "" }}>
 						<Typography

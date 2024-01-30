@@ -9,8 +9,8 @@ import {
 	FormControl,
 	InputLabel,
 	NativeSelect,
-    Button,
-    
+	Button,
+	TextField,
 } from "@mui/material";
 import { globalStyles } from "./GlobalStyles";
 
@@ -20,203 +20,176 @@ export const AdvancedSearch = () => {
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				minHeight: "100vh",
+				maxHeight: "100vh",
+				justifyContent: "space-between",
+				backgroundColor: "",
 			}}
 		>
 			<Header />
-			<Box sx={{ mx: globalStyles.mx, backgroundColor: "", flex: 1 }}>
-				<Box sx={{ width: "45%", mt: "3vh" }}>
-					<Typography lineHeight={1.1} sx={{ fontSize: "20px" }}>
-						Advanced Search
-					</Typography>
-					<Divider sx={{ height: "30px", width: 0 }} />
-					<Typography sx={{ fontSize: "15px", width: "85%" }}>
-						Document Type
-					</Typography>
-				</Box>
-				
-				<Box sx={{ display: "flex", mt: "20px", justifyContent: "space-between", width: "640px" }}>
-					<Box>
-					
-					{ <RoundedDropdown
-					headerText={'Select document type'}
-					placeHolder={'Document Type'}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'300px'}
-					/> }
-
-					</Box>
-					
-
-					<Box>
-					
-					{ <RoundedDropdown
-					headerText={'Select document sub-type'}
-					placeHolder={'Document Sub-type'}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'300px'}
-					/> }
-					</Box>
-		
-				</Box>
-
-				<Divider sx={{ height: "40px", width: 0 }} />
-                <Typography sx={{ fontSize: "15px", width: "85%" }}>
-						Date Range
+			<Box
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					mx: globalStyles.mx,
+					backgroundColor: "",
+					height: `${
+						100 -
+						globalStyles.footerHeight -
+						globalStyles.headerHeight
+					}vh`,
+				}}
+			>
+				<Typography
+					lineHeight={1.1}
+					sx={{ mt: "20px", fontSize: "16px" }}
+				>
+					Advanced Search
 				</Typography>
-				<Divider sx={{ height: "5px", width: 0 }} />
-				
-				<Box sx={{ display: "flex", mt: "20px", justifyContent: "space-between", width: "950px" }}>
-					<Box>
-					
-					{ <RoundedDropdown
-					headerText={'Select date type'}
-					placeHolder={'Date Type'}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'300px'}
-					/> }
-
-					</Box>
-					
-
-					<Box>
-					
-					{ <RoundedDropdown
-					headerText={'Select start date'}
-					placeHolder={'Start Date'}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'300px'}
-					/> }
-					</Box>
-
-					<Box>
-					
-					{ <RoundedDropdown
-					headerText={'Select end date'}
-					placeHolder={'End Date'}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'300px'}
-					/> }
-					</Box>
-		
-		
+				<Typography
+					sx={{
+						fontSize: "12px",
+						width: "85%",
+						mt: "16px",
+					}}
+				>
+					Document Type
+				</Typography>
+				<Box
+					sx={{
+						display: "flex",
+						mt: "8px",
+					}}
+				>
+					<RoundedDropdown
+						headerText="Select document type"
+						placeHolder="Document Type"
+						options={["Type 1", "Type 2", "Type 3"]}
+						width="300px"
+						height="34px"
+					/>
+					<Divider sx={{ width: 0, mr: "10px" }} />
+					<RoundedDropdown
+						headerText={"Select document sub-type"}
+						placeHolder={"Document Sub-type"}
+						options={["Type 1", "Type 2", "Type 3"]}
+						width="300px"
+						height="34px"
+					/>
 				</Box>
-                <Box>
-                <Divider sx={{ height: "30px", width: 0 }} />
-                <Typography sx={{ fontSize: "15px", width: "85%" }}>
+				<Typography sx={{ fontSize: "12px", mt: "16px", width: "85%" }}>
+					Date Range
+				</Typography>
+				<Box
+					sx={{
+						display: "flex",
+						mt: "8px",
+					}}
+				>
+					<RoundedDropdown
+						headerText={"Select date type"}
+						placeHolder={"Date Type"}
+						options={["Type 1", "Type 2", "Type 3"]}
+						width="300px"
+						height="34px"
+					/>
+					<Divider sx={{ width: 0, mr: "10px" }} />
+					<RoundedDropdown
+						headerText={"Select start date"}
+						placeHolder={"Start Date"}
+						options={["Type 1", "Type 2", "Type 3"]}
+						width="300px"
+						height="34px"
+					/>
+					<Divider sx={{ width: 0, mr: "10px" }} />
+					<RoundedDropdown
+						headerText={"Select end date"}
+						placeHolder={"End Date"}
+						options={["Type 1", "Type 2", "Type 3"]}
+						width="300px"
+						height="34px"
+					/>
+				</Box>
+				<Box>
+					<Typography
+						sx={{
+							flex: 1,
+							fontSize: "12px",
+							width: "85%",
+							mb: "8px",
+							mt: "16px",
+						}}
+					>
 						Status
-				</Typography> 
-				<Divider sx={{ height: "10px", width: 0 }} />
-				
-				{ <RoundedDropdown
-					headerText={'Select Status'}
-					placeHolder={'Status'}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'250px'}
-					/> }
-                </Box>
-                <Box>
-                <Divider sx={{ height: "30px", width: 0 }} />
-                <Typography sx={{ fontSize: "15px", width: "85%" }}>
+					</Typography>
+					<RoundedDropdown
+						headerText={"Select Status"}
+						placeHolder={"Status"}
+						options={["Type 1", "Type 2", "Type 3"]}
+						width="300px"
+						height="34px"
+					/>
+				</Box>
+				<Box>
+					<Typography
+						sx={{
+							fontSize: "12px",
+							width: "85%",
+							mt: "16px",
+						}}
+					>
 						Search Keywords and/or Phrases
-				</Typography> 
-                </Box>
-				<Divider sx={{ height: "15px", width: 0 }} />
-				
-                <Box>
-				<Box sx={{ display: "flex", mt: "20px", justifyContent: "space-between", width: "950px"}}>
-					<Box>
-					
-					{ <RoundedDropdown
-					headerText={'Select keyword'}
-					placeHolder={'Type Keywords'}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'600px'}
-					/> }
-
-					</Box>
-					
-
-					<Box>
-					
-					{ <RoundedDropdown
-					headerText={'Where keyword is found'}
-					placeHolder={'Please select '}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'300px'}
-					/> }
-					</Box>
-		
+					</Typography>
 				</Box>
-				<Divider sx={{ height: "5px", width: 0 }} />
-				<Box sx={{ display: "flex", mt: "20px", justifyContent: "space-between", width: "950px"}}>
-					<Box>
-					
-					{ <RoundedDropdown
-					headerText={'Select Phrases'}
-					placeHolder={'Type Phrases'}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'600px'}
-					/> }
-
+				<Box>
+					<Box
+						sx={{
+							display: "flex",
+							mt: "8px",
+						}}
+					>
+						<RoundedDropdown
+							headerText={"Where keyword is found"}
+							placeHolder={"Please select "}
+							options={["Type 1", "Type 2", "Type 3"]}
+							width="300px"
+							height="34px"
+						/>
 					</Box>
-					
-
-					<Box>
-					
-					{ <RoundedDropdown
-					headerText={'Where phrases is found'}
-					placeHolder={'Please select '}
-						options={[
-							{ value: "option1", label: "Option 1" },
-							{ value: "option2", label: "Option 2" },
-							{ value: "option3", label: "Option 3" },
-						]}
-						width={'300px'}
-					/> }
+					<Box
+						sx={{
+							display: "flex",
+							mt: "8px",
+							justifyContent: "space-between",
+							width: "950px",
+						}}
+					>
+						<RoundedDropdown
+							headerText={"Where phrases is found"}
+							placeHolder={"Please select "}
+							options={["Type 1", "Type 2", "Type 3"]}
+							width="300px"
+							height="34px"
+						/>
 					</Box>
-		
+					<Button
+						type="submit"
+						title="Test"
+						variant="contained"
+						color="secondary"
+						sx={{
+							borderRadius: 60,
+							backgroundColor: "silver",
+							textTransform: "none",
+							minWidth: 200,
+							color: "black",
+							mb: "30px",
+							mt: "24px",
+							fontSize: "12px",
+						}}
+					>
+						Search
+					</Button>
 				</Box>
-				
-                <Divider sx={{ height: "70px", width: 0 }} />
-                <Button type="submit" title={'Test'}  variant = "contained" color="secondary" sx={ { borderRadius: 60, backgroundColor: 'silver', textTransform: 'none', minWidth:200, color:'black'} } >Search </Button>
-                </Box>
 			</Box>
 			<Footer />
 		</Box>

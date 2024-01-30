@@ -5,7 +5,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Box, Typography } from "@mui/material";
-import makeStyles from "@mui/material/styles";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -20,11 +19,12 @@ const MenuProps = {
 	},
 };
 
-export default function MultipleSelectPlaceholder({
+export default function RoundedDropdown({
 	headerText,
 	placeHolder,
 	options,
 	width,
+	height,
 }) {
 	const theme = useTheme();
 	const [personName, setPersonName] = React.useState([]);
@@ -40,8 +40,13 @@ export default function MultipleSelectPlaceholder({
 	};
 
 	return (
-		<Box sx={{ backgroundColor: "", width: width }}>
-			<Typography sx={{ fontSize: "12px", color: "#757575" }}>
+		<Box
+			sx={{
+				backgroundColor: "",
+				width: width,
+			}}
+		>
+			<Typography sx={{ fontSize: "10px", color: "#757575" }}>
 				{headerText}
 			</Typography>
 			<FormControl sx={{ width: "100%", mt: "5px", backgroundColor: "" }}>
@@ -60,8 +65,8 @@ export default function MultipleSelectPlaceholder({
 					inputProps={{ "aria-label": "Without label" }}
 					sx={{
 						borderRadius: "50px",
-						height: "40px",
-						fontSize: "14px",
+						height: height,
+						fontSize: "11px",
 						backgroundColor: "",
 					}}
 				>

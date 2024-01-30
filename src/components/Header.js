@@ -4,13 +4,13 @@ import { globalStyles } from "../GlobalStyles";
 
 const Header = ({}) => {
 	return (
-		<>
+		<Box>
 			<Box sx={{ mx: globalStyles.mx, backgroundColor: "" }}>
 				<Box
 					sx={{
 						display: "flex",
 						alignItems: "center",
-						height: "8vh",
+						height: `${globalStyles.headerHeight}vh`,
 					}}
 				>
 					<Box
@@ -30,7 +30,7 @@ const Header = ({}) => {
 				</Box>
 			</Box>
 			<Divider />
-		</>
+		</Box>
 	);
 };
 

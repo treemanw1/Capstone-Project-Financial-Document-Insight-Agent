@@ -4,14 +4,14 @@ import { globalStyles } from "../GlobalStyles";
 
 const Footer = () => {
 	return (
-		<>
+		<Box sx={{ justifySelf: "flex-end" }}>
 			<Divider />
 			<Box
 				sx={{
 					mx: globalStyles.mx,
 					display: "flex",
 					alignItems: "center",
-					height: "7vh",
+					height: `${globalStyles.footerHeight}vh`,
 					justifyContent: "space-between",
 					backgroundColor: "",
 				}}
@@ -47,7 +47,7 @@ const Footer = () => {
 					Powered by Handshakes
 				</Typography>
 			</Box>
-		</>
+		</Box>
 	);
 };
 
