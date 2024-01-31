@@ -1,52 +1,51 @@
 import React from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useState } from "react";
-import { TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 
 const DateDropdown = ({ props }) => {
-	const [value, setValue] = useState("");
 	return (
-		<>
-			<Typography sx={{ fontSize: "13px", color: "#757575" }}>
+		<Box sx={{ background: "" }}>
+			<Typography
+				sx={{
+					color: "#757575",
+					mb: "5px",
+					fontSize: props.titleFontSize,
+				}}
+			>
 				{props.title}
 			</Typography>
 			<DatePicker
-				// this function causing date picker render issues
-				onChange={(e) => {
-					console.log(e);
-					setValue(e);
-				}}
-				label={value == "" ? props.label : ""}
-				sx={{
-					width: props.width,
-					backgroundColor: "",
-					color: "success.main",
-					borderRadius: "40px",
-					"& .MuiOutlinedInput-root": {
-						borderRadius: "30px",
-						height: "50px",
-						fontSize: value == "" ? 0 : "15px",
-					},
-					"& .MuiFormLabel-root": {
-						fontSize: "15px",
-						mt: props.textOffset,
-						ml: "6px",
-					},
-					"& .MuiInputBase-root": {
-						height: props.height,
-					},
-				}}
-				slots={{
-					textField: (params) => (
-						<TextField
-							sx={{}}
-							InputLabelProps={{ shrink: false }}
-							{...params}
-						/>
-					),
-				}}
+				label={props.date == null ? props.label : ""}
+				value={props.date}
+				onChange={props.onChange}
+				renderInput={(params) => (
+					<TextField
+						InputLabelProps={{ shrink: false }}
+						sx={{
+							fontSize: "11px",
+							width: props.width,
+							"& .MuiOutlinedInput-root": {
+								borderRadius: "30px",
+								height: props.height,
+								fontSize: props.inputFontSize,
+							},
+							"& .MuiFormLabel-root": {
+								ml: "6px",
+								color: "#333333",
+								mt: props.mt,
+								fontSize: props.inputFontSize,
+							},
+							"& .MuiInputBase-inputAdornedEnd": {
+								ml: "6px",
+								color: "#333333",
+							},
+						}}
+						{...params}
+					/>
+				)}
 			/>
-		</>
+		</Box>
 	);
 };
 

@@ -5,6 +5,7 @@ import RoundedDropdown from "../components/RoundedDropdown";
 import RoundButton from "../components/RoundButton";
 import ReportButton from "../components/ReportButton";
 import { Box, Divider, Typography, TextField } from "@mui/material";
+import SearchField from "../components/SearchField";
 import { globalStyles } from "../GlobalStyles";
 
 export const Home = () => {
@@ -66,6 +67,7 @@ export const Home = () => {
 							options={["Type 1", "Type 2", "Type 3"]}
 							width="25%"
 							height="40px"
+							fontSize="12px"
 						/>
 						<Divider sx={{ width: 0, ml: "20px" }} />
 						<Box
@@ -77,20 +79,13 @@ export const Home = () => {
 								flex: 1,
 							}}
 						>
-							<Typography
-								sx={{ fontSize: "12px", color: "#757575" }}
-							>
-								Search for keywords and/or phrases
-							</Typography>
-							<TextField
-								InputProps={{
-									style: {
-										borderRadius: "50px",
-										width: "100%",
-										height: "40px",
-									},
+							<SearchField
+								props={{
+									title: "Search for keywords and/or phrases",
+									height: "40px",
+									fontSize: "12px",
 								}}
-							></TextField>
+							/>
 						</Box>
 					</Box>
 				</Box>

@@ -25,6 +25,7 @@ export default function RoundedDropdown({
 	options,
 	width,
 	height,
+	fontSize,
 }) {
 	const theme = useTheme();
 	const [personName, setPersonName] = React.useState([]);
@@ -46,7 +47,7 @@ export default function RoundedDropdown({
 				width: width,
 			}}
 		>
-			<Typography sx={{ fontSize: "10px", color: "#757575" }}>
+			<Typography sx={{ fontSize: fontSize, color: "#757575" }}>
 				{headerText}
 			</Typography>
 			<FormControl sx={{ width: "100%", mt: "5px", backgroundColor: "" }}>
