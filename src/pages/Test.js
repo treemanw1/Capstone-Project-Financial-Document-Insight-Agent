@@ -2,18 +2,15 @@ import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RoundedDropdown from "../components/RoundedDropdown";
-import {
-	Box,
-	Divider,
-	Typography,
-	FormControl,
-	InputLabel,
-	NativeSelect,
-	Button,
-} from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { globalStyles } from "../GlobalStyles";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useState } from "react";
+import DateDropdown from "../components/DateDropdown";
+import SearchField from "../components/SearchField";
 
 const Test = () => {
+	const [value, setValue] = useState("");
 	return (
 		<Box
 			sx={{
@@ -30,7 +27,7 @@ const Test = () => {
 					display: "flex",
 					flexDirection: "column",
 					mx: globalStyles.mx,
-					backgroundColor: "pink",
+					backgroundColor: "",
 					height: `${
 						100 -
 						globalStyles.footerHeight -
@@ -38,26 +35,20 @@ const Test = () => {
 					}vh`,
 				}}
 			>
-				<Typography>Advanced Search</Typography>
-				<RoundedDropdown
-					headerText="Hello"
-					placeHolder="Placeholder"
-					options={["Type 1", "Type 2", "Type 3"]}
-					width="300px"
-					height="30px"
-				/>
-				<Box
-					sx={{
-						flex: 1,
-						height: "10px",
-						background: "lightblue",
+				<DateDropdown
+					props={{
+						title: "Select start date",
+						label: "Start Date",
+						width: 450,
+						height: "40px",
+						textOffset: "-5px",
 					}}
 				/>
-				<Box
-					sx={{
-						flex: 1,
-						height: "10px",
-						background: "red",
+				<SearchField
+					props={{
+						title: "Search for keyword",
+						width: 500,
+						height: "40px",
 					}}
 				/>
 			</Box>

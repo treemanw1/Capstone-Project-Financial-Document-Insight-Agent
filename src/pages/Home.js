@@ -1,11 +1,11 @@
 import React from "react";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import RoundedDropdown from "./components/RoundedDropdown";
-import RoundButton from "./components/RoundButton";
-import ReportButton from "./components/ReportButton";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import RoundedDropdown from "../components/RoundedDropdown";
+import RoundButton from "../components/RoundButton";
+import ReportButton from "../components/ReportButton";
 import { Box, Divider, Typography, TextField } from "@mui/material";
-import { globalStyles } from "./GlobalStyles";
+import { globalStyles } from "../GlobalStyles";
 
 export const Home = () => {
 	return (

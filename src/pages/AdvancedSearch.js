@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import RoundedDropdown from "./components/RoundedDropdown";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import RoundedDropdown from "../components/RoundedDropdown";
 import {
 	Box,
 	Divider,
@@ -12,7 +12,7 @@ import {
 	Button,
 	TextField,
 } from "@mui/material";
-import { globalStyles } from "./GlobalStyles";
+import { globalStyles } from "../GlobalStyles";
 
 export const AdvancedSearch = () => {
 	return (
