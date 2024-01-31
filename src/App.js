@@ -6,6 +6,7 @@ import "./index.css";
 import { Home } from "./Home";
 import Header from "./components/Header";
 import { AdvancedSearch } from "./AdvancedSearch";
+import { ReportPreview } from "./ReportPreview";
 
 const router = createBrowserRouter([
 	{
@@ -16,7 +17,11 @@ const router = createBrowserRouter([
 		path: "/advanced-search",
 		element: <AdvancedSearch />,
 	},
-	{},
+	{
+		path:"/report-preview",
+		element:<ReportPreview/>,
+	}
+	
 ]);
 
 function App() {
