@@ -60,15 +60,15 @@ export const SavedReports = () => {
 		}}
 	  >
 		<Header />
-        <Box sx={{ mx: globalStyles.mx, backgroundColor: "" }}>
+        <Box sx={{ mx: globalStyles.mx, backgroundColor: ""}}>
 		  <Box sx={{mt: 5}}>
 			<Typography lineHeight={1.1} sx={{ fontSize: "20px" }}>
 			  <b>Saved Reports</b>
 			</Typography>
 		  </Box>
 		</Box>
-		<Box sx={{ display: "flex", mx: globalStyles.mx, backgroundColor: "", mt: "3vh", justifyContent: "center" }}>
-            <Box sx={{ width: "30%", backgroundColor: "pink"}}>
+		<Box sx={{ display: "flex", mx: globalStyles.mx, backgroundColor: "", mt: "3vh", justifyContent: "space-between" }}>
+            <Box sx={{ width: "30%", backgroundColor: "pink", alignContent: 'center'}}>
                 <RoundedDropdown
                     label="Document Type"
                     options={[
@@ -105,7 +105,7 @@ export const SavedReports = () => {
             </Box>
         </Box>
 
-		<Box sx={{ mx: globalStyles.mx, backgroundColor: "", mt: 5 }}>
+		<Box sx={{ mx: globalStyles.mx, backgroundColor: "", mt: 5, flexGrow: 1 }}>
             <DataGrid
             rows={rows}
             columns={columns}
@@ -113,10 +113,9 @@ export const SavedReports = () => {
             autoHeight
             />
          </Box>
-        <Box sx={{ display: "flex", mx: globalStyles.mx, backgroundColor: "", mt: 7.5, justifyContent: 'flex-end'}}>
-            <Pagination count={10} />
-        </Box>
+    <Box sx={{bottom:0, backgroundColor: ""}}>
 		<Footer />
+    </Box>
 	  </Box>
 	);
   };
