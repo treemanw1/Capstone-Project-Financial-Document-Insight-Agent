@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, Divider, Grid, Icon, Typography } from "@mui/material";
 import { globalStyles } from "../GlobalStyles";
 
-const CustomDarkFooter = () => {
+const ReportPreviewFooter = () => {
 	return (
 		<>
 			<Divider />
@@ -14,10 +14,10 @@ const CustomDarkFooter = () => {
 					height: "7vh",
 					justifyContent: "flex-end",
 					backgroundColor: "black",
-                    width:"100%",
+					width: "100%",
 				}}
 			>
-                qSqsqsqsq
+				qSqsqsqsq
 				<Typography
 					sx={{
 						backgroundColor: "Black",
