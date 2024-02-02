@@ -67,43 +67,46 @@ export const SavedReports = () => {
 			</Typography>
 		  </Box>
 		</Box>
-		<Box sx={{ display: "flex", mx: globalStyles.mx, backgroundColor: "", mt: "3vh", justifyContent: "space-between" }}>
-            <Box sx={{ width: "30%", backgroundColor: "pink", alignContent: 'center'}}>
-                <RoundedDropdown
-                    label="Document Type"
-                    options={[
-                        { value: "option1", label: "Company Announcements" },
-                        { value: "option2", label: "Annual Reports" },
-                        { value: "option3", label: "General Announcements" },
-                    ]}
-                    onChange={(event) => {
-                        console.log(event);
-                    }}
-                />
-            </Box>
-            <Box sx={{ backgroundColor: "pink" }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['SingleInputDateRangeField']}>
-                    <DateRangePicker
-                        slots={{ field: SingleInputDateRangeField }}
-                        name="allowedRange"
-                    />
-                </DemoContainer>
-            </LocalizationProvider>
-            </Box>
-            <Box sx={{ width: "60%",  backgroundColor: "pink" }}>
-            <TextField fullWidth
-                id="keyword"
-                label=""
-                variant="outlined"
-                margin="normal"
-                sx={{ ml: 0 }}
-            />
-            </Box>
-            <Box sx={{ alignContent: 'center' }}>
-                <Button type="submit" color="primary" sx={ { height: 45, borderRadius: 6, backgroundColor: 'lightgrey', color: 'black'} }>Search</Button>
-            </Box>
-        </Box>
+		<Grid container spacing={1} sx={{ mx: globalStyles.mx, mt: 2, alignItems: 'center' }}>
+        <Grid item xs={12} sm={2} marginTop={1}>
+          <RoundedDropdown
+            label="Document Type"
+            options={[
+              { value: 'option1', label: 'Company Announcements' },
+              { value: 'option2', label: 'Annual Reports' },
+              { value: 'option3', label: 'General Announcements' },
+            ]}
+            onChange={(event) => {
+              console.log(event);
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['SingleInputDateRangeField']}>
+              <DateRangePicker
+                slots={{ field: SingleInputDateRangeField }}
+                name="allowedRange"
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={12} sm={5}>
+          <TextField
+            fullWidth
+            id="keyword"
+            label=""
+            variant="outlined"
+            margin="normal"
+          />
+        </Grid>
+        <Grid item xs={12} sm={2} marginTop={1}>
+          <Button type="submit" color="primary" sx={{ height: 55, borderRadius: 6, backgroundColor: 'lightgrey', color: 'black' }}>
+            Search
+          </Button>
+        </Grid>
+      </Grid>
+
 
 		<Box sx={{ mx: globalStyles.mx, backgroundColor: "", mt: 5, flexGrow: 1 }}>
             <DataGrid
