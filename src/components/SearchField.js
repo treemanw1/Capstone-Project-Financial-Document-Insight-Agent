@@ -1,10 +1,12 @@
 import React from "react";
-import { TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 
 const SearchField = ({ props }) => {
 	return (
-		<>
-			<Typography sx={{ fontSize: "13px", color: "#757575" }}>
+		<Box>
+			<Typography
+				sx={{ fontSize: props.fontSize, color: "#757575", mb: "5px" }}
+			>
 				{props.title}
 			</Typography>
 			<TextField
@@ -20,7 +22,7 @@ const SearchField = ({ props }) => {
 					},
 				}}
 			></TextField>
-		</>
+		</Box>
 	);
 };
 
