@@ -108,7 +108,7 @@ export const ResultsPage = () => {
 						0 documents selected
 					</Typography>
         		</Box>
-        		<Box sx={{ flex: 1, textAlign: 'right', marginRight: globalStyles.mx }}>
+        		<Box sx={{ flex: 1, textAlign: 'right' }}>
             	<Button variant="contained" color="primary" sx={{ borderRadius: 60, backgroundColor: 'LightGray', textTransform: 'none', minWidth: 200, color: 'black' }}> Next</Button>
         		</Box>
     		</Box>

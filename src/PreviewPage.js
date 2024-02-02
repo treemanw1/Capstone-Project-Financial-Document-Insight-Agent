@@ -142,9 +142,12 @@ export const PreviewPage = () => {
         		<Box sx={{ width: "400px" }}>
                     <Button type="submit" title={'Test'} color="secondary" sx={{ textAlign:'start', textTransform: 'none', minWidth: 200, color: 'white', fontSize: 20 }}>Back</Button>
                 </Box>
-            <Box sx={{ flex: 1, textAlign: 'right', marginRight: globalStyles.mx, display: 'flex', justifyContent: 'flex-end'}}>
-                <Button onClick={handleOpen} variant="contained" color="secondary" sx={{ borderRadius: 60, backgroundColor: 'LightGray', textTransform: 'none', minWidth: 200, color: 'black'}}>Save Report</Button>
+            <Box sx={{ flex: 1, textAlign: 'right', display: 'flex', justifyContent: 'flex-end'}}>
+
+                <Box sx={{width:'45%',display:'flex', justifyContent: 'space-between'}}>
+                <Button onClick={handleOpen} variant="contained" color="secondary"  sx={{ borderRadius: 60, backgroundColor: 'LightGray', textTransform: 'none', minWidth: 200, color: 'black'}}>Save Report</Button>
                 <Button variant="contained" color="secondary" sx={{ borderRadius: 60, backgroundColor: 'LightGray', textTransform: 'none', minWidth: 200, color: 'black'}}>Export Report</Button>
+                </Box>
             </Box>
             </Box>
             </Box>
