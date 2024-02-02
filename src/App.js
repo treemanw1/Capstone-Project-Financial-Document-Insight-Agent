@@ -5,6 +5,7 @@ import "./index.css";
 
 import { Home } from "./pages/Home";
 import { AdvancedSearch } from "./pages/AdvancedSearch";
+import { ReportPreview } from "./pages/ReportPreview";
 import Test from "./pages/Test";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
 	{
 		path: "/advanced-search",
 		element: <AdvancedSearch />,
+	},
+	{
+		path: "/report-preview",
+		element: <ReportPreview />,
 	},
 	{
 		path: "/test",
