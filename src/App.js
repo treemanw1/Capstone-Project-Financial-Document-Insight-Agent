@@ -5,11 +5,14 @@ import { MainLayout } from "./MainLayout";
 import Header from "./components/Header";
 import { Home } from "./Home";
 import { ResultsPage } from "./ResultsPage";
+import { PreviewPage } from "./PreviewPage"
+import { SavedReports } from "./SavedReports"
+
 
 function App() {
 	return (
 		<>
-			<ResultsPage />
+			<SavedReports/>
 		</>
 	);
 }

@@ -13,6 +13,22 @@ import {
 	Grid,
 } from "@mui/material";
 import { globalStyles } from "./GlobalStyles";
+import { DataGrid } from '@mui/x-data-grid';
+
+const columns = [
+    { field: 'companyName', headerName: 'Company Name', width: 250 },
+    { field: 'documentTitle', headerName: 'Document Title', width: 250 },
+    { field: 'dateTime', headerName: 'Date/Time', width: 200 },
+    { field: 'mostRelevantReference', headerName: 'Most Relevant Reference', width: 600 },
+    { field: 'totalRelevancesFound', headerName: 'Total Relevances Found', width: 200 },
+  ];
+  
+
+  const rows = [
+    { id: 1, companyName: 'ABC Holdings', documentTitle: 'General Announcements', dateTime: '21 Nov 2023 01:15PM', mostRelevantReference: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', totalRelevancesFound: 30 },
+    { id: 2, companyName: 'BBC Holdings', documentTitle: 'General Announcements', dateTime: '21 Nov 2023 01:15PM', mostRelevantReference: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', totalRelevancesFound: 10 },
+    
+  ];
 
 export const ResultsPage = () => {
 	return (
@@ -25,132 +41,78 @@ export const ResultsPage = () => {
 		}}
 	  >
 		<Header />
-		<Box sx={{ display: "flex", mx: globalStyles.mx, backgroundColor: "", mt: "3vh", justifyContent: 'space-between'}}>
+		<Box sx={{ display: "flex", mx: globalStyles.mx, backgroundColor: "", mt: "4vh", justifyContent: 'space-between'}}>
 			<Box sx={{ width: "25%", backgroundColor: ""}}>
-				{/* <RoundedDropdown
-				label="Document Type"
-				options={[
-				{ value: "option1", label: "Option 1" },
-				{ value: "option2", label: "Option 2" },
-				{ value: "option3", label: "Option 3" },
-				]}
-				onChange={(event) => {
-				console.log(event);
-				}}
-				/> */}
   
-  			<FormControl variant="outlined" fullWidth>
-				<InputLabel variant="standard" htmlFor="uncontrolled-native">
-				Select document type
-				</InputLabel>
-				<NativeSelect
-				defaultValue={1}
-				inputProps={{
-					name: "age",
-					id: "uncontrolled-native",
-				}}
-				sx={{ borderRadius: "40px", height: "40px" }}
-				>
-				<option value={1}>Company Announcements</option>
-				</NativeSelect>
-		  	</FormControl>
+  				<RoundedDropdown
+                    label="Select Document Type"
+                    options={[
+                        { value: "option1", label: "Company Announcements" },
+                        { value: "option2", label: "Annual Reports" },
+                        { value: "option3", label: "General Announcements" },
+                    ]}
+                    onChange={(event) => {
+                        console.log(event);
+                    }}
+                />
 			</Box>
 			<Box sx={{ width: "65%", backgroundColor: ""}}>
-				{/* <RoundedDropdown
-				label="Document Type"
-				options={[
-				{ value: "option1", label: "Option 1" },
-				{ value: "option2", label: "Option 2" },
-				{ value: "option3", label: "Option 3" },
-				]}
-				onChange={(event) => {
-				console.log(event);
-				}}
-				/> */}
-  
-  			<FormControl variant="outlined" fullWidth>
-				<InputLabel variant="standard" htmlFor="uncontrolled-native">
-				Search for keyword and/or phrases
-				</InputLabel>
-				<NativeSelect
-				defaultValue={1}
-				inputProps={{
-					name: "age",
-					id: "uncontrolled-native",
-				}}
-				sx={{ borderRadius: "40px", height: "40px" }}
-				>
-				<option value={1}>Dividend-in-specie</option>
-				</NativeSelect>
-		  	</FormControl>
+				<RoundedDropdown
+                    label="Search for keyword and/or phrases"
+                    options={[
+                        { value: "option1", label: "Dividend-in-specie" },
+                        { value: "option2", label: "2" },
+                        { value: "option3", label: "3" },
+                    ]}
+                    onChange={(event) => {
+                        console.log(event);
+                    }}
+                />
 			</Box>
-			<Button type="submit" color="primary" sx={ { borderRadius: 15, backgroundColor: '' } }>Search</Button>
+			<Button type="submit" color="primary" sx={ { borderRadius: 6, backgroundColor: 'lightgrey', color: 'black'} }>Search</Button>
 		</Box>
 		<Box sx={{ mx: globalStyles.mx, backgroundColor: "", height: '50%' }}>
-		  <Box sx={{mt: 5}}>
+		  <Box sx={{mt: 6}}>
 			<Typography lineHeight={1.1} sx={{ fontSize: "22px" }}>
 			  Showing 30 documents
 			</Typography>
 		  </Box>
 		</Box>
 		<Box sx={{ mx: globalStyles.mx, backgroundColor: "", mt: 5 }}>
-		<Grid container spacing={5}>
-			<Grid item xs={2}>
-				Company Name
-			</Grid>
-			<Grid item xs={2}>
-				Document Title
-			</Grid>
-			<Grid item xs={2}>
-				Date/Time
-			</Grid>
-			<Grid item xs={4}>
-				Most Relevant Reference
-			</Grid>
-			<Grid item xs={2}>
-				Total Relevances Found
-			</Grid>
-		</Grid>
+		<DataGrid
+            rows={rows}
+            columns={columns}
+			autoHeight
+            pageSize={5}
+            checkboxSelection
+            disableSelectionOnClick
+            sortingMode="server" 
+        />
 		</Box>
-		<Box sx={{ mx: globalStyles.mx, backgroundColor: "", mt: 5 }}>
-		<Grid container spacing={5}>
-			<Grid item xs={2}>
-				ABC Holdings
-			</Grid>
-			<Grid item xs={2}>
-				General Announcements
-			</Grid>
-			<Grid item xs={2}>
-				21 Nov 2023 01:15PM
-			</Grid>
-			<Grid item xs={4}>
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</Grid>
-			<Grid item xs={2}>
-				30 references
-			</Grid>
-		</Grid>
+		<Box
+			sx={{
+				position: 'fixed',
+				bottom: 0,
+				display: 'flex',
+				alignItems: 'center',
+				height: '7vh',
+				justifyContent: 'space-between',
+				backgroundColor: 'black',
+				width: '100%',
+				maxHeight: '100px',
+			}}
+>
+    		<Box sx={{ mx: globalStyles.mx, display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        		<Box sx={{ width: "400px" }}>
+            		<Typography lineHeight={1.1} sx={{ fontSize: "18px", color: 'white' }}>
+						0 documents selected
+					</Typography>
+        		</Box>
+        		<Box sx={{ flex: 1, textAlign: 'right', marginRight: globalStyles.mx }}>
+            	<Button variant="contained" color="primary" sx={{ borderRadius: 60, backgroundColor: 'LightGray', textTransform: 'none', minWidth: 200, color: 'black' }}> Next</Button>
+        		</Box>
+    		</Box>
 		</Box>
-		<Box sx={{ mx: globalStyles.mx, backgroundColor: "", flex: 1, mt: 3}}>
-		<Grid container spacing={5}>
-			<Grid item xs={2}>
-				BBC Holdings
-			</Grid>
-			<Grid item xs={2}>
-				General Announcements
-			</Grid>
-			<Grid item xs={2}>
-				21 Nov 2023 01:15PM
-			</Grid>
-			<Grid item xs={4}>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</Grid>
-			<Grid item xs={2}>
-				10 references
-			</Grid>
-		</Grid>
 		</Box>
-		<Footer />
-	  </Box>
 	);
   };
