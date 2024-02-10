@@ -3,7 +3,7 @@ import { Box, TextField, Typography } from "@mui/material";
 
 const SearchField = ({ props }) => {
 	return (
-		<Box>
+		<Box sx={{ background: "", width: props.width }}>
 			<Typography
 				sx={{ fontSize: props.fontSize, color: "#757575", mb: "5px" }}
 			>
@@ -11,7 +11,7 @@ const SearchField = ({ props }) => {
 			</Typography>
 			<TextField
 				sx={{
-					width: props.width,
+					width: "100%",
 					color: "success.main",
 					borderRadius: "40px",
 					"& .MuiOutlinedInput-root": {

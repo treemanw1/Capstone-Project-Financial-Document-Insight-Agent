@@ -1,19 +1,30 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
-const RoundButton = ({ style }) => {
+const RoundButton = ({ props, handleClick = () => console.log("click") }) => {
+	// props:
+	// { text, width, fontSize }
+	// handleClick
 	return (
-		<Box
+		<Button
 			sx={{
-				borderRadius: "50px",
+				width: props.width,
+				fontSize: props.fontSize,
 				backgroundColor: "#D9D9D9",
-				p: 2,
-				width: style.width,
-				fontSize: style.fontSize,
+				borderRadius: "50px",
+				color: "black",
+				textTransform: "none",
+				py: 1,
+				px: 2,
+				"&:hover": {
+					backgroundColor: "#B5B5B5",
+					color: "white",
+				},
 			}}
+			onClick={handleClick}
 		>
-			{style.text}
-		</Box>
+			{props.text}
+		</Button>
 	);
 };
 

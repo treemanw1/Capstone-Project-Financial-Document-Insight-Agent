@@ -50,7 +50,13 @@ export default function RoundedDropdown({
 			<Typography sx={{ fontSize: fontSize, color: "#757575" }}>
 				{headerText}
 			</Typography>
-			<FormControl sx={{ width: "100%", mt: "5px", backgroundColor: "" }}>
+			<FormControl
+				sx={{
+					width: "100%",
+					mt: "5px",
+					backgroundColor: "",
+				}}
+			>
 				<Select
 					displayEmpty
 					value={personName}
@@ -66,9 +72,9 @@ export default function RoundedDropdown({
 					inputProps={{ "aria-label": "Without label" }}
 					sx={{
 						borderRadius: "50px",
-						height: height,
 						fontSize: "11px",
 						backgroundColor: "",
+						height: height,
 					}}
 				>
 					<MenuItem disabled value="">

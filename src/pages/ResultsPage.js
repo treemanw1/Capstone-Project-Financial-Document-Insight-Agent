@@ -1,10 +1,27 @@
 import React from "react";
+import { useState } from "react";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
+
 import RoundedDropdown from "../components/RoundedDropdown";
-import { Box, Typography, Button } from "@mui/material";
+import SearchField from "../components/SearchField";
+import {
+	Box,
+	Container,
+	Typography,
+	Button,
+	Divider,
+	Modal,
+} from "@mui/material";
 import { globalStyles } from "../GlobalStyles";
 import { DataGrid } from "@mui/x-data-grid";
+
+import PDFViewerModal from "../modals/PDFViewerModal";
+
+// import { Document, Page, pdfjs } from "react-pdf";
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+// 	"pdfjs-dist/build/pdf.worker.min.js",
+// 	import.meta.url
+// ).toString();
 
 const columns = [
 	{ field: "companyName", headerName: "Company Name", width: 250 },
@@ -41,9 +58,76 @@ const rows = [
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 		totalRelevancesFound: 10,
 	},
+	{
+		id: 3,
+		companyName: "BBC Holdings",
+		documentTitle: "General Announcements",
+		dateTime: "21 Nov 2023 01:15PM",
+		mostRelevantReference:
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		totalRelevancesFound: 6,
+	},
+	{
+		id: 4,
+		companyName: "BBC Holdings",
+		documentTitle: "General Announcements",
+		dateTime: "21 Nov 2023 01:15PM",
+		mostRelevantReference:
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		totalRelevancesFound: 6,
+	},
+	{
+		id: 5,
+		companyName: "BBC Holdings",
+		documentTitle: "General Announcements",
+		dateTime: "21 Nov 2023 01:15PM",
+		mostRelevantReference:
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		totalRelevancesFound: 6,
+	},
+	{
+		id: 6,
+		companyName: "BBC Holdings",
+		documentTitle: "General Announcements",
+		dateTime: "21 Nov 2023 01:15PM",
+		mostRelevantReference:
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		totalRelevancesFound: 6,
+	},
+	{
+		id: 7,
+		companyName: "BBC Holdings",
+		documentTitle: "General Announcements",
+		dateTime: "21 Nov 2023 01:15PM",
+		mostRelevantReference:
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		totalRelevancesFound: 6,
+	},
+	{
+		id: 8,
+		companyName: "BBC Holdings",
+		documentTitle: "General Announcements",
+		dateTime: "21 Nov 2023 01:15PM",
+		mostRelevantReference:
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		totalRelevancesFound: 6,
+	},
+	{
+		id: 9,
+		companyName: "BBC Holdings",
+		documentTitle: "General Announcements",
+		dateTime: "21 Nov 2023 01:15PM",
+		mostRelevantReference:
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		totalRelevancesFound: 6,
+	},
 ];
 
 export const ResultsPage = () => {
+	const [open, setOpen] = useState(false);
+	const handleOpen = () => setOpen(true);
+	const handleClose = () => setOpen(false);
+
 	return (
 		<Box
 			sx={{
@@ -51,6 +135,7 @@ export const ResultsPage = () => {
 				flexDirection: "column",
 				minHeight: "100vh",
 				backgroundColor: "",
+				justifyContent: "space-between",
 			}}
 		>
 			<Header />
@@ -59,120 +144,113 @@ export const ResultsPage = () => {
 					display: "flex",
 					mx: globalStyles.mx,
 					backgroundColor: "",
-					mt: "4vh",
+					mt: "2vh",
 					justifyContent: "space-between",
 				}}
 			>
-				<Box sx={{ width: "25%", backgroundColor: "" }}>
-					<RoundedDropdown
-						label="Select Document Type"
-						options={[
-							{
-								value: "option1",
-								label: "Company Announcements",
-							},
-							{ value: "option2", label: "Annual Reports" },
-							{
-								value: "option3",
-								label: "General Announcements",
-							},
-						]}
-						onChange={(event) => {
-							console.log(event);
-						}}
-					/>
-				</Box>
-				<Box sx={{ width: "65%", backgroundColor: "" }}>
-					<RoundedDropdown
-						label="Search for keyword and/or phrases"
-						options={[
-							{ value: "option1", label: "Dividend-in-specie" },
-							{ value: "option2", label: "2" },
-							{ value: "option3", label: "3" },
-						]}
-						onChange={(event) => {
-							console.log(event);
-						}}
-					/>
-				</Box>
-				<Button
-					type="submit"
-					color="primary"
+				<RoundedDropdown
+					headerText="Select Document Type"
+					placeHolder="Document Type"
+					options={["Company Announcements", "General Announcements"]}
+					onChange={(event) => {
+						console.log(event);
+					}}
+					fontSize="12px"
+					width="25%"
+					height="7vh"
+				/>
+				<SearchField
+					props={{
+						title: "Search for keywords and/or phrases",
+						fontSize: "12px",
+						width: "57.5%",
+						height: "7vh",
+					}}
+				/>
+				<Box
 					sx={{
-						borderRadius: 6,
-						backgroundColor: "lightgrey",
-						color: "black",
+						width: "15%",
+						display: "flex",
+						alignItems: "flex-end",
 					}}
 				>
-					Search
-				</Button>
+					<Button
+						type="submit"
+						color="primary"
+						sx={{
+							borderRadius: 10,
+							backgroundColor: "lightgrey",
+							color: "black",
+							height: "7vh",
+							width: "100%",
+							textTransform: "none",
+							"&:hover": {
+								backgroundColor: "#BBBBBB",
+								boxShadow: "none",
+							},
+						}}
+					>
+						Search
+					</Button>
+				</Box>
 			</Box>
 			<Box
-				sx={{ mx: globalStyles.mx, backgroundColor: "", height: "50%" }}
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					mx: globalStyles.mx,
+					backgroundColor: "",
+					height: "70vh",
+				}}
 			>
-				<Box sx={{ mt: 6 }}>
-					<Typography lineHeight={1.1} sx={{ fontSize: "22px" }}>
+				<Box sx={{ mt: 3, mb: 2 }}>
+					<Typography lineHeight={1.1} sx={{ fontSize: "3vh" }}>
 						Showing 30 documents
 					</Typography>
 				</Box>
-			</Box>
-			<Box sx={{ mx: globalStyles.mx, backgroundColor: "", mt: 5 }}>
 				<DataGrid
 					rows={rows}
 					columns={columns}
-					autoHeight
-					pageSize={5}
+					autoPageSize
 					checkboxSelection
 					disableSelectionOnClick
 					sortingMode="server"
 				/>
 			</Box>
+			{/* Footer */}
 			<Box
 				sx={{
-					position: "fixed",
-					bottom: 0,
 					display: "flex",
 					alignItems: "center",
-					height: "7vh",
 					justifyContent: "space-between",
-					backgroundColor: "black",
-					width: "100%",
-					maxHeight: "100px",
+					background: "black",
+					height: "8vh",
+					px: globalStyles.mx,
 				}}
 			>
-				<Box
+				<Typography sx={{ color: "white" }}>
+					0 document(s) selected
+				</Typography>
+				<Button
+					type="submit"
 					sx={{
-						mx: globalStyles.mx,
-						display: "flex",
-						justifyContent: "space-between",
-						width: "100%",
+						borderRadius: 6,
+						backgroundColor: "#D9D9D9",
+						color: "black",
+						width: "25vh",
+						textTransform: "none",
+						"&:hover": {
+							backgroundColor: "#ffffff",
+							boxShadow: "none",
+						},
 					}}
+					onClick={handleOpen}
 				>
-					<Box sx={{ width: "400px" }}>
-						<Typography
-							lineHeight={1.1}
-							sx={{ fontSize: "18px", color: "white" }}
-						>
-							0 documents selected
-						</Typography>
-					</Box>
-					<Box sx={{ flex: 1, textAlign: "right" }}>
-						<Button
-							variant="contained"
-							color="primary"
-							sx={{
-								borderRadius: 60,
-								backgroundColor: "LightGray",
-								textTransform: "none",
-								minWidth: 200,
-								color: "black",
-							}}
-						>
-							{" "}
-							Next
-						</Button>
-					</Box>
-				</Box>
+					Next
+				</Button>
+				<PDFViewerModal
+					props={{ open: open, handleClose: handleClose }}
+				/>
 			</Box>
 		</Box>
 	);

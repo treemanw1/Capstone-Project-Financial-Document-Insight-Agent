@@ -2,15 +2,34 @@ import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RoundedDropdown from "../components/RoundedDropdown";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Divider,
+	Grid,
+	TextField,
+	Typography,
+} from "@mui/material";
 import { globalStyles } from "../GlobalStyles";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useState } from "react";
 import DateDropdown from "../components/DateDropdown";
 import SearchField from "../components/SearchField";
+import { Document, Page, pdfjs } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+	"pdfjs-dist/build/pdf.worker.min.js",
+	import.meta.url
+).toString();
 
 const Test = () => {
-	const [date, setDate] = useState(null);
+	const [numPages, setNumPages] = useState();
+	const [pageNumber, setPageNumber] = useState(1);
+
+	function onDocumentLoadSuccess(numPages) {
+		setNumPages(numPages);
+	}
+
 	return (
 		<Box
 			sx={{
@@ -27,42 +46,44 @@ const Test = () => {
 					display: "flex",
 					flexDirection: "column",
 					mx: globalStyles.mx,
-					backgroundColor: "pink",
+					backgroundColor: "",
 					height: `${
 						100 -
 						globalStyles.footerHeight -
 						globalStyles.headerHeight
 					}vh`,
-					justifyContent: "space-between",
+					justifyContent: "",
+					alignItems: "center",
 				}}
 			>
 				<Typography
 					lineHeight={1.1}
 					sx={{ mt: "20px", fontSize: "3vh" }}
 				>
-					Advanced Search
+					References Grid
 				</Typography>
+				<Grid></Grid>
+				{/* <Document
+					file="antifragile.pdf"
+					onLoadSuccess={onDocumentLoadSuccess}
+				>
+					<Page
+						height={650}
+						renderTextLayer={false}
+						renderAnnotationLayer={false}
+						pageNumber={pageNumber}
+					/>
+				</Document>
+				<Button
+					onClick={() => {
+						const newPageNum = pageNumber + 1;
+						setPageNumber(newPageNum);
+					}}
+				>
+					Next
+				</Button> */}
 			</Box>
 			<Footer />
-			{/* <DateDropdown
-					props={{
-						title: "Select start date",
-						label: "Start Date",
-						date: date,
-						onChange: (d) => setDate(d),
-						width: "400px",
-						height: "45px",
-						mt: "-4px",
-					}}
-				/>
-				<SearchField
-					props={{
-						title: "Search for keyword",
-						width: 500,
-						height: "50px",
-						fontSize: "13px",
-					}}
-				/> */}
 		</Box>
 	);
 };

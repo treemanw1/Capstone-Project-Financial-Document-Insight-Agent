@@ -98,21 +98,21 @@ export const Home = () => {
 						</Typography>
 						<Box sx={{ display: "flex", gap: 2 }}>
 							<RoundButton
-								style={{
+								props={{
 									text: "Company Announcements: Dymon",
 									width: "fit-content",
 									fontSize: "13px",
 								}}
 							/>
 							<RoundButton
-								style={{
+								props={{
 									text: "IPO Prospectus + Catalodge: Conflict of Interest",
 									width: "fit-content",
 									fontSize: "13px",
 								}}
 							/>
 							<RoundButton
-								style={{
+								props={{
 									text: "Company Announcements: Dymon",
 									width: "fit-content",
 									fontSize: "13px",

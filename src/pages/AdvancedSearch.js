@@ -208,22 +208,9 @@ export const AdvancedSearch = () => {
 						/>
 					</Box>
 				</Box>
-				<Button
-					type="submit"
-					title="Test"
-					variant="contained"
-					color="secondary"
-					sx={{
-						borderRadius: 60,
-						backgroundColor: "silver",
-						textTransform: "none",
-						width: "30vh",
-						fontSize: "12px",
-						color: "black",
-					}}
-				>
-					Search
-				</Button>
+				<RoundButton
+					props={{ text: "Search", width: "30vh", fontSize: "12px" }}
+				/>
 			</Box>
 			<Box sx={{ height: "7.5vh", background: "" }} />
 			<Footer />

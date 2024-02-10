@@ -23,13 +23,14 @@ const router = createBrowserRouter([
 		element: <AdvancedSearch />,
 	},
 	{
-		path: "/report-preview",
-		element: <ReportPreview />,
-	},
-	{
 		path: "/results-page",
 		element: <ResultsPage />,
 	},
+	{
+		path: "/report-preview",
+		element: <ReportPreview />,
+	},
+
 	{
 		path: "/saved-reports",
 		element: <SavedReports />,
