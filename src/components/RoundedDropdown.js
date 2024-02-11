@@ -1,34 +1,20 @@
-import * as React from "react";
-import { useTheme } from "@mui/material/styles";
+import { React, useState } from "react";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Box, Typography } from "@mui/material";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-	PaperProps: {
-		style: {
-			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
-			backgroundColor: "#F1F1F1",
-			borderRadius: "15px",
-		},
-	},
-};
-
-export default function RoundedDropdown({
+const RoundedDropdown = ({
 	headerText,
 	placeHolder,
 	options,
-	width,
 	height,
+	width,
 	fontSize,
-}) {
-	const theme = useTheme();
-	const [personName, setPersonName] = React.useState([]);
+}) => {
+	// height of RoundedDropdown will match parent Box height
+	const [personName, setPersonName] = useState([]);
 
 	const handleChange = (event) => {
 		const {
@@ -43,8 +29,11 @@ export default function RoundedDropdown({
 	return (
 		<Box
 			sx={{
-				backgroundColor: "",
+				// backgroundColor: "lightblue",
+				height: height,
 				width: width,
+				display: "flex",
+				flexDirection: "column",
 			}}
 		>
 			<Typography sx={{ fontSize: fontSize, color: "#757575" }}>
@@ -54,7 +43,8 @@ export default function RoundedDropdown({
 				sx={{
 					width: "100%",
 					mt: "5px",
-					backgroundColor: "",
+					// backgroundColor: "lightgreen",
+					height: "100%",
 				}}
 			>
 				<Select
@@ -68,13 +58,22 @@ export default function RoundedDropdown({
 						}
 						return selected.join(", ");
 					}}
-					MenuProps={MenuProps}
+					MenuProps={{
+						PaperProps: {
+							style: {
+								maxHeight: 150,
+								width: 250,
+								backgroundColor: "#F1F1F1",
+								borderRadius: "15px",
+							},
+						},
+					}}
 					inputProps={{ "aria-label": "Without label" }}
 					sx={{
 						borderRadius: "50px",
-						fontSize: "11px",
-						backgroundColor: "",
-						height: height,
+						fontSize: "1.5vh",
+						// backgroundColor: "pink",
+						height: "100%",
 					}}
 				>
 					<MenuItem disabled value="">
@@ -94,4 +93,6 @@ export default function RoundedDropdown({
 			</FormControl>
 		</Box>
 	);
-}
+};
+
+export default RoundedDropdown;

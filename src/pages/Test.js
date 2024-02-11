@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import RoundedDropdown from "../components/RoundedDropdown";
 import {
 	Box,
 	Button,
@@ -16,6 +15,7 @@ import { useState } from "react";
 import DateDropdown from "../components/DateDropdown";
 import SearchField from "../components/SearchField";
 import { Document, Page, pdfjs } from "react-pdf";
+import RoundedDropdown from "../components/RoundedDropdown";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 	"pdfjs-dist/build/pdf.worker.min.js",
@@ -58,11 +58,40 @@ const Test = () => {
 			>
 				<Typography
 					lineHeight={1.1}
-					sx={{ mt: "20px", fontSize: "3vh" }}
+					sx={{ mt: "20px", fontSize: "3vh", mb: "100px" }}
 				>
-					References Grid
+					RoundedDropdown
 				</Typography>
-				<Grid></Grid>
+				<Box sx={{ display: "flex", gap: 5, width: "100%" }}>
+					<RoundedDropdown
+						headerText="Select Document Type"
+						placeHolder="Document Type"
+						options={[
+							"Company Announcements",
+							"General Announcements",
+						]}
+						onChange={(event) => {
+							console.log(event);
+						}}
+						fontSize="1.5vh"
+						width="25%"
+						height="6vh"
+					/>
+					<RoundedDropdown
+						headerText="Select Document Type"
+						placeHolder="Document Type"
+						options={[
+							"Company Announcements",
+							"General Announcements",
+						]}
+						onChange={(event) => {
+							console.log(event);
+						}}
+						fontSize="1.5vh"
+						width="25%"
+						height="17vh"
+					/>
+				</Box>
 				{/* <Document
 					file="antifragile.pdf"
 					onLoadSuccess={onDocumentLoadSuccess}

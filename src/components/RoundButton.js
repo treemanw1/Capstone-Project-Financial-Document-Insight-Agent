@@ -3,11 +3,12 @@ import { Box, Button } from "@mui/material";
 
 const RoundButton = ({ props, handleClick = () => console.log("click") }) => {
 	// props:
-	// { text, width, fontSize }
+	// { text, height, width, fontSize }
 	// handleClick
 	return (
 		<Button
 			sx={{
+				height: props.height,
 				width: props.width,
 				fontSize: props.fontSize,
 				backgroundColor: "#D9D9D9",

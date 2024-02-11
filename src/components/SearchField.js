@@ -10,6 +10,7 @@ const SearchField = ({ props }) => {
 				{props.title}
 			</Typography>
 			<TextField
+				inputProps={{ style: { fontSize: "1.5vh" } }}
 				sx={{
 					width: "100%",
 					color: "success.main",
@@ -18,7 +19,7 @@ const SearchField = ({ props }) => {
 						borderRadius: "30px",
 					},
 					"& .MuiInputBase-root": {
-						height: props.height,
+						height: "100%",
 					},
 				}}
 			></TextField>

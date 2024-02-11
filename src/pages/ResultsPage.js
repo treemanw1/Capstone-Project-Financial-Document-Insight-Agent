@@ -4,24 +4,12 @@ import Header from "../components/Header";
 
 import RoundedDropdown from "../components/RoundedDropdown";
 import SearchField from "../components/SearchField";
-import {
-	Box,
-	Container,
-	Typography,
-	Button,
-	Divider,
-	Modal,
-} from "@mui/material";
+import { Box, Typography, Button, Divider, Modal } from "@mui/material";
 import { globalStyles } from "../GlobalStyles";
 import { DataGrid } from "@mui/x-data-grid";
 
 import PDFViewerModal from "../modals/PDFViewerModal";
-
-// import { Document, Page, pdfjs } from "react-pdf";
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-// 	"pdfjs-dist/build/pdf.worker.min.js",
-// 	import.meta.url
-// ).toString();
+import RoundButton from "../components/RoundButton";
 
 const columns = [
 	{ field: "companyName", headerName: "Company Name", width: 250 },
@@ -143,9 +131,10 @@ export const ResultsPage = () => {
 				sx={{
 					display: "flex",
 					mx: globalStyles.mx,
-					backgroundColor: "",
+					// backgroundColor: "pink",
 					mt: "2vh",
 					justifyContent: "space-between",
+					gap: 2,
 				}}
 			>
 				<RoundedDropdown
@@ -155,43 +144,33 @@ export const ResultsPage = () => {
 					onChange={(event) => {
 						console.log(event);
 					}}
-					fontSize="12px"
+					fontSize="1.5vh"
 					width="25%"
 					height="7vh"
 				/>
 				<SearchField
 					props={{
 						title: "Search for keywords and/or phrases",
-						fontSize: "12px",
+						fontSize: "1.5vh",
 						width: "57.5%",
 						height: "7vh",
 					}}
 				/>
 				<Box
 					sx={{
-						width: "15%",
 						display: "flex",
-						alignItems: "flex-end",
+						flexDirection: "column",
+						justifyContent: "flex-end",
 					}}
 				>
-					<Button
-						type="submit"
-						color="primary"
-						sx={{
-							borderRadius: 10,
-							backgroundColor: "lightgrey",
-							color: "black",
-							height: "7vh",
-							width: "100%",
-							textTransform: "none",
-							"&:hover": {
-								backgroundColor: "#BBBBBB",
-								boxShadow: "none",
-							},
+					<RoundButton
+						props={{
+							text: "Search",
+							height: "6vh",
+							width: "25vh",
+							fontSize: "1.5vh",
 						}}
-					>
-						Search
-					</Button>
+					/>
 				</Box>
 			</Box>
 			<Box
@@ -209,12 +188,21 @@ export const ResultsPage = () => {
 					</Typography>
 				</Box>
 				<DataGrid
+					sx={{
+						"&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell":
+							{ py: "8px" },
+						"&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell":
+							{ py: "15px" },
+						"&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell":
+							{ py: "22px" },
+					}}
 					rows={rows}
 					columns={columns}
 					autoPageSize
 					checkboxSelection
 					disableSelectionOnClick
 					sortingMode="server"
+					getRowHeight={() => "auto"}
 				/>
 			</Box>
 			{/* Footer */}
