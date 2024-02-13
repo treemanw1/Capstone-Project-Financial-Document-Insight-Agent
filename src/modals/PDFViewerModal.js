@@ -169,7 +169,7 @@ const PDFViewerModal = ({ props }) => {
 							onLoadSuccess={onDocumentLoadSuccess}
 						>
 							<Page
-								height={675}
+								height={550} // useState for responsiveness later
 								renderTextLayer={false}
 								renderAnnotationLayer={false}
 								pageNumber={pageNumber}

@@ -112,6 +112,8 @@ const rows = [
 ];
 
 export const ResultsPage = () => {
+	const [selectedDocuments, setSelectedDocuments] = useState(new Set([]));
+
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
@@ -144,16 +146,16 @@ export const ResultsPage = () => {
 					onChange={(event) => {
 						console.log(event);
 					}}
-					fontSize="1.5vh"
+					fontSize="1.75vh"
 					width="25%"
-					height="7vh"
+					height="9.5vh"
 				/>
 				<SearchField
 					props={{
 						title: "Search for keywords and/or phrases",
-						fontSize: "1.5vh",
+						fontSize: "1.75vh",
 						width: "57.5%",
-						height: "7vh",
+						height: "9.5vh",
 					}}
 				/>
 				<Box
@@ -166,9 +168,9 @@ export const ResultsPage = () => {
 					<RoundButton
 						props={{
 							text: "Search",
-							height: "6vh",
+							height: "6.5vh",
 							width: "25vh",
-							fontSize: "1.5vh",
+							fontSize: "1.75vh",
 						}}
 					/>
 				</Box>
@@ -201,8 +203,21 @@ export const ResultsPage = () => {
 					autoPageSize
 					checkboxSelection
 					disableSelectionOnClick
+					hideFooterSelectedRowCount
 					sortingMode="server"
 					getRowHeight={() => "auto"}
+					onCellClick={(params, event, details) => {
+						console.log(selectedDocuments);
+						if (selectedDocuments.has(params.id)) {
+							const newSet = new Set([...selectedDocuments]);
+							newSet.delete(params.id);
+							setSelectedDocuments(newSet);
+						} else {
+							const newSet = new Set([...selectedDocuments]);
+							newSet.add(params.id);
+							setSelectedDocuments(newSet);
+						}
+					}}
 				/>
 			</Box>
 			{/* Footer */}
@@ -217,7 +232,7 @@ export const ResultsPage = () => {
 				}}
 			>
 				<Typography sx={{ color: "white" }}>
-					0 document(s) selected
+					{selectedDocuments.size} document(s) selected
 				</Typography>
 				<Button
 					type="submit"

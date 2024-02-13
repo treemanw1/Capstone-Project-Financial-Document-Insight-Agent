@@ -5,12 +5,13 @@ import { Box, TextField, Typography } from "@mui/material";
 
 const DateDropdown = ({ props }) => {
 	return (
-		<Box sx={{ background: "" }}>
+		<Box sx={{ background: "", height: props.height }}>
 			<Typography
 				sx={{
+					height: `calc(${props.fontSize} + 5px)`,
 					color: "#757575",
 					mb: "5px",
-					fontSize: props.titleFontSize,
+					fontSize: props.fontSize,
 				}}
 			>
 				{props.title}
@@ -25,18 +26,20 @@ const DateDropdown = ({ props }) => {
 						sx={{
 							fontSize: "11px",
 							width: props.width,
+							height: "100%",
 							"& .MuiOutlinedInput-root": {
 								borderRadius: "30px",
-								height: props.height,
-								fontSize: props.inputFontSize,
+								height: `calc(100% - ${props.fontSize} - 10px)`,
+								fontSize: props.fontSize,
 							},
 							"& .MuiFormLabel-root": {
 								ml: "6px",
 								color: "#333333",
 								mt: props.mt,
-								fontSize: props.inputFontSize,
+								fontSize: props.fontSize,
 							},
 							"& .MuiInputBase-inputAdornedEnd": {
+								height: "100%",
 								ml: "6px",
 								color: "#333333",
 							},

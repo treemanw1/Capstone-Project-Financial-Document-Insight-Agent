@@ -11,6 +11,8 @@ import DateDropdown from "../components/DateDropdown";
 
 const styles = {
 	fontSize: "1.5vh",
+	barWidth: 36, // vh
+	barHeight: "7.5vh",
 };
 
 export const AdvancedSearch = () => {
@@ -30,6 +32,7 @@ export const AdvancedSearch = () => {
 			<Header />
 			<Box
 				sx={{
+					background: "",
 					display: "flex",
 					flexDirection: "column",
 					mx: globalStyles.mx,
@@ -62,13 +65,19 @@ export const AdvancedSearch = () => {
 					>
 						Document Type
 					</Typography>
-					<Box sx={{ display: "flex" }}>
+					<Box
+						sx={{
+							display: "flex",
+							background: "",
+							height: "8vh",
+						}}
+					>
 						<RoundedDropdown
 							headerText="Select document type"
 							placeHolder="Document Type"
 							options={["Type 1", "Type 2", "Type 3"]}
-							width="300px"
-							height="34px"
+							width={styles.barWidth + "vh"}
+							height={styles.barHeight}
 							fontSize={styles.fontSize}
 						/>
 						<Divider sx={{ width: 0, mr: "15px" }} />
@@ -76,8 +85,8 @@ export const AdvancedSearch = () => {
 							headerText={"Select document sub-type"}
 							placeHolder={"Document Sub-type"}
 							options={["Type 1", "Type 2", "Type 3"]}
-							width="300px"
-							height="34px"
+							width={styles.barWidth + "vh"}
+							height={styles.barHeight}
 							fontSize={styles.fontSize}
 						/>
 					</Box>
@@ -90,14 +99,15 @@ export const AdvancedSearch = () => {
 					<Box
 						sx={{
 							display: "flex",
+							height: "8vh",
 						}}
 					>
 						<RoundedDropdown
 							headerText={"Select date type"}
 							placeHolder={"Date Type"}
 							options={["Type 1", "Type 2", "Type 3"]}
-							width="300px"
-							height="34px"
+							width={styles.barWidth + "vh"}
+							height={styles.barHeight}
 							fontSize={styles.fontSize}
 						/>
 						<Divider sx={{ width: 0, mr: "15px" }} />
@@ -107,11 +117,10 @@ export const AdvancedSearch = () => {
 								label: "Start Date",
 								date: startDate,
 								onChange: (d) => setStartDate(d),
-								width: "300px",
-								height: "34px",
+								width: styles.barWidth + "vh",
+								height: styles.barHeight,
 								mt: "-6px",
-								titleFontSize: styles.fontSize,
-								inputFontSize: "11px",
+								fontSize: styles.fontSize,
 							}}
 						/>
 						<Divider sx={{ width: 0, mr: "15px" }} />
@@ -121,17 +130,16 @@ export const AdvancedSearch = () => {
 								label: "End Date",
 								date: endDate,
 								onChange: (d) => setEndDate(d),
-								width: "300px",
-								height: "34px",
-								mt: "-5.5px",
-								titleFontSize: styles.fontSize,
-								inputFontSize: "11px",
+								width: styles.barWidth + "vh",
+								height: styles.barHeight,
+								mt: "-6px",
+								fontSize: styles.fontSize,
 							}}
 						/>
 					</Box>
 				</Box>
 
-				<Box sx={{ background: "" }}>
+				<Box sx={{ background: "", height: "12vh" }}>
 					<Typography
 						sx={{
 							flex: 1,
@@ -145,13 +153,13 @@ export const AdvancedSearch = () => {
 						headerText={"Select Status"}
 						placeHolder={"Status"}
 						options={["Type 1", "Type 2", "Type 3"]}
-						width="300px"
-						height="34px"
+						width={styles.barWidth + "vh"}
+						height={styles.barHeight}
 						fontSize={styles.fontSize}
 					/>
 				</Box>
 
-				<Box sx={{ background: "", mb: "15px" }}>
+				<Box sx={{ background: "", mb: "" }}>
 					<Typography
 						sx={{
 							fontSize: "2.2vh",
@@ -170,8 +178,10 @@ export const AdvancedSearch = () => {
 							props={{
 								title: "Search for keyword",
 								fontSize: styles.fontSize,
-								width: "60vh",
-								height: "34px",
+								width: `calc(
+									${styles.barWidth * 2}vh + 15px
+								)`,
+								height: styles.barHeight,
 							}}
 						/>
 						<Divider sx={{ width: 0, mr: "15px" }} />
@@ -179,8 +189,8 @@ export const AdvancedSearch = () => {
 							headerText={"Where keyword is found"}
 							placeHolder={"Please select "}
 							options={["Type 1", "Type 2", "Type 3"]}
-							width="300px"
-							height="34px"
+							width={styles.barWidth + "vh"}
+							height={styles.barHeight}
 							fontSize={styles.fontSize}
 						/>
 					</Box>
@@ -193,8 +203,10 @@ export const AdvancedSearch = () => {
 							props={{
 								title: "Search for phrases",
 								fontSize: styles.fontSize,
-								width: "60vh",
-								height: "34px",
+								width: `calc(
+									${styles.barWidth * 2}vh + 15px
+								)`,
+								height: styles.barHeight,
 							}}
 						/>
 						<Divider sx={{ width: 0, mr: "15px" }} />
@@ -202,17 +214,22 @@ export const AdvancedSearch = () => {
 							headerText={"Where phrases is found"}
 							placeHolder={"Please select "}
 							options={["Type 1", "Type 2", "Type 3"]}
-							width="300px"
-							height="34px"
+							width={styles.barWidth + "vh"}
+							height={styles.barHeight}
 							fontSize={styles.fontSize}
 						/>
 					</Box>
 				</Box>
 				<RoundButton
-					props={{ text: "Search", width: "30vh", fontSize: "12px" }}
+					props={{
+						text: "Search",
+						height: "5vh",
+						width: "30vh",
+						fontSize: "2vh",
+					}}
 				/>
 			</Box>
-			<Box sx={{ height: "7.5vh", background: "" }} />
+			<Box sx={{ height: "5vh", background: "" }} />
 			<Footer />
 		</Box>
 	);

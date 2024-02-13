@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Button, Divider, Icon } from "@mui/material";
+import { Box, Divider, Link, Icon } from "@mui/material";
 import { globalStyles } from "../GlobalStyles";
 
-const Header = ({}) => {
+const Header = () => {
 	return (
 		<Box>
 			<Box sx={{ mx: globalStyles.mx, backgroundColor: "" }}>
@@ -10,18 +10,35 @@ const Header = ({}) => {
 					sx={{
 						display: "flex",
 						alignItems: "center",
+						// background: "lightblue",
 						height: `${globalStyles.headerHeight}vh`,
 					}}
 				>
 					<Box
 						sx={{
-							"& > *": { marginRight: "25px" },
+							display: "flex",
+							justifyContent: "space-between",
+							width: "28%",
+							// background: "pink",
 						}}
 					>
-						{/* <Icon></Icon> */}
-						<a>Home</a>
-						<a>Advanced Search</a>
-						<a>Saved Reports</a>
+						<Link href="/" underline="hover" color="black">
+							Home
+						</Link>
+						<Link
+							href="/advanced-search"
+							underline="hover"
+							color="black"
+						>
+							Advanced Search
+						</Link>
+						<Link
+							href="saved-reports"
+							underline="hover"
+							color="black"
+						>
+							Saved Reports
+						</Link>
 					</Box>
 					<Box sx={{ marginLeft: "auto" }}>
 						<a>Hello, Cleopatra</a>

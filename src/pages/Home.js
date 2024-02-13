@@ -58,7 +58,7 @@ export const Home = () => {
 						sx={{
 							display: "flex",
 							mt: "20px",
-							backgroundColor: "",
+							// backgroundColor: "pink",
 						}}
 					>
 						<RoundedDropdown
@@ -66,8 +66,8 @@ export const Home = () => {
 							placeHolder={"Document Type"}
 							options={["Type 1", "Type 2", "Type 3"]}
 							width="25%"
-							height="40px"
-							fontSize="12px"
+							height="9vh"
+							fontSize="1.75vh"
 						/>
 						<Divider sx={{ width: 0, ml: "20px" }} />
 						<Box
@@ -82,8 +82,8 @@ export const Home = () => {
 							<SearchField
 								props={{
 									title: "Search for keywords and/or phrases",
-									height: "40px",
-									fontSize: "12px",
+									height: "9vh",
+									fontSize: "1.75vh",
 								}}
 							/>
 						</Box>

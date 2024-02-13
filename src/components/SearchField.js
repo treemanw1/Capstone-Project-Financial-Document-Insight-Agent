@@ -3,23 +3,35 @@ import { Box, TextField, Typography } from "@mui/material";
 
 const SearchField = ({ props }) => {
 	return (
-		<Box sx={{ background: "", width: props.width }}>
+		<Box
+			sx={{
+				// background: "pink",
+				width: props.width,
+				height: props.height,
+			}}
+		>
 			<Typography
-				sx={{ fontSize: props.fontSize, color: "#757575", mb: "5px" }}
+				sx={{
+					height: `calc(${props.fontSize} + 5px)`,
+					fontSize: props.fontSize,
+					color: "#757575",
+					mb: "5px",
+				}}
 			>
 				{props.title}
 			</Typography>
 			<TextField
-				inputProps={{ style: { fontSize: "1.5vh" } }}
+				inputProps={{ style: { fontSize: props.fontSize } }}
 				sx={{
 					width: "100%",
 					color: "success.main",
+					height: "100%",
 					borderRadius: "40px",
 					"& .MuiOutlinedInput-root": {
-						borderRadius: "30px",
+						borderRadius: "50px",
 					},
 					"& .MuiInputBase-root": {
-						height: "100%",
+						height: `calc(100% - ${props.fontSize} - 10px)`,
 					},
 				}}
 			></TextField>

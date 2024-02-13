@@ -13,7 +13,6 @@ const RoundedDropdown = ({
 	width,
 	fontSize,
 }) => {
-	// height of RoundedDropdown will match parent Box height
 	const [personName, setPersonName] = useState([]);
 
 	const handleChange = (event) => {
@@ -29,22 +28,28 @@ const RoundedDropdown = ({
 	return (
 		<Box
 			sx={{
+				display: "flex",
+				flexDirection: "column",
 				// backgroundColor: "lightblue",
 				height: height,
 				width: width,
-				display: "flex",
-				flexDirection: "column",
 			}}
 		>
-			<Typography sx={{ fontSize: fontSize, color: "#757575" }}>
+			<Typography
+				sx={{
+					height: `calc(${fontSize} + 5px)`,
+					fontSize: fontSize,
+					color: "#757575",
+					mb: "5px",
+				}}
+			>
 				{headerText}
 			</Typography>
 			<FormControl
 				sx={{
 					width: "100%",
-					mt: "5px",
+					height: `calc(100% - ${fontSize} - 10px)`, // Adjust for potential margins/paddings
 					// backgroundColor: "lightgreen",
-					height: "100%",
 				}}
 			>
 				<Select
@@ -71,20 +76,19 @@ const RoundedDropdown = ({
 					inputProps={{ "aria-label": "Without label" }}
 					sx={{
 						borderRadius: "50px",
-						fontSize: "1.5vh",
+						fontSize: fontSize,
 						// backgroundColor: "pink",
 						height: "100%",
 					}}
 				>
-					<MenuItem disabled value="">
+					<MenuItem sx={{ fontSize: fontSize }} disabled value="">
 						<em>{placeHolder}</em>
 					</MenuItem>
 					{options.map((name) => (
 						<MenuItem
-							sx={{ backgroundColor: "" }}
+							sx={{ backgroundColor: "", fontSize: fontSize }}
 							key={name}
 							value={name}
-							// style={getStyles(name, personName, theme)}
 						>
 							{name}
 						</MenuItem>

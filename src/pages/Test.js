@@ -5,6 +5,7 @@ import {
 	Box,
 	Button,
 	Divider,
+	FormControl,
 	Grid,
 	TextField,
 	Typography,
@@ -62,35 +63,34 @@ const Test = () => {
 				>
 					RoundedDropdown
 				</Typography>
-				<Box sx={{ display: "flex", gap: 5, width: "100%" }}>
-					<RoundedDropdown
-						headerText="Select Document Type"
-						placeHolder="Document Type"
-						options={[
-							"Company Announcements",
-							"General Announcements",
-						]}
-						onChange={(event) => {
-							console.log(event);
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						backgroundColor: "lightblue",
+						height: "7vh",
+						width: "50vh",
+					}}
+				>
+					<Typography
+						sx={{ fontSize: "1.5vh", color: "#757575", mb: "5px" }}
+					>
+						Text
+					</Typography>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							// background: "green",
+							flex: 1,
 						}}
-						fontSize="1.5vh"
-						width="25%"
-						height="6vh"
-					/>
-					<RoundedDropdown
-						headerText="Select Document Type"
-						placeHolder="Document Type"
-						options={[
-							"Company Announcements",
-							"General Announcements",
-						]}
-						onChange={(event) => {
-							console.log(event);
-						}}
-						fontSize="1.5vh"
-						width="25%"
-						height="17vh"
-					/>
+					>
+						<FormControl sx={{ flex: 1, background: "" }}>
+							<Typography sx={{ height: "100%" }}>
+								Typography
+							</Typography>
+						</FormControl>
+					</Box>
 				</Box>
 				{/* <Document
 					file="antifragile.pdf"
