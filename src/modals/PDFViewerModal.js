@@ -1,15 +1,9 @@
-import { React, useState } from "react";
-import {
-	Box,
-	Container,
-	Typography,
-	Button,
-	Divider,
-	Modal,
-} from "@mui/material";
+import { React, useState, useCallback } from "react";
+import { Box, Typography, Button, Divider, Modal } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { Document, Page, pdfjs } from "react-pdf";
 import RoundButton from "../components/RoundButton";
+import "react-pdf/dist/Page/TextLayer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 	"pdfjs-dist/build/pdf.worker.min.js",
@@ -39,12 +33,13 @@ const columns = [
 		editable: true,
 	},
 ];
+
 const rows = [
 	{ id: 1, score: 0.9, page: 13, review: "" },
 	{ id: 2, score: 0.9, page: 1, review: "" },
 	{ id: 3, score: 0.9, page: 50, review: "" },
 	{ id: 4, score: 0.39, page: 100, review: "" },
-	{ id: 5, score: 0.5, page: 13, review: "" },
+	{ id: 5, score: 0.5, page: 16, review: "" },
 	{ id: 6, score: 0.9, page: 13, review: "" },
 	{ id: 7, score: 0.9, page: 13, review: "" },
 	{ id: 8, score: 0.6, page: 13, review: "" },
@@ -52,9 +47,43 @@ const rows = [
 	{ id: 10, score: 0.9, page: 13, review: "" },
 ];
 
+function highlightPattern(text, patterns) {
+	for (var i = 0; i < patterns.length; i++) {
+		text = text.replace(patterns[i], (value) => `<mark>${value}</mark>`);
+	}
+	return text;
+}
+
 const PDFViewerModal = ({ props }) => {
 	const [numPages, setNumPages] = useState();
 	const [pageNumber, setPageNumber] = useState(1);
+	const [chunks, setChunks] = useState([
+		{
+			id: 1,
+			text: "Wind extinguishes a candle and energizes fire.",
+			pageNum: 16,
+		},
+		{
+			id: 2,
+			text: "How?",
+			pageNum: 16,
+		},
+		{
+			id: 3,
+			text: "The green lumber fallacy.",
+			pageNum: 13,
+		},
+	]);
+
+	const textRenderer = useCallback(
+		(textItem) => {
+			const patterns = chunks
+				.filter((o) => o.pageNum == pageNumber)
+				.map((o) => o.text);
+			return highlightPattern(textItem.str, patterns);
+		},
+		[pageNumber]
+	);
 
 	function onDocumentLoadSuccess(numPages) {
 		setNumPages(numPages);
@@ -170,9 +199,10 @@ const PDFViewerModal = ({ props }) => {
 						>
 							<Page
 								height={550} // useState for responsiveness later
-								renderTextLayer={false}
+								// renderTextLayer={false}
 								renderAnnotationLayer={false}
 								pageNumber={pageNumber}
+								customTextRenderer={textRenderer}
 							/>
 						</Document>
 					</Box>

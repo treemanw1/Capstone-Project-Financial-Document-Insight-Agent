@@ -1,120 +1,45 @@
-import React from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import {
-	Box,
-	Button,
-	Divider,
-	FormControl,
-	Grid,
-	TextField,
-	Typography,
-} from "@mui/material";
-import { globalStyles } from "../GlobalStyles";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useState } from "react";
-import DateDropdown from "../components/DateDropdown";
-import SearchField from "../components/SearchField";
+import React, { useCallback, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import RoundedDropdown from "../components/RoundedDropdown";
-
+import "react-pdf/dist/Page/TextLayer.css";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 	"pdfjs-dist/build/pdf.worker.min.js",
 	import.meta.url
 ).toString();
 
-const Test = () => {
-	const [numPages, setNumPages] = useState();
-	const [pageNumber, setPageNumber] = useState(1);
+function highlightPattern(text, pattern) {
+	return text.replace(pattern, (value) => `<mark>${value}</mark>`);
+}
 
-	function onDocumentLoadSuccess(numPages) {
-		setNumPages(numPages);
+export default function Test() {
+	const [searchText, setSearchText] = useState("");
+
+	const textRenderer = useCallback(
+		(textItem) => highlightPattern(textItem.str, searchText),
+		[searchText]
+	);
+
+	function onChange(event) {
+		setSearchText(event.target.value);
 	}
 
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				maxHeight: "100vh",
-				justifyContent: "space-between",
-				backgroundColor: "",
-			}}
-		>
-			<Header />
-			<Box
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					mx: globalStyles.mx,
-					backgroundColor: "",
-					height: `${
-						100 -
-						globalStyles.footerHeight -
-						globalStyles.headerHeight
-					}vh`,
-					justifyContent: "",
-					alignItems: "center",
-				}}
-			>
-				<Typography
-					lineHeight={1.1}
-					sx={{ mt: "20px", fontSize: "3vh", mb: "100px" }}
-				>
-					RoundedDropdown
-				</Typography>
-				<Box
-					sx={{
-						display: "flex",
-						flexDirection: "column",
-						backgroundColor: "lightblue",
-						height: "7vh",
-						width: "50vh",
-					}}
-				>
-					<Typography
-						sx={{ fontSize: "1.5vh", color: "#757575", mb: "5px" }}
-					>
-						Text
-					</Typography>
-					<Box
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							// background: "green",
-							flex: 1,
-						}}
-					>
-						<FormControl sx={{ flex: 1, background: "" }}>
-							<Typography sx={{ height: "100%" }}>
-								Typography
-							</Typography>
-						</FormControl>
-					</Box>
-				</Box>
-				{/* <Document
-					file="antifragile.pdf"
-					onLoadSuccess={onDocumentLoadSuccess}
-				>
-					<Page
-						height={650}
-						renderTextLayer={false}
-						renderAnnotationLayer={false}
-						pageNumber={pageNumber}
-					/>
-				</Document>
-				<Button
-					onClick={() => {
-						const newPageNum = pageNumber + 1;
-						setPageNumber(newPageNum);
-					}}
-				>
-					Next
-				</Button> */}
-			</Box>
-			<Footer />
-		</Box>
+		<>
+			<Document file="antifragile.pdf">
+				<Page
+					renderAnnotationLayer={false}
+					pageNumber={50}
+					customTextRenderer={textRenderer}
+				/>
+			</Document>
+			<div>
+				<label htmlFor="search">Search:</label>
+				<input
+					type="search"
+					id="search"
+					value={searchText}
+					onChange={onChange}
+				/>
+			</div>
+		</>
 	);
-};
-
-export default Test;
+}
