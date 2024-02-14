@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
 
-const RoundButton = ({ props, handleClick = () => console.log("click") }) => {
+const RoundButton = ({ props, onClick = () => console.log("click") }) => {
 	// props:
 	// { text, height, width, fontSize }
 	// handleClick
@@ -23,7 +23,7 @@ const RoundButton = ({ props, handleClick = () => console.log("click") }) => {
 					color: "white",
 				},
 			}}
-			onClick={handleClick}
+			onClick={onClick}
 		>
 			{props.text}
 		</Button>

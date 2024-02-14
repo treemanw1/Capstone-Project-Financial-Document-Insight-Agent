@@ -7,8 +7,11 @@ import ReportButton from "../components/ReportButton";
 import { Box, Divider, Typography, TextField } from "@mui/material";
 import SearchField from "../components/SearchField";
 import { globalStyles } from "../GlobalStyles";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
+	const navigate = useNavigate();
+
 	return (
 		<Box
 			sx={{
@@ -59,6 +62,8 @@ export const Home = () => {
 							display: "flex",
 							mt: "20px",
 							// backgroundColor: "pink",
+							alignItems: "flex-end",
+							justifyContent: "space-between",
 						}}
 					>
 						<RoundedDropdown
@@ -69,24 +74,22 @@ export const Home = () => {
 							height="9vh"
 							fontSize="1.75vh"
 						/>
-						<Divider sx={{ width: 0, ml: "20px" }} />
-						<Box
-							sx={{
-								display: "flex",
-								flexDirection: "column",
-								justifyContent: "space-between",
-								backgroundColor: "",
-								flex: 1,
+						<SearchField
+							props={{
+								title: "Search for keywords and/or phrases",
+								height: "9vh",
+								width: "57.5%",
+								fontSize: "1.75vh",
 							}}
-						>
-							<SearchField
-								props={{
-									title: "Search for keywords and/or phrases",
-									height: "9vh",
-									fontSize: "1.75vh",
-								}}
-							/>
-						</Box>
+						/>
+						<RoundButton
+							props={{
+								text: "Search",
+								height: "6vh",
+								width: "15%",
+							}}
+							onClick={() => navigate("/results-page")}
+						/>
 					</Box>
 				</Box>
 				<Box sx={{ backgroundColor: "", mb: "30px" }}>

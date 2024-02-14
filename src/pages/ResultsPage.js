@@ -12,18 +12,18 @@ import PDFViewerModal from "../modals/PDFViewerModal";
 import RoundButton from "../components/RoundButton";
 
 const columns = [
-	{ field: "companyName", headerName: "Company Name", width: 250 },
-	{ field: "documentTitle", headerName: "Document Title", width: 250 },
+	{ field: "companyName", headerName: "Company Name", width: 150 },
+	{ field: "documentTitle", headerName: "Document Title", width: 200 },
 	{ field: "dateTime", headerName: "Date/Time", width: 200 },
 	{
 		field: "mostRelevantReference",
 		headerName: "Most Relevant Reference",
-		width: 600,
+		width: 520,
 	},
 	{
 		field: "totalRelevancesFound",
 		headerName: "Total Relevances Found",
-		width: 200,
+		width: 175,
 	},
 ];
 
@@ -170,7 +170,7 @@ export const ResultsPage = () => {
 							text: "Search",
 							height: "6.5vh",
 							width: "25vh",
-							fontSize: "1.75vh",
+							fontSize: "2vh",
 						}}
 					/>
 				</Box>
@@ -207,7 +207,6 @@ export const ResultsPage = () => {
 					sortingMode="server"
 					getRowHeight={() => "auto"}
 					onCellClick={(params, event, details) => {
-						console.log(selectedDocuments);
 						if (selectedDocuments.has(params.id)) {
 							const newSet = new Set([...selectedDocuments]);
 							newSet.delete(params.id);

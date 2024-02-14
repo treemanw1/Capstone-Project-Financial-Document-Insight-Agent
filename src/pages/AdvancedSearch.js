@@ -8,6 +8,7 @@ import { Box, Divider, Typography, Button } from "@mui/material";
 import { globalStyles } from "../GlobalStyles";
 import SearchField from "../components/SearchField";
 import DateDropdown from "../components/DateDropdown";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
 	fontSize: "1.5vh",
@@ -18,6 +19,8 @@ const styles = {
 export const AdvancedSearch = () => {
 	const [startDate, setStartDate] = useState(null);
 	const [endDate, setEndDate] = useState(null);
+
+	const navigate = useNavigate();
 
 	return (
 		<Box
@@ -226,6 +229,9 @@ export const AdvancedSearch = () => {
 						height: "5vh",
 						width: "30vh",
 						fontSize: "2vh",
+					}}
+					onClick={() => {
+						navigate("/results-page");
 					}}
 				/>
 			</Box>

@@ -241,11 +241,11 @@ const PDFViewerModal = ({ props }) => {
 						>
 							<RoundButton
 								props={{ text: "Cancel" }}
-								handleClick={props.handleClose}
+								onClick={props.handleClose}
 							/>
 							<RoundButton
 								props={{ text: "Confirm Review" }}
-								handleClick={props.handleClose}
+								onClick={props.handleClose}
 							/>
 						</Box>
 					</Box>
