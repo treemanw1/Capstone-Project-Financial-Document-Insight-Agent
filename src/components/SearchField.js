@@ -2,6 +2,7 @@ import React from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
 const SearchField = ({ props }) => {
+	// props: width, height, fontSize, title
 	return (
 		<Box
 			sx={{

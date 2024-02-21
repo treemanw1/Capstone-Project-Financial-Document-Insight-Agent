@@ -175,7 +175,18 @@ export const ReportPreview = () => {
 				}}
 			>
 				<Header />
-				<Box sx={{ mx: globalStyles.mx, backgroundColor: "", flex: 1 }}>
+				<Box
+					sx={{
+						// display: "flex",
+						mx: globalStyles.mx,
+						backgroundColor: "pink",
+						height: `${
+							100 -
+							globalStyles.footerHeight -
+							globalStyles.headerHeight
+						}vh`,
+					}}
+				>
 					<Box
 						sx={{
 							width: "100%",
@@ -387,15 +398,6 @@ export const ReportPreview = () => {
 										sx={{ height: "15px", width: 0 }}
 									/>
 								</Box>
-
-								{/*} <button aria-describedby={id} type="button" onClick={onSaveandClose} >
-        Save 
-      </button>
-      <Popper id={id} open={open} anchorEl={anchorEl}>
-        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-          The content of the Popper.
-        </Box>
-        </Popper>*/}
 							</Box>
 						</Modal>
 

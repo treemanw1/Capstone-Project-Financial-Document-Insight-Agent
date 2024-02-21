@@ -8,8 +8,8 @@ import { AdvancedSearch } from "./pages/AdvancedSearch";
 import { ReportPreview } from "./pages/ReportPreview";
 import { ResultsPage } from "./pages/ResultsPage";
 import { SavedReports } from "./pages/SavedReports";
-
-import Test from "./pages/Test";
+import Chat from "./pages/Chat.tsx";
+import Test from "./pages/Test.tsx";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
@@ -38,6 +38,10 @@ const router = createBrowserRouter([
 	{
 		path: "/test",
 		element: <Test />,
+	},
+	{
+		path: "/chat",
+		element: <Chat />,
 	},
 ]);
 
