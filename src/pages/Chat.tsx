@@ -1,14 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import {
-	Box,
-	Button,
-	Container,
-	Divider,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
+import { useNavigate } from "react-router-dom";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 	"pdfjs-dist/build/pdf.worker.min.js",
@@ -22,23 +16,25 @@ function highlightPattern(text, patterns) {
 	return text;
 }
 
-const messages = [
-	{
-		id: 0,
-		content: "Hi, I am the user",
-	},
-	{
-		id: 1,
-		content:
-			"Hello there! This is the chatbot response. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-	},
-	{
-		id: 2,
-		content: "I have another question. What is the meaning of life?",
-	},
-];
+// const messages = [
+// 	{
+// 		id: 0,
+// 		content: "Hi, I am the user",
+// 	},
+// 	{
+// 		id: 1,
+// 		content:
+// 			"Hello there! This is the chatbot response. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+// 	},
+// 	{
+// 		id: 2,
+// 		content: "I have another question. What is the meaning of life?",
+// 	},
+// ];
 
 const Chat = () => {
+	const navigate = useNavigate();
+
 	const [pdfs, setPDFs] = useState([
 		{
 			id: 0,
@@ -55,9 +51,14 @@ const Chat = () => {
 			currentPage: 1,
 		},
 	]);
-	const [selectedPDF, setSelectedPDF] = useState(0);
+	const [selectedPDFID, setSelectedPDFID] = useState<number>(0);
 
-	const [pageNumber, setPageNumber] = useState(1);
+	const [displayPageNum, setDisplayPageNum] = useState<string>(() => {
+		const foundPdf = pdfs.find((o) => o.id === selectedPDFID);
+		return foundPdf?.currentPage?.toString() ?? "";
+	});
+
+	const [pageNumber, setPageNumber] = useState(1); // for chunk highlighting
 
 	const [chunks, setChunks] = useState([
 		{
@@ -67,23 +68,27 @@ const Chat = () => {
 		},
 	]);
 
-	const [numPages, setNumPages] = useState();
+	const [query, setQuery] = useState("");
+	const [messages, setMessages] = useState<
+		Array<{
+			id: string;
+			content: string;
+		}>
+	>([]);
 
-	const textRenderer = useCallback(
-		(textItem) => {
-			const patterns = chunks
-				.filter((o) => o.pageNum == pageNumber)
-				.map((o) => o.text);
-			return highlightPattern(textItem.str, patterns);
-		},
-		[pageNumber]
-	);
-
-	const onDocumentLoadSuccess = (numPages) => {
-		setNumPages(numPages);
-	};
+	// chunk highlighting
+	// const textRenderer = useCallback(
+	// 	(textItem) => {
+	// 		const patterns = chunks
+	// 			.filter((o) => o.pageNum == pageNumber)
+	// 			.map((o) => o.text);
+	// 		return highlightPattern(textItem.str, patterns);
+	// 	},
+	// 	[pageNumber]
+	// );
 
 	const setCurrentPage = (id, pageNum) => {
+		console.log(id, pageNum);
 		setPDFs((prevPdfs) => {
 			const newPdfs = [...prevPdfs];
 			newPdfs[id].currentPage = pageNum;
@@ -109,9 +114,31 @@ const Chat = () => {
 				}}
 			>
 				<Box>
-					<Typography sx={{ m: 2 }}>
+					<Button
+						disableFocusRipple
+						disableTouchRipple
+						sx={{
+							color: "black",
+							textTransform: "none",
+							borderRadius: 0,
+							height: "8vh",
+							ml: 2,
+							"&:hover": {
+								backgroundColor: "transparent",
+								textDecoration: "underline",
+							},
+							"&:active": {
+								backgroundColor: "transparent",
+								color: "",
+							},
+						}}
+						onClick={() => {
+							console.log("Back to document select page");
+							navigate("/results-page");
+						}}
+					>
 						Back to Document Selection
-					</Typography>
+					</Button>
 					<Divider />
 				</Box>
 				<Box
@@ -121,40 +148,83 @@ const Chat = () => {
 						justifyContent: "end",
 						flex: 1,
 						// background: "pink",
-						overflow: "auto",
+						overflow: "scroll",
 						p: 2,
 						gap: 2,
 					}}
 				>
-					{messages.map((message) => {
-						if (message.id % 2 == 0) {
-							return (
-								<Typography
-									sx={{
-										display: "flex",
-										justifyContent: "end",
-									}}
-								>
-									{message.content}
-								</Typography>
-							);
-						} else {
-							return (
-								<Typography sx={{}}>
-									{message.content}
-								</Typography>
-							);
-						}
-					})}
+					<Box sx={{ minHeight: 0 }}>
+						{messages.map((message) => {
+							if (parseInt(message.id) % 2 == 0) {
+								return (
+									<Typography
+										key={message.id}
+										sx={{
+											display: "flex",
+											justifyContent: "end",
+										}}
+									>
+										{message.content}
+									</Typography>
+								);
+							} else {
+								return (
+									<Typography
+										key={message.id}
+										sx={{ display: "flex" }}
+									>
+										{message.content}
+									</Typography>
+								);
+							}
+						})}
+					</Box>
 				</Box>
-				<TextField
-					placeholder="Start typing your question..."
+				<Box
 					sx={{
-						"& .MuiOutlinedInput-root": {
-							borderRadius: 0,
-						},
+						display: "flex",
+						justifyContent: "space-between",
+						// background: "pink",
 					}}
-				/>
+				>
+					<TextField
+						value={query}
+						onChange={(event) => {
+							setQuery(event.target.value);
+						}}
+						placeholder="Start typing your question..."
+						sx={{
+							flex: 1,
+							"& .MuiOutlinedInput-root": {
+								borderRadius: 0,
+							},
+						}}
+					/>
+					<Button
+						sx={{
+							background: "lightgray",
+							color: "black",
+							textTransform: "none",
+							borderRadius: 0,
+						}}
+						onClick={() => {
+							const id: number =
+								messages.length == 0
+									? 0
+									: parseInt(
+											messages[messages.length - 1].id
+									  ) + 1;
+							let message = {
+								id: id.toString(),
+								content: query,
+							};
+							setMessages(messages.concat(message));
+							setQuery("");
+						}}
+					>
+						Send
+					</Button>
+				</Box>
 			</Box>
 			<Divider sx={{ background: "#E0E0E0", width: "1px" }} />
 			<Box
@@ -167,29 +237,45 @@ const Chat = () => {
 				}}
 			>
 				<Box sx={{ background: "" }}>
-					<Box sx={{ display: "flex", alignItems: "center" }}>
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							// background: "lightblue",
+						}}
+					>
 						<Typography sx={{ m: 2 }}>
-							{pdfs.find((o) => o.id === selectedPDF)?.name}
+							{pdfs.find((o) => o.id === selectedPDFID)?.name}
 						</Typography>
 						<TextField
-							defaultValue={1}
+							sx={{
+								width: "50px",
+							}}
+							value={displayPageNum}
 							onChange={(event) => {
-								const newPage = parseInt(event.target.value);
-								const currPDF = pdfs.find(
-									(o) => o.id === selectedPDF
-								);
+								const pageNumber: string = event.target.value;
+								const maxPages: number =
+									pdfs.find((o) => o.id === selectedPDFID)
+										?.numPages ?? 1;
 								if (
-									newPage >= 1 &&
-									newPage <= (currPDF?.numPages ?? 0)
+									/^(?:[1-9]\d*)?$/.test(pageNumber) &&
+									(parseInt(pageNumber) < maxPages ||
+										pageNumber == "")
 								) {
-									setCurrentPage(currPDF?.id, newPage);
+									const currPDFID: number =
+										pdfs.find((o) => o.id === selectedPDFID)
+											?.id ?? 0;
+									setDisplayPageNum(pageNumber);
+									setCurrentPage(
+										currPDFID,
+										parseInt(pageNumber)
+									);
 								}
 							}}
-						>
-							Textfield
-						</TextField>
+						/>
 						<Typography sx={{ m: 2 }}>
-							/{pdfs.find((o) => o.id === selectedPDF)?.numPages}
+							/
+							{pdfs.find((o) => o.id === selectedPDFID)?.numPages}
 						</Typography>
 					</Box>
 					<Divider />
@@ -197,26 +283,23 @@ const Chat = () => {
 				<Box
 					sx={{
 						display: "flex",
-						// background: "lightblue",
 						justifyContent: "center",
 						height: "100%",
 						overflow: "auto",
 					}}
 				>
 					<Document
-						file={pdfs.find((o) => o.id === selectedPDF)?.path}
-						onLoadSuccess={onDocumentLoadSuccess}
+						file={pdfs.find((o) => o.id === selectedPDFID)?.path}
+						// onLoadSuccess={onDocumentLoadSuccess}
 					>
 						<Page
-							width={789}
-							// height={500} // useState for responsiveness later
-							// renderTextLayer={false}
+							width={789} // useState for responsiveness later
 							renderAnnotationLayer={false}
 							pageNumber={
-								pdfs.find((o) => o.id === selectedPDF)
+								pdfs.find((o) => o.id === selectedPDFID)
 									?.currentPage
 							}
-							customTextRenderer={textRenderer}
+							// customTextRenderer={textRenderer}
 						/>
 					</Document>
 				</Box>
@@ -226,15 +309,15 @@ const Chat = () => {
 				sx={{
 					display: "flex",
 					flexDirection: "column",
-					// backgroundColor: "pink",
 					width: "7.5%",
 				}}
 			>
 				{pdfs.map((pdf) => {
 					return (
 						<Button
+							key={pdf.id}
 							onClick={() => {
-								setSelectedPDF(pdf.id);
+								setSelectedPDFID(pdf.id);
 							}}
 							sx={{
 								color: "black",

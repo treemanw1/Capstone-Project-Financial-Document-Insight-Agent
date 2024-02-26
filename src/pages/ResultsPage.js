@@ -11,6 +11,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import PDFViewerModal from "../modals/PDFViewerModal";
 import RoundButton from "../components/RoundButton";
 
+import { useNavigate } from "react-router-dom";
+
 const columns = [
 	{ field: "companyName", headerName: "Company Name", width: 150 },
 	{ field: "documentTitle", headerName: "Document Title", width: 200 },
@@ -118,6 +120,8 @@ export const ResultsPage = () => {
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 
+	const navigate = useNavigate();
+
 	return (
 		<Box
 			sx={{
@@ -170,7 +174,7 @@ export const ResultsPage = () => {
 							text: "Search",
 							height: "6.5vh",
 							width: "25vh",
-							fontSize: "2vh",
+							fontSize: "1.75vh",
 						}}
 					/>
 				</Box>
@@ -246,7 +250,9 @@ export const ResultsPage = () => {
 							boxShadow: "none",
 						},
 					}}
-					onClick={handleOpen}
+					onClick={() => {
+						navigate("/chat");
+					}}
 				>
 					Next
 				</Button>
