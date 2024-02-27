@@ -3,7 +3,22 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useState } from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
-const DateDropdown = ({ props }) => {
+interface MyObjectProp {
+	title: string;
+	label: string;
+	date: Date | null;
+	height: string;
+	width: string;
+	mt: string;
+	fontSize: string;
+	onChange: (date: Date | null) => void;
+}
+
+interface MyComponentProps {
+	props: MyObjectProp;
+}
+
+const DateDropdown: React.FC<MyComponentProps> = ({ props }) => {
 	return (
 		<Box sx={{ background: "", height: props.height }}>
 			<Typography

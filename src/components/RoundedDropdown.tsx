@@ -1,28 +1,35 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { Box, Typography } from "@mui/material";
 
-const RoundedDropdown = ({
+interface MyComponentProps {
+	headerText: string;
+	placeHolder: string;
+	height: string;
+	width: string;
+	fontSize: string;
+	options: string[];
+}
+
+const RoundedDropdown: React.FC<MyComponentProps> = ({
 	headerText,
 	placeHolder,
-	options,
 	height,
 	width,
 	fontSize,
+	options,
 }) => {
-	const [personName, setPersonName] = useState([]);
+	const [personName, setPersonName] = useState<string>("");
 
-	const handleChange = (event) => {
+	const handleChange = (event: SelectChangeEvent) => {
 		const {
 			target: { value },
 		} = event;
-		setPersonName(
-			// On autofill we get a stringified value.
-			typeof value === "string" ? value.split(",") : value
-		);
+		console.log("value: ", value);
+		setPersonName(value);
 	};
 
 	return (
@@ -48,7 +55,7 @@ const RoundedDropdown = ({
 			<FormControl
 				sx={{
 					width: "100%",
-					height: `calc(100% - ${fontSize} - 10px)`, // Adjust for potential margins/paddings
+					height: `calc(100% - ${fontSize} - 10px)`,
 					// backgroundColor: "lightgreen",
 				}}
 			>
@@ -57,12 +64,6 @@ const RoundedDropdown = ({
 					value={personName}
 					onChange={handleChange}
 					input={<OutlinedInput />}
-					renderValue={(selected) => {
-						if (selected.length === 0) {
-							return placeHolder;
-						}
-						return selected.join(", ");
-					}}
 					MenuProps={{
 						PaperProps: {
 							style: {

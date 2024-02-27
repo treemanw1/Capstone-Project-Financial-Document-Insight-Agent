@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RoundedDropdown from "../components/RoundedDropdown";
 import RoundButton from "../components/RoundButton";
-import { Box, Divider, Typography, Button } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { globalStyles } from "../GlobalStyles";
 import SearchField from "../components/SearchField";
 import DateDropdown from "../components/DateDropdown";
@@ -17,8 +17,8 @@ const styles = {
 };
 
 export const AdvancedSearch = () => {
-	const [startDate, setStartDate] = useState(null);
-	const [endDate, setEndDate] = useState(null);
+	const [startDate, setStartDate] = useState<Date | null>(null);
+	const [endDate, setEndDate] = useState<Date | null>(null);
 
 	const navigate = useNavigate();
 
@@ -224,12 +224,10 @@ export const AdvancedSearch = () => {
 					</Box>
 				</Box>
 				<RoundButton
-					props={{
-						text: "Search",
-						height: "5vh",
-						width: "30vh",
-						fontSize: "2vh",
-					}}
+					text="Search"
+					height="5vh"
+					width="30vh"
+					fontSize="2vh"
 					onClick={() => {
 						navigate("/results-page");
 					}}

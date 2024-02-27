@@ -2,40 +2,32 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 	"pdfjs-dist/build/pdf.worker.min.js",
 	import.meta.url
 ).toString();
 
-function highlightPattern(text, patterns) {
+function highlightPattern(text: string, patterns: string[]) {
 	for (var i = 0; i < patterns.length; i++) {
 		text = text.replace(patterns[i], (value) => `<mark>${value}</mark>`);
 	}
 	return text;
 }
 
-// const messages = [
-// 	{
-// 		id: 0,
-// 		content: "Hi, I am the user",
-// 	},
-// 	{
-// 		id: 1,
-// 		content:
-// 			"Hello there! This is the chatbot response. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-// 	},
-// 	{
-// 		id: 2,
-// 		content: "I have another question. What is the meaning of life?",
-// 	},
-// ];
-
 const Chat = () => {
 	const navigate = useNavigate();
 
-	const [pdfs, setPDFs] = useState([
+	const [pdfs, setPDFs] = useState<
+		Array<{
+			id: number;
+			name: string;
+			numPages: number;
+			path: string;
+			currentPage: number;
+		}>
+	>([
 		{
 			id: 0,
 			name: "Antifragile - Nassim Taleb",
@@ -51,6 +43,7 @@ const Chat = () => {
 			currentPage: 1,
 		},
 	]);
+
 	const [selectedPDFID, setSelectedPDFID] = useState<number>(0);
 
 	const [displayPageNum, setDisplayPageNum] = useState<string>(() => {
@@ -58,9 +51,15 @@ const Chat = () => {
 		return foundPdf?.currentPage?.toString() ?? "";
 	});
 
-	const [pageNumber, setPageNumber] = useState(1); // for chunk highlighting
+	const [pageNumber, setPageNumber] = useState<number>(1); // for chunk highlighting
 
-	const [chunks, setChunks] = useState([
+	const [chunks, setChunks] = useState<
+		Array<{
+			id: number;
+			text: string;
+			pageNum: number;
+		}>
+	>([
 		{
 			id: 1,
 			text: "Wind extinguishes a candle and energizes fire.",
@@ -68,7 +67,7 @@ const Chat = () => {
 		},
 	]);
 
-	const [query, setQuery] = useState("");
+	const [query, setQuery] = useState<string>("");
 	const [messages, setMessages] = useState<
 		Array<{
 			id: string;
@@ -87,7 +86,7 @@ const Chat = () => {
 	// 	[pageNumber]
 	// );
 
-	const setCurrentPage = (id, pageNum) => {
+	const setCurrentPage = (id: number, pageNum: number) => {
 		console.log(id, pageNum);
 		setPDFs((prevPdfs) => {
 			const newPdfs = [...prevPdfs];

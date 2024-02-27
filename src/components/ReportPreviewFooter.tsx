@@ -17,7 +17,6 @@ const ReportPreviewFooter = () => {
 					width: "100%",
 				}}
 			>
-				qSqsqsqsq
 				<Typography
 					sx={{
 						backgroundColor: "Black",

@@ -1,17 +1,28 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Button } from "@mui/material";
 
-const RoundButton = ({ props, onClick = () => console.log("click") }) => {
-	// props:
-	// { text, height, width, fontSize }
-	// handleClick
+interface MyComponentProps {
+	text: string;
+	height?: string;
+	width: string;
+	fontSize: string;
+	onClick?: () => void;
+}
+
+const RoundButton: React.FC<MyComponentProps> = ({
+	text,
+	height = "1.5vh",
+	width,
+	fontSize,
+	onClick,
+}) => {
 	return (
 		<Button
 			sx={{
 				// background: "pink",
-				height: props.height,
-				width: props.width,
-				fontSize: props.fontSize,
+				height: height,
+				width: width,
+				fontSize: fontSize,
 				backgroundColor: "#D9D9D9",
 				borderRadius: "50px",
 				color: "black",
@@ -25,7 +36,7 @@ const RoundButton = ({ props, onClick = () => console.log("click") }) => {
 			}}
 			onClick={onClick}
 		>
-			{props.text}
+			{text}
 		</Button>
 	);
 };

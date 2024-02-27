@@ -9,6 +9,10 @@ import SearchField from "../components/SearchField";
 import { globalStyles } from "../GlobalStyles";
 import { useNavigate } from "react-router-dom";
 
+const styles = {
+	fontSize: "1.5vh",
+};
+
 export const Home = () => {
 	const navigate = useNavigate();
 
@@ -83,11 +87,10 @@ export const Home = () => {
 							}}
 						/>
 						<RoundButton
-							props={{
-								text: "Search",
-								height: "6vh",
-								width: "15%",
-							}}
+							text="Search"
+							height="6vh"
+							width="15%"
+							fontSize={styles.fontSize}
 							onClick={() => navigate("/results-page")}
 						/>
 					</Box>
@@ -101,25 +104,19 @@ export const Home = () => {
 						</Typography>
 						<Box sx={{ display: "flex", gap: 2 }}>
 							<RoundButton
-								props={{
-									text: "Company Announcements: Dymon",
-									width: "fit-content",
-									fontSize: "13px",
-								}}
+								text="Company Announcements: Dymon"
+								width="fit-content"
+								fontSize={styles.fontSize}
 							/>
 							<RoundButton
-								props={{
-									text: "IPO Prospectus + Catalodge: Conflict of Interest",
-									width: "fit-content",
-									fontSize: "13px",
-								}}
+								text="IPO Prospectus + Catalodge: Conflict of Interest"
+								width="fit-content"
+								fontSize={styles.fontSize}
 							/>
 							<RoundButton
-								props={{
-									text: "Company Announcements: Dymon",
-									width: "fit-content",
-									fontSize: "13px",
-								}}
+								text="Company Announcements: Dymon"
+								width="fit-content"
+								fontSize={styles.fontSize}
 							/>
 						</Box>
 					</Box>
@@ -136,25 +133,22 @@ export const Home = () => {
 						</Typography>
 						<Box sx={{ display: "flex", gap: 2 }}>
 							<ReportButton
-								style={{
-									text: "Research for General Motors IPO Submission",
-									width: "250px",
-									fontSize: "13px",
-								}}
+								text="Research for General Motors IPO Submission"
+								width="250px"
+								fontSize={styles.fontSize}
+								noDocuments={5}
 							/>
 							<ReportButton
-								style={{
-									text: "Research for General Motors IPO Submission",
-									width: "250px",
-									fontSize: "13px",
-								}}
+								text="Research for General Motors IPO Submission"
+								width="250px"
+								fontSize={styles.fontSize}
+								noDocuments={5}
 							/>
 							<ReportButton
-								style={{
-									text: "Research for General Motors IPO Submission",
-									width: "250px",
-									fontSize: "13px",
-								}}
+								text="Research for General Motors IPO Submission"
+								width="250px"
+								fontSize={styles.fontSize}
+								noDocuments={5}
 							/>
 						</Box>
 					</Box>

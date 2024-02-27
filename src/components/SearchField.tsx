@@ -1,8 +1,18 @@
 import React from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
-const SearchField = ({ props }) => {
-	// props: width, height, fontSize, title
+interface MyObjectProp {
+	title: string;
+	height: string;
+	width: string;
+	fontSize: string;
+}
+
+interface MyComponentProps {
+	props: MyObjectProp;
+}
+
+const SearchField: React.FC<MyComponentProps> = ({ props }) => {
 	return (
 		<Box
 			sx={{
