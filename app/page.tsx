@@ -1,21 +1,20 @@
+"use client";
+
 import React from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import RoundedDropdown from "../components/RoundedDropdown";
-import RoundButton from "../components/RoundButton";
-import ReportButton from "../components/ReportButton";
+import Header from "@components/Header";
+import Footer from "@components/Footer";
+import RoundedDropdown from "@components/RoundedDropdown";
+import RoundButton from "@components/RoundButton";
+import ReportButton from "@components/ReportButton";
 import { Box, Typography } from "@mui/material";
-import SearchField from "../components/SearchField";
-import { globalStyles } from "../GlobalStyles";
-import { useNavigate } from "react-router-dom";
+import SearchField from "@components/SearchField";
+import { globalStyles } from "@components/GlobalStyles";
 
 const styles = {
 	fontSize: "1.5vh",
 };
 
-export const Home = () => {
-	const navigate = useNavigate();
-
+const Home = () => {
 	return (
 		<Box
 			sx={{
@@ -91,7 +90,9 @@ export const Home = () => {
 							height="6vh"
 							width="15%"
 							fontSize={styles.fontSize}
-							onClick={() => navigate("/results-page")}
+							onClick={() =>
+								console.log("Navigate to results page")
+							}
 						/>
 					</Box>
 				</Box>
@@ -158,3 +159,5 @@ export const Home = () => {
 		</Box>
 	);
 };
+
+export default Home;

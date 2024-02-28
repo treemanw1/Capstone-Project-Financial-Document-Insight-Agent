@@ -9,15 +9,14 @@ import { ReportPreview } from "./pages/ReportPreview";
 import { ResultsPage } from "./pages/ResultsPage";
 import { SavedReports } from "./pages/SavedReports";
 import Chat from "./pages/Chat.tsx";
-import Test from "./pages/Test.tsx";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <Home />,
-	},
+	// {
+	// 	path: "/",
+	// 	element: <Home />,
+	// },
 	{
 		path: "/advanced-search",
 		element: <AdvancedSearch />,
@@ -34,10 +33,6 @@ const router = createBrowserRouter([
 	{
 		path: "/saved-reports",
 		element: <SavedReports />,
-	},
-	{
-		path: "/test",
-		element: <Test />,
 	},
 	{
 		path: "/chat",

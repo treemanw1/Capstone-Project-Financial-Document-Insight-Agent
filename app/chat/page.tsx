@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import { Document, Page, pdfjs } from "react-pdf";
