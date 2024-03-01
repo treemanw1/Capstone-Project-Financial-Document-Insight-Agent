@@ -1,6 +1,7 @@
 import React from "react";
-import { Box, Divider, Link, Icon } from "@mui/material";
+import { Box, Divider, Icon, Link, Typography } from "@mui/material";
 import { globalStyles } from "./GlobalStyles";
+import NextLink from "next/link";
 
 const Header = () => {
 	return (
@@ -22,26 +23,42 @@ const Header = () => {
 							// background: "pink",
 						}}
 					>
-						<Link href="/" underline="hover" color="black">
+						<Link
+							component={NextLink}
+							href="/"
+							underline="hover"
+							color="black"
+							variant="body1"
+						>
 							Home
 						</Link>
 						<Link
+							component={NextLink}
 							href="/advanced-search"
 							underline="hover"
 							color="black"
+							variant="body1"
 						>
 							Advanced Search
 						</Link>
 						<Link
-							href="saved-reports"
+							component={NextLink}
+							href="/saved-reports"
 							underline="hover"
 							color="black"
+							variant="body1"
 						>
 							Saved Reports
 						</Link>
 					</Box>
-					<Box sx={{ marginLeft: "auto" }}>
-						<a>Hello, Cleopatra</a>
+					<Box
+						sx={{
+							display: "flex",
+							// background: "pink",
+							marginLeft: "auto",
+						}}
+					>
+						<Typography>Hello, Cleopatra</Typography>
 						<Icon />
 					</Box>
 				</Box>

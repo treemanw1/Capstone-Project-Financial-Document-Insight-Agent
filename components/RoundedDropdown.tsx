@@ -10,18 +10,18 @@ import { Box, Typography } from "@mui/material";
 interface MyComponentProps {
 	headerText: string;
 	placeHolder: string;
-	height: string;
+	height?: string;
 	width: string;
-	fontSize: string;
+	fontSize?: string;
 	options: string[];
 }
 
 const RoundedDropdown: React.FC<MyComponentProps> = ({
 	headerText,
 	placeHolder,
-	height,
+	height = "7.5vh",
 	width,
-	fontSize,
+	fontSize = "1.5vh",
 	options,
 }) => {
 	const [personName, setPersonName] = useState<string>("");
@@ -30,7 +30,6 @@ const RoundedDropdown: React.FC<MyComponentProps> = ({
 		const {
 			target: { value },
 		} = event;
-		console.log("value: ", value);
 		setPersonName(value);
 	};
 
@@ -87,13 +86,13 @@ const RoundedDropdown: React.FC<MyComponentProps> = ({
 					<MenuItem sx={{ fontSize: fontSize }} disabled value="">
 						<em>{placeHolder}</em>
 					</MenuItem>
-					{options.map((name) => (
+					{options.map((option) => (
 						<MenuItem
 							sx={{ backgroundColor: "", fontSize: fontSize }}
-							key={name}
-							value={name}
+							key={option}
+							value={option}
 						>
-							{name}
+							{option}
 						</MenuItem>
 					))}
 				</Select>

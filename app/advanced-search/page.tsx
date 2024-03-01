@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 import { useState } from "react";
 import { Box, Divider, Typography } from "@mui/material";
 
@@ -15,6 +15,8 @@ import { globalStyles } from "@components/GlobalStyles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+import { useRouter } from "next/navigation";
+
 const styles = {
 	fontSize: "1.5vh",
 	barWidth: 36, // vh
@@ -24,6 +26,8 @@ const styles = {
 const AdvancedSearch = () => {
 	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [endDate, setEndDate] = useState<Date | null>(null);
+
+	const router = useRouter();
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -233,7 +237,7 @@ const AdvancedSearch = () => {
 						width="30vh"
 						fontSize="2vh"
 						onClick={() => {
-							console.log("Navigate to results-page");
+							router.push("/results-page");
 						}}
 					/>
 				</Box>

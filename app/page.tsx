@@ -9,19 +9,22 @@ import ReportButton from "@components/ReportButton";
 import { Box, Typography } from "@mui/material";
 import SearchField from "@components/SearchField";
 import { globalStyles } from "@components/GlobalStyles";
+import { useRouter } from "next/navigation";
 
 const styles = {
-	fontSize: "1.5vh",
+	fontSize: "1.75vh",
 };
 
 const Home = () => {
+	const router = useRouter();
+
 	return (
 		<Box
 			sx={{
 				display: "flex",
 				flexDirection: "column",
 				minHeight: "100vh",
-				backgroundColor: "",
+				// backgroundColor: "pink",
 				justifyContent: "space-between",
 			}}
 		>
@@ -90,9 +93,7 @@ const Home = () => {
 							height="6vh"
 							width="15%"
 							fontSize={styles.fontSize}
-							onClick={() =>
-								console.log("Navigate to results page")
-							}
+							onClick={() => router.push("/results-page")}
 						/>
 					</Box>
 				</Box>

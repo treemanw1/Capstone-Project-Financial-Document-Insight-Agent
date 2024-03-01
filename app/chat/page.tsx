@@ -5,10 +5,17 @@ import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-	"pdfjs-dist/build/pdf.worker.min.js",
-	import.meta.url
-).toString();
+import { useRouter } from "next/navigation";
+
+// pdfjs.GlobalWorkerOptions.workerSrc =
+// 	"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+// 	"pdfjs-dist/build/pdf.worker.min.js",
+// 	import.meta.url
+// ).toString();
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 function highlightPattern(text: string, patterns: string[]) {
 	for (var i = 0; i < patterns.length; i++) {
@@ -42,6 +49,8 @@ const Chat = () => {
 			currentPage: 1,
 		},
 	]);
+
+	const router = useRouter();
 
 	const [selectedPDFID, setSelectedPDFID] = useState<number>(0);
 
@@ -131,7 +140,7 @@ const Chat = () => {
 							},
 						}}
 						onClick={() => {
-							console.log("Back to document select page");
+							router.push("/results-page");
 						}}
 					>
 						Back to Document Selection

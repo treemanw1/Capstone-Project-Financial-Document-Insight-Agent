@@ -7,7 +7,7 @@ interface MyComponentProps {
 	text: string;
 	height?: string;
 	width: string;
-	fontSize: string;
+	fontSize?: string;
 	onClick?: () => void;
 }
 
@@ -15,7 +15,7 @@ const RoundButton: React.FC<MyComponentProps> = ({
 	text,
 	height = "7.5vh",
 	width,
-	fontSize,
+	fontSize = "1.75vh",
 	onClick,
 }) => {
 	return (
