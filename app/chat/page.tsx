@@ -57,11 +57,6 @@ const Chat = () => {
 
 	const [selectedPDFID, setSelectedPDFID] = useState<number>(0);
 
-	const [displayPageNum, setDisplayPageNum] = useState<string>(() => {
-		const foundPdf = pdfs.find((o) => o.id === selectedPDFID);
-		return foundPdf?.currentPage?.toString() ?? "";
-	});
-
 	const [pageNumber, setPageNumber] = useState<number>(1); // for chunk highlighting
 
 	const [chunks, setChunks] = useState<
@@ -117,8 +112,6 @@ const Chat = () => {
 		setMessages(messages.concat(message));
 		setQuery("");
 	};
-
-	const listRef = createRef<FixedSizeList>();
 
 	return (
 		<Box
@@ -253,32 +246,12 @@ const Chat = () => {
 					</Button>
 				</Box>
 			</Box>
-			<Box
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					// backgroundColor: "lightblue",
-					width: "52.5%",
-					justifyContent: "space-between",
-					borderRight: 1,
-				}}
-			>
-				<PageNumberDisplay
-					pdfs={pdfs}
-					selectedPDFID={selectedPDFID}
-					displayPageNum={displayPageNum}
-					setDisplayPageNum={setDisplayPageNum}
-					setCurrentPage={setCurrentPage}
-					listRef={listRef}
-				/>
-				<PDFViewer
-					pdfs={pdfs}
-					selectedPDFID={selectedPDFID}
-					setDisplayPageNum={setDisplayPageNum}
-					headerHeight={styles.headerHeight}
-					listRef={listRef}
-				/>
-				{/* <Box
+			<PDFViewer
+				pdfs={pdfs}
+				selectedPDFID={selectedPDFID}
+				headerHeight={styles.headerHeight}
+			/>
+			{/* <Box
 					sx={{
 						background: "#F1F1F1",
 						display: "flex",
@@ -320,7 +293,6 @@ const Chat = () => {
 						</List>
 					</Document>
 				</Box> */}
-			</Box>
 			<Divider sx={{ background: "#E0E0E0", width: "1px" }} />
 			<Box
 				sx={{

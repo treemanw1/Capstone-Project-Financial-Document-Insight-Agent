@@ -30,7 +30,6 @@ const PageNumberDisplay: React.FC<MyComponentProps> = ({
 	displayPageNum,
 	setDisplayPageNum,
 	setCurrentPage,
-	listRef,
 }) => {
 	return (
 		<Box
