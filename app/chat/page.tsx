@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
+import style from "./chat.module.css";
 
 import { useRouter } from "next/navigation";
 
@@ -23,6 +24,10 @@ function highlightPattern(text: string, patterns: string[]) {
 	}
 	return text;
 }
+
+const styles = {
+	headerHeight: "8vh",
+};
 
 const Chat = () => {
 	const [pdfs, setPDFs] = useState<
@@ -103,6 +108,19 @@ const Chat = () => {
 		});
 	};
 
+	const onSendQuery = () => {
+		const id: number =
+			messages.length == 0
+				? 0
+				: parseInt(messages[messages.length - 1].id) + 1;
+		let message = {
+			id: id.toString(),
+			content: query,
+		};
+		setMessages(messages.concat(message));
+		setQuery("");
+	};
+
 	return (
 		<Box
 			sx={{
@@ -118,9 +136,10 @@ const Chat = () => {
 					width: "40%",
 					// backgroundColor: "pink",
 					justifyContent: "space-between",
+					borderRight: 1,
 				}}
 			>
-				<Box>
+				<Box sx={{ height: styles.headerHeight, borderBottom: 1 }}>
 					<Button
 						disableFocusRipple
 						disableTouchRipple
@@ -145,7 +164,6 @@ const Chat = () => {
 					>
 						Back to Document Selection
 					</Button>
-					<Divider />
 				</Box>
 				<Box
 					sx={{
@@ -191,6 +209,7 @@ const Chat = () => {
 						display: "flex",
 						justifyContent: "space-between",
 						// background: "pink",
+						borderTop: 1,
 					}}
 				>
 					<TextField
@@ -198,10 +217,22 @@ const Chat = () => {
 						onChange={(event) => {
 							setQuery(event.target.value);
 						}}
+						onKeyDown={(event) => {
+							if (event.key == "Enter") {
+								onSendQuery();
+							}
+						}}
 						placeholder="Start typing your question..."
 						sx={{
 							flex: 1,
+							"& fieldset": { border: "none" },
 							"& .MuiOutlinedInput-root": {
+								"& fieldset": {
+									borderColor: "#E0E3E7",
+								},
+								"&:hover fieldset": {
+									borderColor: "#E0E3E7",
+								},
 								borderRadius: 0,
 							},
 						}}
@@ -212,101 +243,110 @@ const Chat = () => {
 							color: "black",
 							textTransform: "none",
 							borderRadius: 0,
+							"&:hover": {
+								backgroundColor: "#3C3C3C",
+								color: "white",
+							},
 						}}
-						onClick={() => {
-							const id: number =
-								messages.length == 0
-									? 0
-									: parseInt(
-											messages[messages.length - 1].id
-									  ) + 1;
-							let message = {
-								id: id.toString(),
-								content: query,
-							};
-							setMessages(messages.concat(message));
-							setQuery("");
-						}}
+						onClick={onSendQuery}
 					>
 						Send
 					</Button>
 				</Box>
 			</Box>
-			<Divider sx={{ background: "#E0E0E0", width: "1px" }} />
 			<Box
 				sx={{
 					display: "flex",
 					flexDirection: "column",
-					backgroundColor: "",
+					// backgroundColor: "lightblue",
 					width: "52.5%",
 					justifyContent: "space-between",
+					borderRight: 1,
 				}}
 			>
-				<Box sx={{ background: "" }}>
-					<Box
-						sx={{
-							display: "flex",
-							alignItems: "center",
-							// background: "lightblue",
-						}}
-					>
-						<Typography sx={{ m: 2 }}>
-							{pdfs.find((o) => o.id === selectedPDFID)?.name}
-						</Typography>
-						<TextField
-							sx={{
-								width: "50px",
-							}}
-							value={displayPageNum}
-							onChange={(event) => {
-								const pageNumber: string = event.target.value;
-								const maxPages: number =
-									pdfs.find((o) => o.id === selectedPDFID)
-										?.numPages ?? 1;
-								if (
-									/^(?:[1-9]\d*)?$/.test(pageNumber) &&
-									(parseInt(pageNumber) < maxPages ||
-										pageNumber == "")
-								) {
-									const currPDFID: number =
-										pdfs.find((o) => o.id === selectedPDFID)
-											?.id ?? 0;
-									setDisplayPageNum(pageNumber);
-									setCurrentPage(
-										currPDFID,
-										parseInt(pageNumber)
-									);
-								}
-							}}
-						/>
-						<Typography sx={{ m: 2 }}>
-							/
-							{pdfs.find((o) => o.id === selectedPDFID)?.numPages}
-						</Typography>
-					</Box>
-					<Divider />
-				</Box>
 				<Box
 					sx={{
 						display: "flex",
+						alignItems: "center",
+						height: styles.headerHeight,
+						borderBottom: 1,
+					}}
+				>
+					<Typography sx={{ m: 2 }}>
+						{pdfs.find((o) => o.id === selectedPDFID)?.name}
+					</Typography>
+					<TextField
+						sx={{
+							display: "flex",
+							justifyContent: "center",
+							width: "60px",
+							height: "40px",
+							border: 1,
+							"& fieldset": { border: "none" },
+						}}
+						value={displayPageNum}
+						onChange={(event) => {
+							const pageNumber: string = event.target.value;
+							const maxPages: number =
+								pdfs.find((o) => o.id === selectedPDFID)
+									?.numPages ?? 1;
+							if (
+								/^(?:[1-9]\d*)?$/.test(pageNumber) &&
+								(parseInt(pageNumber) < maxPages ||
+									pageNumber == "")
+							) {
+								const currPDFID: number =
+									pdfs.find((o) => o.id === selectedPDFID)
+										?.id ?? 0;
+								setDisplayPageNum(pageNumber);
+								setCurrentPage(currPDFID, parseInt(pageNumber));
+							}
+						}}
+					/>
+					<Typography sx={{ m: 2 }}>
+						/{pdfs.find((o) => o.id === selectedPDFID)?.numPages}
+					</Typography>
+				</Box>
+				<Box
+					sx={{
+						background: "#F1F1F1",
+						// background: "pink",
+						display: "flex",
 						justifyContent: "center",
-						height: "100%",
+						alignItems: "center",
+						flexDirection: "column",
+						height: `calc(100vh - ${styles.headerHeight})`,
 						overflow: "auto",
 					}}
 				>
 					<Document
+						className={style.document}
 						file={pdfs.find((o) => o.id === selectedPDFID)?.path}
 						// onLoadSuccess={onDocumentLoadSuccess}
 					>
-						<Page
-							width={789} // useState for responsiveness later
+						{Array.from(
+							new Array(
+								pdfs.find(
+									(o) => o.id === selectedPDFID
+								)?.numPages
+							),
+							(el, index) => (
+								<Page
+									key={`page_${index + 1}`}
+									pageNumber={index + 1}
+								/>
+							)
+						)}
+						{/* <Page
+							width={700}
+							className={style.page}
 							renderAnnotationLayer={false}
 							pageNumber={
 								pdfs.find((o) => o.id === selectedPDFID)
 									?.currentPage
 							}
 							// customTextRenderer={textRenderer}
-						/>
+						/> */}
 					</Document>
 				</Box>
 			</Box>
@@ -314,10 +354,12 @@ const Chat = () => {
 			<Box
 				sx={{
 					display: "flex",
+					// background: "pink",
 					flexDirection: "column",
 					width: "7.5%",
 				}}
 			>
+				<Box sx={{ height: styles.headerHeight, borderBottom: 1 }} />
 				{pdfs.map((pdf) => {
 					return (
 						<Button
@@ -328,6 +370,8 @@ const Chat = () => {
 							sx={{
 								color: "black",
 								textTransform: "none",
+								fontSize: "13px",
+								textAlign: "left",
 								borderBottom: 1,
 								borderRadius: 0,
 							}}
