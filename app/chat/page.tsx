@@ -1,20 +1,18 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback, createRef } from "react";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
-import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/TextLayer.css";
-import style from "./chat.module.css";
 
 import { useRouter } from "next/navigation";
 
-// pdfjs.GlobalWorkerOptions.workerSrc =
-// 	"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+import PDFViewer from "./PDFViewer";
 
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-// 	"pdfjs-dist/build/pdf.worker.min.js",
-// 	import.meta.url
-// ).toString();
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/Page/TextLayer.css";
+import { FixedSizeList as List, FixedSizeList } from "react-window";
+
+import PageNumberDisplay from "./PageNumberDisplay";
+import style from "./chat.module.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -100,7 +98,6 @@ const Chat = () => {
 	// );
 
 	const setCurrentPage = (id: number, pageNum: number) => {
-		console.log(id, pageNum);
 		setPDFs((prevPdfs) => {
 			const newPdfs = [...prevPdfs];
 			newPdfs[id].currentPage = pageNum;
@@ -120,6 +117,8 @@ const Chat = () => {
 		setMessages(messages.concat(message));
 		setQuery("");
 	};
+
+	const listRef = createRef<FixedSizeList>();
 
 	return (
 		<Box
@@ -264,91 +263,63 @@ const Chat = () => {
 					borderRight: 1,
 				}}
 			>
-				<Box
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						height: styles.headerHeight,
-						borderBottom: 1,
-					}}
-				>
-					<Typography sx={{ m: 2 }}>
-						{pdfs.find((o) => o.id === selectedPDFID)?.name}
-					</Typography>
-					<TextField
-						sx={{
-							display: "flex",
-							justifyContent: "center",
-							width: "60px",
-							height: "40px",
-							border: 1,
-							"& fieldset": { border: "none" },
-						}}
-						value={displayPageNum}
-						onChange={(event) => {
-							const pageNumber: string = event.target.value;
-							const maxPages: number =
-								pdfs.find((o) => o.id === selectedPDFID)
-									?.numPages ?? 1;
-							if (
-								/^(?:[1-9]\d*)?$/.test(pageNumber) &&
-								(parseInt(pageNumber) < maxPages ||
-									pageNumber == "")
-							) {
-								const currPDFID: number =
-									pdfs.find((o) => o.id === selectedPDFID)
-										?.id ?? 0;
-								setDisplayPageNum(pageNumber);
-								setCurrentPage(currPDFID, parseInt(pageNumber));
-							}
-						}}
-					/>
-					<Typography sx={{ m: 2 }}>
-						/{pdfs.find((o) => o.id === selectedPDFID)?.numPages}
-					</Typography>
-				</Box>
-				<Box
+				<PageNumberDisplay
+					pdfs={pdfs}
+					selectedPDFID={selectedPDFID}
+					displayPageNum={displayPageNum}
+					setDisplayPageNum={setDisplayPageNum}
+					setCurrentPage={setCurrentPage}
+					listRef={listRef}
+				/>
+				<PDFViewer
+					pdfs={pdfs}
+					selectedPDFID={selectedPDFID}
+					setDisplayPageNum={setDisplayPageNum}
+					headerHeight={styles.headerHeight}
+					listRef={listRef}
+				/>
+				{/* <Box
 					sx={{
 						background: "#F1F1F1",
-						// background: "pink",
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
 						flexDirection: "column",
 						height: `calc(100vh - ${styles.headerHeight})`,
-						overflow: "auto",
+						overflow: "clip",
 					}}
 				>
 					<Document
 						className={style.document}
 						file={pdfs.find((o) => o.id === selectedPDFID)?.path}
-						// onLoadSuccess={onDocumentLoadSuccess}
 					>
-						{Array.from(
-							new Array(
-								pdfs.find(
-									(o) => o.id === selectedPDFID
-								)?.numPages
-							),
-							(el, index) => (
-								<Page
-									key={`page_${index + 1}`}
-									pageNumber={index + 1}
-								/>
-							)
-						)}
-						{/* <Page
-							width={700}
-							className={style.page}
-							renderAnnotationLayer={false}
-							pageNumber={
+						<List
+							ref={listRef}
+							height={640}
+							itemCount={
 								pdfs.find((o) => o.id === selectedPDFID)
-									?.currentPage
+									?.numPages!
 							}
-							// customTextRenderer={textRenderer}
-						/> */}
+							itemSize={820}
+							width={629}
+							onItemsRendered={({ visibleStopIndex }) => {
+								setDisplayPageNum(
+									(visibleStopIndex + 1).toString()
+								);
+							}}
+						>
+							{({ index, style }) => (
+								<Box sx={{ ...style }}>
+									<Page
+										key={`page_${index + 1}`}
+										pageNumber={index + 1}
+										renderAnnotationLayer={false}
+									/>
+								</Box>
+							)}
+						</List>
 					</Document>
-				</Box>
+				</Box> */}
 			</Box>
 			<Divider sx={{ background: "#E0E0E0", width: "1px" }} />
 			<Box
