@@ -8,7 +8,7 @@ import styles from "./chat.module.css";
 class PageRenderer extends PureComponent<ListChildComponentProps> {
 	render() {
 		const { index, style, data } = this.props;
-		const { pdfHeight } = data;
+		const { pdfHeight, textRenderer } = data;
 
 		return (
 			<Box sx={{ ...style }}>
@@ -18,6 +18,7 @@ class PageRenderer extends PureComponent<ListChildComponentProps> {
 					key={`page_${index + 1}`}
 					pageNumber={index + 1}
 					renderAnnotationLayer={false}
+					customTextRenderer={textRenderer}
 				/>
 			</Box>
 		);

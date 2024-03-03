@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, createRef } from "react";
+import React, { useEffect, useState, useCallback, createRef } from "react";
 import { Box, Typography, TextField } from "@mui/material";
 import { Document, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -11,7 +11,7 @@ import { globalStyles } from "styles";
 import style from "./chat.module.css";
 
 import PageRenderer from "./PageRenderer";
-import { PDF } from "interfaces";
+import { PDF, Chunk } from "interfaces";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -22,12 +22,49 @@ interface MyComponentProps {
 const bodyHeightPercentage =
 	1 - parseInt(globalStyles.headerHeight.slice(0, -2)) / 100;
 
+function highlightPattern(text: string, patterns: string[]) {
+	for (var i = 0; i < patterns.length; i++) {
+		text = text.replace(patterns[i], (value) => `<mark>${value}</mark>`);
+	}
+	return text;
+}
+
 const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
 	const [currentPage, setCurrentPage] = useState<string>("1");
 	const [pdfHeight, setPdfHeight] = useState<number>(
 		window.innerHeight * bodyHeightPercentage
 	);
+	const [chunks, setChunks] = useState<Chunk[]>([]);
+
 	const listRef = createRef<FixedSizeList>();
+
+	useEffect(() => {
+		const fetchData = async () => {
+			// try {
+			// 	const response = await fetch("INSERT API ENDPOINT HERE");
+			// 	if (!response.ok) {
+			// 		throw new Error("Failed to fetch PDFs");
+			// 	}
+			// 	const data = await response.json();
+			// 	setPDFs(data);
+			// } catch (error) {
+			// 	console.error("Error fetching PDFs:", error);
+			// }
+			setChunks([
+				{
+					id: 0,
+					text: "Wind extinguishes a candle and energizes fire",
+					pageNum: 16,
+				},
+				{
+					id: 1,
+					text: "I want to live happily in a world I don’t understand.",
+					pageNum: 20,
+				},
+			]);
+		};
+		fetchData();
+	}, []);
 
 	useEffect(() => {
 		function updateWidth() {
@@ -57,7 +94,15 @@ const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
 		}
 	};
 
-	console.log("pdfHeight:", pdfHeight);
+	const textRenderer = useCallback(
+		(textItem: { str: string }) => {
+			const patterns = chunks
+				.filter((o) => o.pageNum == parseInt(currentPage))
+				.map((o) => o.text);
+			return highlightPattern(textItem.str, patterns);
+		},
+		[currentPage]
+	);
 
 	return (
 		<Box
@@ -107,7 +152,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
 				<Document className={style.document} file={pdf?.path}>
 					<List
 						className={style.list}
-						itemData={{ pdfHeight }}
+						itemData={{ pdfHeight, textRenderer }}
 						ref={listRef}
 						height={pdfHeight}
 						itemCount={pdf?.numPages!}

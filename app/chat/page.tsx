@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 
 import { useRouter } from "next/navigation";
@@ -10,37 +10,22 @@ import PDFViewer from "./PDFViewer";
 import { pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import { globalStyles } from "styles";
-import { PDF, Message, Chunk } from "interfaces";
+import { PDF, Message } from "interfaces";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
-function highlightPattern(text: string, patterns: string[]) {
-	for (var i = 0; i < patterns.length; i++) {
-		text = text.replace(patterns[i], (value) => `<mark>${value}</mark>`);
-	}
-	return text;
-}
-
 const Chat = () => {
 	const router = useRouter();
+	router.prefetch("/results-page");
+
 	const [pdfs, setPDFs] = useState<PDF[] | null>(null);
 	const [selectedPDFID, setSelectedPDFID] = useState<number | null>(null);
 
 	const [query, setQuery] = useState<string>("");
 	const [messages, setMessages] = useState<Message[]>([]);
 
-	// chunk highlighting states
-	const [pageNumber, setPageNumber] = useState<number>(1);
-	const [chunks, setChunks] = useState<Chunk[]>([
-		{
-			id: 1,
-			text: "Wind extinguishes a candle and energizes fire.",
-			pageNum: 16,
-		},
-	]);
-
 	useEffect(() => {
-		const fetchPdfs = async () => {
+		const fetchData = async () => {
 			// try {
 			// 	const response = await fetch("INSERT API ENDPOINT HERE");
 			// 	if (!response.ok) {
@@ -66,7 +51,7 @@ const Chat = () => {
 				},
 			]);
 		};
-		fetchPdfs();
+		fetchData();
 	}, []);
 
 	useEffect(() => {
@@ -74,17 +59,6 @@ const Chat = () => {
 			setSelectedPDFID(pdfs[0].id);
 		}
 	}, [pdfs]);
-
-	// chunk highlighting function
-	// const textRenderer = useCallback(
-	// 	(textItem) => {
-	// 		const patterns = chunks
-	// 			.filter((o) => o.pageNum == pageNumber)
-	// 			.map((o) => o.text);
-	// 		return highlightPattern(textItem.str, patterns);
-	// 	},
-	// 	[pageNumber]
-	// );
 
 	const onSendQuery = () => {
 		const id: number =
