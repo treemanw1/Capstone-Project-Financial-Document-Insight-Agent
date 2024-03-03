@@ -3,6 +3,7 @@
 import React, {
 	useState,
 	useEffect,
+	useRef,
 	createRef,
 	PureComponent,
 	Fragment,
@@ -12,41 +13,40 @@ import "react-pdf/dist/Page/TextLayer.css";
 import { FixedSizeList as List, FixedSizeList } from "react-window";
 
 import { Box, Typography, TextField } from "@mui/material";
+import { globalStyles } from "styles";
 import style from "./chat.module.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
-const styles = {
-	headerHeight: "8vh",
-};
-
-interface MyComponentProps {
-	pdfs: Array<{
-		id: number;
-		name: string;
-		numPages: number;
-		path: string;
-		currentPage: number;
-	}>;
-	selectedPDFID: number;
-	headerHeight: string;
+interface PDF {
+	id: number;
+	name: string;
+	numPages: number;
+	path: string;
 }
 
-const PDFViewer: React.FC<MyComponentProps> = ({
-	pdfs,
-	selectedPDFID,
-	headerHeight,
-}) => {
-	const [displayPageNum, setDisplayPageNum] = useState<string>("1");
+interface MyComponentProps {
+	pdf: PDF | null;
+}
+
+const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
+	const [currentPage, setCurrentPage] = useState<string>("1");
 
 	const listRef = createRef<FixedSizeList>();
 
-	// change to scroll only when we change in textfield
-	// useEffect(() => {
-	// 	if (parseInt(displayPageNum) > 1) {
-	// 		listRef.current?.scrollToItem(parseInt(displayPageNum) - 1);
-	// 	}
-	// }, [displayPageNum]);
+	const handleInputPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const pageNumber: string = event.target.value;
+		if (
+			/^(?:[1-9]\d*)?$/.test(pageNumber) &&
+			(parseInt(pageNumber) < pdf?.numPages! + 1 || pageNumber == "")
+		) {
+			setCurrentPage(pageNumber);
+			listRef.current?.scrollToItem(
+				parseInt(pageNumber == "" ? "0" : pageNumber) - 1,
+				"start"
+			);
+		}
+	};
 
 	return (
 		<Box
@@ -63,13 +63,11 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 				sx={{
 					display: "flex",
 					alignItems: "center",
-					height: styles.headerHeight,
+					height: globalStyles.headerHeight,
 					borderBottom: 1,
 				}}
 			>
-				<Typography sx={{ m: 2 }}>
-					{pdfs.find((o) => o.id === selectedPDFID)?.name}
-				</Typography>
+				<Typography sx={{ m: 2 }}>{pdf?.name}</Typography>
 
 				<TextField
 					sx={{
@@ -80,34 +78,10 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 						border: 1,
 						"& fieldset": { border: "none" },
 					}}
-					value={displayPageNum}
-					onChange={(event) => {
-						const pageNumber: string = event.target.value;
-						const maxPages: number =
-							pdfs.find((o) => o.id === selectedPDFID)
-								?.numPages ?? 1;
-						if (
-							/^(?:[1-9]\d*)?$/.test(pageNumber) &&
-							(parseInt(pageNumber) < maxPages + 1 ||
-								pageNumber == "")
-						) {
-							console.log(pageNumber);
-							const currPDFID: number = pdfs.find(
-								(o) => o.id === selectedPDFID
-							)?.id!;
-							setDisplayPageNum(pageNumber);
-							listRef.current?.scrollToItem(
-								parseInt(pageNumber == "" ? "0" : pageNumber) -
-									1,
-								"start"
-							);
-							// setCurrentPage(currPDFID, parseInt(pageNumber));
-						}
-					}}
+					value={currentPage.toString()}
+					onChange={handleInputPage}
 				/>
-				<Typography sx={{ m: 2 }}>
-					/{pdfs.find((o) => o.id === selectedPDFID)?.numPages}
-				</Typography>
+				<Typography sx={{ m: 2 }}>/{pdf?.numPages}</Typography>
 			</Box>
 			<Box
 				sx={{
@@ -116,26 +90,19 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 					justifyContent: "center",
 					alignItems: "center",
 					flexDirection: "column",
-					height: `calc(100vh - ${headerHeight})`,
+					height: `calc(100vh - ${globalStyles.headerHeight})`,
 					overflow: "clip",
 				}}
 			>
-				<Document
-					className={style.document}
-					file={pdfs.find((o) => o.id === selectedPDFID)?.path}
-				>
+				<Document className={style.document} file={pdf?.path}>
 					<List
 						ref={listRef}
 						height={640}
-						itemCount={
-							pdfs.find((o) => o.id === selectedPDFID)?.numPages!
-						}
+						itemCount={pdf?.numPages!}
 						itemSize={820}
 						width={629}
 						onItemsRendered={({ visibleStopIndex }) => {
-							setDisplayPageNum(
-								(visibleStopIndex + 1).toString()
-							);
+							setCurrentPage((visibleStopIndex + 1).toString());
 						}}
 					>
 						{({ index, style }) => (

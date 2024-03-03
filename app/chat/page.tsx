@@ -10,9 +10,8 @@ import PDFViewer from "./PDFViewer";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import { FixedSizeList as List, FixedSizeList } from "react-window";
-
-import PageNumberDisplay from "./PageNumberDisplay";
 import style from "./chat.module.css";
+import { globalStyles } from "styles";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -23,63 +22,76 @@ function highlightPattern(text: string, patterns: string[]) {
 	return text;
 }
 
-const styles = {
-	headerHeight: "8vh",
-};
+interface PDF {
+	id: number;
+	name: string;
+	numPages: number;
+	path: string;
+}
+
+interface Message {
+	id: string;
+	content: string;
+}
+
+interface Chunk {
+	id: number;
+	text: string;
+	pageNum: number;
+}
 
 const Chat = () => {
-	const [pdfs, setPDFs] = useState<
-		Array<{
-			id: number;
-			name: string;
-			numPages: number;
-			path: string;
-			currentPage: number;
-		}>
-	>([
-		{
-			id: 0,
-			name: "Antifragile - Nassim Taleb",
-			numPages: 581,
-			path: "antifragile.pdf",
-			currentPage: 1,
-		},
-		{
-			id: 1,
-			name: "Shogun - James Clavell",
-			numPages: 1081,
-			path: "shogun.pdf",
-			currentPage: 1,
-		},
-	]);
-
 	const router = useRouter();
+	const [pdfs, setPDFs] = useState<PDF[] | null>(null);
+	const [selectedPDFID, setSelectedPDFID] = useState<number | null>(null);
 
-	const [selectedPDFID, setSelectedPDFID] = useState<number>(0);
+	const [query, setQuery] = useState<string>("");
+	const [messages, setMessages] = useState<Message[]>([]);
 
-	const [pageNumber, setPageNumber] = useState<number>(1); // for chunk highlighting
+	useEffect(() => {
+		const fetchPdfs = async () => {
+			// try {
+			// 	const response = await fetch("INSERT API ENDPOINT HERE");
+			// 	if (!response.ok) {
+			// 		throw new Error("Failed to fetch PDFs");
+			// 	}
+			// 	const data = await response.json();
+			// 	setPDFs(data);
+			// } catch (error) {
+			// 	console.error("Error fetching PDFs:", error);
+			// }
+			setPDFs([
+				{
+					id: 0,
+					name: "Antifragile - Nassim Taleb",
+					numPages: 581,
+					path: "antifragile.pdf",
+				},
+				{
+					id: 1,
+					name: "Shogun - James Clavell",
+					numPages: 1081,
+					path: "shogun.pdf",
+				},
+			]);
+		};
+		fetchPdfs();
+	}, []);
 
-	const [chunks, setChunks] = useState<
-		Array<{
-			id: number;
-			text: string;
-			pageNum: number;
-		}>
-	>([
+	useEffect(() => {
+		if (pdfs && pdfs.length > 0) {
+			setSelectedPDFID(pdfs[0].id);
+		}
+	}, [pdfs]);
+
+	const [pageNumber, setPageNumber] = useState<number>(1);
+	const [chunks, setChunks] = useState<Chunk[]>([
 		{
 			id: 1,
 			text: "Wind extinguishes a candle and energizes fire.",
 			pageNum: 16,
 		},
 	]);
-
-	const [query, setQuery] = useState<string>("");
-	const [messages, setMessages] = useState<
-		Array<{
-			id: string;
-			content: string;
-		}>
-	>([]);
 
 	// chunk highlighting
 	// const textRenderer = useCallback(
@@ -91,14 +103,6 @@ const Chat = () => {
 	// 	},
 	// 	[pageNumber]
 	// );
-
-	const setCurrentPage = (id: number, pageNum: number) => {
-		setPDFs((prevPdfs) => {
-			const newPdfs = [...prevPdfs];
-			newPdfs[id].currentPage = pageNum;
-			return newPdfs;
-		});
-	};
 
 	const onSendQuery = () => {
 		const id: number =
@@ -131,7 +135,9 @@ const Chat = () => {
 					borderRight: 1,
 				}}
 			>
-				<Box sx={{ height: styles.headerHeight, borderBottom: 1 }}>
+				<Box
+					sx={{ height: globalStyles.headerHeight, borderBottom: 1 }}
+				>
 					<Button
 						disableFocusRipple
 						disableTouchRipple
@@ -247,52 +253,8 @@ const Chat = () => {
 				</Box>
 			</Box>
 			<PDFViewer
-				pdfs={pdfs}
-				selectedPDFID={selectedPDFID}
-				headerHeight={styles.headerHeight}
+				pdf={pdfs?.find((pdf) => pdf.id == selectedPDFID) || null}
 			/>
-			{/* <Box
-					sx={{
-						background: "#F1F1F1",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						flexDirection: "column",
-						height: `calc(100vh - ${styles.headerHeight})`,
-						overflow: "clip",
-					}}
-				>
-					<Document
-						className={style.document}
-						file={pdfs.find((o) => o.id === selectedPDFID)?.path}
-					>
-						<List
-							ref={listRef}
-							height={640}
-							itemCount={
-								pdfs.find((o) => o.id === selectedPDFID)
-									?.numPages!
-							}
-							itemSize={820}
-							width={629}
-							onItemsRendered={({ visibleStopIndex }) => {
-								setDisplayPageNum(
-									(visibleStopIndex + 1).toString()
-								);
-							}}
-						>
-							{({ index, style }) => (
-								<Box sx={{ ...style }}>
-									<Page
-										key={`page_${index + 1}`}
-										pageNumber={index + 1}
-										renderAnnotationLayer={false}
-									/>
-								</Box>
-							)}
-						</List>
-					</Document>
-				</Box> */}
 			<Divider sx={{ background: "#E0E0E0", width: "1px" }} />
 			<Box
 				sx={{
@@ -302,27 +264,33 @@ const Chat = () => {
 					width: "7.5%",
 				}}
 			>
-				<Box sx={{ height: styles.headerHeight, borderBottom: 1 }} />
-				{pdfs.map((pdf) => {
-					return (
-						<Button
-							key={pdf.id}
-							onClick={() => {
-								setSelectedPDFID(pdf.id);
-							}}
-							sx={{
-								color: "black",
-								textTransform: "none",
-								fontSize: "13px",
-								textAlign: "left",
-								borderBottom: 1,
-								borderRadius: 0,
-							}}
-						>
-							{pdf.name}
-						</Button>
-					);
-				})}
+				<Box
+					sx={{ height: globalStyles.headerHeight, borderBottom: 1 }}
+				/>
+				{pdfs == null ? (
+					<Typography>Loading...</Typography>
+				) : (
+					pdfs.map((pdf) => {
+						return (
+							<Button
+								key={pdf.id}
+								onClick={() => {
+									setSelectedPDFID(pdf.id);
+								}}
+								sx={{
+									color: "black",
+									textTransform: "none",
+									fontSize: "13px",
+									textAlign: "left",
+									borderBottom: 1,
+									borderRadius: 0,
+								}}
+							>
+								{pdf.name}
+							</Button>
+						);
+					})
+				)}
 			</Box>
 		</Box>
 	);

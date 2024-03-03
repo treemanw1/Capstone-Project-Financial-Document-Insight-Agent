@@ -10,7 +10,7 @@ import RoundedDropdown from "@components/RoundedDropdown";
 import RoundButton from "@components/RoundButton";
 import SearchField from "@components/SearchField";
 import DateDropdown from "@components/DateDropdown";
-import { globalStyles } from "@components/GlobalStyles";
+import { globalStyles } from "styles";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -48,11 +48,10 @@ const AdvancedSearch = () => {
 						flexDirection: "column",
 						mx: globalStyles.mx,
 						backgroundColor: "",
-						height: `${
-							100 -
-							globalStyles.footerHeight -
-							globalStyles.headerHeight
-						}vh`,
+						height: `calc(
+							100vh -
+							${globalStyles.footerHeight} -
+							${globalStyles.headerHeight})`,
 						justifyContent: "space-between",
 					}}
 				>

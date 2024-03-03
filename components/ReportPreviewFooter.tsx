@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Divider, Grid, Icon, Typography } from "@mui/material";
-import { globalStyles } from "./GlobalStyles";
+import { globalStyles } from "../styles";
 
 const ReportPreviewFooter = () => {
 	return (

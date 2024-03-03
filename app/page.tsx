@@ -8,7 +8,7 @@ import RoundButton from "@components/RoundButton";
 import ReportButton from "@components/ReportButton";
 import { Box, Typography } from "@mui/material";
 import SearchField from "@components/SearchField";
-import { globalStyles } from "@components/GlobalStyles";
+import { globalStyles } from "styles";
 import { useRouter } from "next/navigation";
 
 const styles = {

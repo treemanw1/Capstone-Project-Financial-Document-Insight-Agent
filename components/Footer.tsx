@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Divider, Grid, Icon, Typography } from "@mui/material";
-import { globalStyles } from "@components/GlobalStyles";
+import { globalStyles } from "styles";
 
 const Footer = () => {
 	return (
@@ -11,7 +11,7 @@ const Footer = () => {
 					mx: globalStyles.mx,
 					display: "flex",
 					alignItems: "center",
-					height: `${globalStyles.footerHeight}vh`,
+					height: globalStyles.footerHeight,
 					justifyContent: "space-between",
 					backgroundColor: "",
 				}}

@@ -4,7 +4,7 @@ import React from "react";
 import { useState } from "react";
 
 import { Box, Typography, Button } from "@mui/material";
-import { globalStyles } from "@components/GlobalStyles";
+import { globalStyles } from "styles";
 import { DataGrid } from "@mui/x-data-grid";
 
 import Header from "@components/Header";

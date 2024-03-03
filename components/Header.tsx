@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Divider, Icon, Link, Typography } from "@mui/material";
-import { globalStyles } from "./GlobalStyles";
+import { globalStyles } from "../styles";
 import NextLink from "next/link";
 
 const Header = () => {
@@ -12,7 +12,7 @@ const Header = () => {
 						display: "flex",
 						alignItems: "center",
 						// background: "lightblue",
-						height: `${globalStyles.headerHeight}vh`,
+						height: globalStyles.headerHeight,
 					}}
 				>
 					<Box
