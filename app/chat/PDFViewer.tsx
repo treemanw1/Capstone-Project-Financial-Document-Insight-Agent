@@ -1,51 +1,53 @@
 "use client";
 
-import React, {
-	useState,
-	useEffect,
-	useRef,
-	createRef,
-	PureComponent,
-	Fragment,
-} from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+import React, { useEffect, useState, createRef } from "react";
+import { Box, Typography, TextField } from "@mui/material";
+import { Document, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import { FixedSizeList as List, FixedSizeList } from "react-window";
+import { useDebouncedCallback } from "use-debounce";
 
-import { Box, Typography, TextField } from "@mui/material";
 import { globalStyles } from "styles";
 import style from "./chat.module.css";
 
-import { useDebouncedCallback } from "use-debounce";
 import PageRenderer from "./PageRenderer";
+import { PDF } from "interfaces";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-
-interface PDF {
-	id: number;
-	name: string;
-	numPages: number;
-	path: string;
-}
 
 interface MyComponentProps {
 	pdf: PDF | null;
 }
 
+const bodyHeightPercentage =
+	1 - parseInt(globalStyles.headerHeight.slice(0, -2)) / 100;
+
 const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
 	const [currentPage, setCurrentPage] = useState<string>("1");
-
+	const [pdfHeight, setPdfHeight] = useState<number>(
+		window.innerHeight * bodyHeightPercentage
+	);
 	const listRef = createRef<FixedSizeList>();
+
+	useEffect(() => {
+		function updateWidth() {
+			setPdfHeight(window.innerHeight * bodyHeightPercentage);
+		}
+		window.addEventListener("resize", updateWidth);
+		return () => window.removeEventListener("resize", updateWidth);
+	}, []);
 
 	const debouncedScroll = useDebouncedCallback((visibleStopIndex) => {
 		setCurrentPage((visibleStopIndex + 1).toString());
-	}, 10);
+	}, 20);
 
 	const handleInputPage = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const pageNumber: string = event.target.value;
-		if (
+		if (pageNumber == "") {
+			setCurrentPage(pageNumber);
+		} else if (
 			/^(?:[1-9]\d*)?$/.test(pageNumber) &&
-			(parseInt(pageNumber) < pdf?.numPages! + 1 || pageNumber == "")
+			parseInt(pageNumber) < pdf?.numPages! + 1
 		) {
 			setCurrentPage(pageNumber);
 			listRef.current?.scrollToItem(
@@ -54,6 +56,8 @@ const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
 			);
 		}
 	};
+
+	console.log("pdfHeight:", pdfHeight);
 
 	return (
 		<Box
@@ -75,7 +79,6 @@ const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
 				}}
 			>
 				<Typography sx={{ m: 2 }}>{pdf?.name}</Typography>
-
 				<TextField
 					sx={{
 						display: "flex",
@@ -103,11 +106,13 @@ const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
 			>
 				<Document className={style.document} file={pdf?.path}>
 					<List
+						className={style.list}
+						itemData={{ pdfHeight }}
 						ref={listRef}
-						height={640}
+						height={pdfHeight}
 						itemCount={pdf?.numPages!}
-						itemSize={820}
-						width={629}
+						itemSize={pdfHeight * 1.05}
+						width={pdfHeight * 0.801}
 						onItemsRendered={({ visibleStopIndex }) =>
 							debouncedScroll(visibleStopIndex)
 						}

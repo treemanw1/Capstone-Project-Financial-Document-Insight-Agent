@@ -1,17 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, createRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 
 import { useRouter } from "next/navigation";
 
 import PDFViewer from "./PDFViewer";
 
-import { Document, Page, pdfjs } from "react-pdf";
+import { pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
-import { FixedSizeList as List, FixedSizeList } from "react-window";
-import style from "./chat.module.css";
 import { globalStyles } from "styles";
+import { PDF, Message, Chunk } from "interfaces";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -22,24 +21,6 @@ function highlightPattern(text: string, patterns: string[]) {
 	return text;
 }
 
-interface PDF {
-	id: number;
-	name: string;
-	numPages: number;
-	path: string;
-}
-
-interface Message {
-	id: string;
-	content: string;
-}
-
-interface Chunk {
-	id: number;
-	text: string;
-	pageNum: number;
-}
-
 const Chat = () => {
 	const router = useRouter();
 	const [pdfs, setPDFs] = useState<PDF[] | null>(null);
@@ -47,6 +28,16 @@ const Chat = () => {
 
 	const [query, setQuery] = useState<string>("");
 	const [messages, setMessages] = useState<Message[]>([]);
+
+	// chunk highlighting states
+	const [pageNumber, setPageNumber] = useState<number>(1);
+	const [chunks, setChunks] = useState<Chunk[]>([
+		{
+			id: 1,
+			text: "Wind extinguishes a candle and energizes fire.",
+			pageNum: 16,
+		},
+	]);
 
 	useEffect(() => {
 		const fetchPdfs = async () => {
@@ -84,16 +75,7 @@ const Chat = () => {
 		}
 	}, [pdfs]);
 
-	const [pageNumber, setPageNumber] = useState<number>(1);
-	const [chunks, setChunks] = useState<Chunk[]>([
-		{
-			id: 1,
-			text: "Wind extinguishes a candle and energizes fire.",
-			pageNum: 16,
-		},
-	]);
-
-	// chunk highlighting
+	// chunk highlighting function
 	// const textRenderer = useCallback(
 	// 	(textItem) => {
 	// 		const patterns = chunks
