@@ -16,6 +16,9 @@ import { Box, Typography, TextField } from "@mui/material";
 import { globalStyles } from "styles";
 import style from "./chat.module.css";
 
+import { useDebouncedCallback } from "use-debounce";
+import PageRenderer from "./PageRenderer";
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface PDF {
@@ -33,6 +36,10 @@ const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
 	const [currentPage, setCurrentPage] = useState<string>("1");
 
 	const listRef = createRef<FixedSizeList>();
+
+	const debouncedScroll = useDebouncedCallback((visibleStopIndex) => {
+		setCurrentPage((visibleStopIndex + 1).toString());
+	}, 10);
 
 	const handleInputPage = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const pageNumber: string = event.target.value;
@@ -101,19 +108,11 @@ const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
 						itemCount={pdf?.numPages!}
 						itemSize={820}
 						width={629}
-						onItemsRendered={({ visibleStopIndex }) => {
-							setCurrentPage((visibleStopIndex + 1).toString());
-						}}
+						onItemsRendered={({ visibleStopIndex }) =>
+							debouncedScroll(visibleStopIndex)
+						}
 					>
-						{({ index, style }) => (
-							<Box sx={{ ...style }}>
-								<Page
-									key={`page_${index + 1}`}
-									pageNumber={index + 1}
-									renderAnnotationLayer={false}
-								/>
-							</Box>
-						)}
+						{PageRenderer}
 					</List>
 				</Document>
 			</Box>
