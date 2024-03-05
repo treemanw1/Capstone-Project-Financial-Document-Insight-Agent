@@ -17,6 +17,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 interface MyComponentProps {
 	pdf: PDF | null;
+	chunks: Chunk[];
 }
 
 const bodyHeightPercentage =
@@ -29,42 +30,15 @@ function highlightPattern(text: string, patterns: string[]) {
 	return text;
 }
 
-const PDFViewer: React.FC<MyComponentProps> = ({ pdf }) => {
+const PDFViewer: React.FC<MyComponentProps> = ({ pdf, chunks }) => {
 	const [currentPage, setCurrentPage] = useState<string>("1");
 	const [pdfHeight, setPdfHeight] = useState<number>(
-		window.innerHeight * bodyHeightPercentage
+		typeof window !== "undefined"
+			? window.innerHeight * bodyHeightPercentage
+			: 640
 	);
-	const [chunks, setChunks] = useState<Chunk[]>([]);
 
 	const listRef = createRef<FixedSizeList>();
-
-	useEffect(() => {
-		const fetchData = async () => {
-			// try {
-			// 	const response = await fetch("INSERT API ENDPOINT HERE");
-			// 	if (!response.ok) {
-			// 		throw new Error("Failed to fetch PDFs");
-			// 	}
-			// 	const data = await response.json();
-			// 	setPDFs(data);
-			// } catch (error) {
-			// 	console.error("Error fetching PDFs:", error);
-			// }
-			setChunks([
-				{
-					id: 0,
-					text: "Wind extinguishes a candle and energizes fire",
-					pageNum: 16,
-				},
-				{
-					id: 1,
-					text: "I want to live happily in a world I don’t understand.",
-					pageNum: 20,
-				},
-			]);
-		};
-		fetchData();
-	}, []);
 
 	useEffect(() => {
 		function updateWidth() {

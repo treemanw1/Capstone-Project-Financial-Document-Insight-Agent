@@ -5,9 +5,9 @@ export interface PDF {
 	path: string;
 }
 
-export interface Message {
-	id: string;
-	content: string;
+export interface Query {
+	id: number;
+	text: string;
 }
 
 export interface Chunk {

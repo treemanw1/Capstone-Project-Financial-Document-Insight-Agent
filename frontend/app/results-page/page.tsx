@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Box, Typography, Button } from "@mui/material";
 import { globalStyles } from "styles";
@@ -117,6 +116,10 @@ const rows = [
 
 export const ResultsPage = () => {
 	const router = useRouter();
+
+	useEffect(() => {
+		router.prefetch("/chat");
+	}, []);
 
 	const [selectedDocuments, setSelectedDocuments] = useState<Set<string>>(
 		new Set([])
