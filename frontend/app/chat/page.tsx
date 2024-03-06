@@ -11,6 +11,7 @@ import { pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import { globalStyles } from "styles";
 import { PDF, Query, Chunk } from "interfaces";
+import Message from "@components/Message";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -26,6 +27,7 @@ const Chat = () => {
 	const [chunks, setChunks] = useState<Chunk[]>([]);
 
 	useEffect(() => {
+		router.prefetch("/results-page");
 		const fetchData = () => {
 			// try {
 			// 	const response = await fetch("INSERT API ENDPOINT HERE");
@@ -88,34 +90,13 @@ const Chat = () => {
 						text: data.response.text,
 					})
 				);
-				setChunks(data.chunks);
+				setChunks(chunks.concat(data.chunks));
 			}
 		} catch (error) {
 			console.error("Error fetching PDFs:", error);
 		}
 		setCurrentQuery("");
 	};
-
-	// const sendQuery = async () => {
-	// 	try {
-	// 		const response = await fetch("http://localhost:8000/query", {
-	// 			method: "POST",
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 			},
-	// 			body: JSON.stringify({ id: 0, text: query }),
-	// 		});
-	// 		if (!response.ok) {
-	// 			throw new Error("Failed to fetch PDFs");
-	// 		} else {
-	// 			const data = await response.json();
-	// 			setMessages(messages.concat(data.text));
-	// 			setChunks(data.chunks);
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Error fetching PDFs:", error);
-	// 	}
-	// };
 
 	return (
 		<Box
@@ -177,28 +158,15 @@ const Chat = () => {
 				>
 					<Box sx={{ minHeight: 0 }}>
 						{messages.map((message) => {
-							if (message.id % 2 == 0) {
-								return (
-									<Typography
-										key={message.id}
-										sx={{
-											display: "flex",
-											justifyContent: "end",
-										}}
-									>
-										{message.text}
-									</Typography>
-								);
-							} else {
-								return (
-									<Typography
-										key={message.id}
-										sx={{ display: "flex" }}
-									>
-										{message.text}
-									</Typography>
-								);
-							}
+							return (
+								<Message
+									key={message.id}
+									message={message}
+									chunk={chunks.find(
+										(chunk) => chunk.id == message.id
+									)}
+								/>
+							);
 						})}
 					</Box>
 				</Box>
