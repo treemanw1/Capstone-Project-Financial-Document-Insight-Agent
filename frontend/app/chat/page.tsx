@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import "react-pdf/dist/Page/TextLayer.css";
 import { globalStyles } from "styles";
 import { PDF, Query, Chunk } from "interfaces";
 import Message from "@components/Message";
+import { FixedSizeList } from "react-window";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -25,6 +26,9 @@ const Chat = () => {
 	const [messages, setMessages] = useState<Query[]>([]);
 
 	const [chunks, setChunks] = useState<Chunk[]>([]);
+
+	const [currentPage, setCurrentPage] = useState<string>("1");
+	const listRef = useRef<FixedSizeList>(null);
 
 	useEffect(() => {
 		router.prefetch("/results-page");
@@ -165,6 +169,8 @@ const Chat = () => {
 									chunk={chunks.find(
 										(chunk) => chunk.id == message.id
 									)}
+									setCurrentPage={setCurrentPage}
+									listRef={listRef}
 								/>
 							);
 						})}
@@ -227,6 +233,9 @@ const Chat = () => {
 			<PDFViewer
 				pdf={pdfs?.find((pdf) => pdf.id == selectedPDFID) || null}
 				chunks={chunks}
+				currentPage={currentPage}
+				setCurrentPage={setCurrentPage}
+				listRef={listRef}
 			/>
 			<Divider sx={{ background: "#E0E0E0", width: "1px" }} />
 			<Box

@@ -18,6 +18,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 interface MyComponentProps {
 	pdf: PDF | null;
 	chunks: Chunk[];
+	currentPage: string;
+	setCurrentPage: (page: string) => void;
+	listRef: React.RefObject<FixedSizeList>;
 }
 
 const bodyHeightPercentage =
@@ -30,15 +33,19 @@ function highlightPattern(text: string, patterns: string[]) {
 	return text;
 }
 
-const PDFViewer: React.FC<MyComponentProps> = ({ pdf, chunks }) => {
-	const [currentPage, setCurrentPage] = useState<string>("1");
+const PDFViewer: React.FC<MyComponentProps> = ({
+	pdf,
+	chunks,
+	currentPage,
+	setCurrentPage,
+	listRef,
+}) => {
+	// const [currentPage, setCurrentPage] = useState<string>("1");
 	const [pdfHeight, setPdfHeight] = useState<number>(
 		typeof window !== "undefined"
 			? window.innerHeight * bodyHeightPercentage
 			: 640
 	);
-
-	const listRef = createRef<FixedSizeList>();
 
 	useEffect(() => {
 		function updateWidth() {
