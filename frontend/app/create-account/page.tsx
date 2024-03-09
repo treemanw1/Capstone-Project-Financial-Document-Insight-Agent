@@ -1,20 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography, Link } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 
 import { useRouter } from "next/navigation";
-import NextLink from "next/link";
 
-const Login = () => {
+const CreateAccount = () => {
 	const router = useRouter();
 
 	const [username, setUsername] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
+	const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-	const onLogin = async () => {
+	const onCreateAccount = async () => {
+		if (password !== confirmPassword) {
+			console.error("Passwords do not match");
+			return;
+		}
 		try {
-			const response = await fetch("http://localhost:8000/login", {
+			const response = await fetch("http://localhost:8000/create-user", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -25,18 +29,18 @@ const Login = () => {
 				}),
 			});
 			if (!response.ok) {
-				throw new Error("Failed to login.");
+				throw new Error("Failed to create account");
 			} else {
 				const data = await response.json();
 				setUsername("");
 				setPassword("");
-				router.push("/home");
+				setConfirmPassword("");
+				router.push("/login");
 			}
 		} catch (error) {
-			console.error("Error logging in:", error);
+			console.error("Error creating account:", error);
 		}
 	};
-
 	return (
 		<Box sx={{ p: 2 }}>
 			<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -66,25 +70,28 @@ const Login = () => {
 				/>
 			</Box>
 			<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-				<Link
-					component={NextLink}
-					href="/create-account"
-					underline="hover"
-					color="black"
-					variant="body1"
-					sx={{ width: "10%" }}
-				>
-					Create Account
-				</Link>
-				<Button
-					onClick={() => onLogin()}
-					sx={{ color: "white", background: "#3C3C3C", mt: 2 }}
-				>
-					Login
-				</Button>
+				<Typography sx={{ width: "10%" }}>
+					Confirm Password:{" "}
+				</Typography>
+				<TextField
+					size="small"
+					id="username"
+					label="Password"
+					variant="outlined"
+					value={confirmPassword}
+					onChange={(event) => {
+						setConfirmPassword(event.target.value);
+					}}
+				/>
 			</Box>
+			<Button
+				onClick={() => onCreateAccount()}
+				sx={{ color: "white", background: "#3C3C3C", mt: 2 }}
+			>
+				Create Account
+			</Button>
 		</Box>
 	);
 };
 
-export default Login;
+export default CreateAccount;
