@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography, Link } from "@mui/material";
+import { Box, Button, Input, TextField, Typography, Link } from "@mui/material";
 
 import { useRouter } from "next/navigation";
 import NextLink from "next/link";
@@ -15,58 +15,121 @@ const Login = () => {
 	const [password, setPassword] = useState<string>("");
 
 	const onLogin = async () => {
-		post({ username: username, password: password }, "/login", (data) => {
-			setUsername("");
-			setPassword("");
-			router.push("/home");
-		});
+		const formData = new FormData();
+		formData.append("username", username);
+		formData.append("password", password);
+		try {
+			const response = await fetch(`http://localhost:8000/token`, {
+				method: "POST",
+				body: formData,
+			});
+			if (!response.ok) {
+				throw new Error("Failed to fetch response.");
+			} else {
+				const data = await response.json();
+				console.log(data);
+			}
+		} catch (error) {
+			console.error("Error:", error);
+		}
 	};
 
 	return (
-		<Box sx={{ p: 2 }}>
-			<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-				<Typography sx={{ width: "10%" }}>Username: </Typography>
-				<TextField
-					size="small"
-					id="username"
-					label="Username"
-					variant="outlined"
-					value={username}
-					onChange={(event) => {
-						setUsername(event.target.value);
+		<Box
+			sx={{
+				display: "flex",
+				flexDirection: "column",
+				// background: "lightgray",
+				justifyContent: "center",
+				alignItems: "center",
+				height: "100vh",
+			}}
+		>
+			<Typography variant="h3" fontWeight="bold">
+				Login
+			</Typography>
+			<Box
+				sx={{
+					p: 2,
+					background: "white",
+					display: "flex",
+					flexDirection: "column",
+					// justifyContent: "center",
+				}}
+			>
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						gap: 1,
 					}}
-				/>
-			</Box>
-			<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-				<Typography sx={{ width: "10%" }}>Password: </Typography>
-				<TextField
-					size="small"
-					id="username"
-					label="Password"
-					variant="outlined"
-					value={password}
-					onChange={(event) => {
-						setPassword(event.target.value);
+				>
+					<Typography sx={{ width: "50%" }}>Username: </Typography>
+					<TextField
+						InputLabelProps={{ shrink: false }}
+						size="small"
+						id="username"
+						label={username == "" ? "Username" : ""}
+						variant="outlined"
+						value={username}
+						onChange={(event) => {
+							setUsername(event.target.value);
+						}}
+					/>
+				</Box>
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						gap: 1,
 					}}
-				/>
-			</Box>
-			<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-				<Link
-					component={NextLink}
-					href="/create-account"
-					underline="hover"
-					color="black"
-					variant="body1"
-					sx={{ width: "10%" }}
 				>
-					Create Account
-				</Link>
-				<Button
-					onClick={() => onLogin()}
-					sx={{ color: "white", background: "#3C3C3C", mt: 2 }}
+					<Typography sx={{ width: "50%" }}>Password: </Typography>
+					<TextField
+						InputLabelProps={{ shrink: false }}
+						size="small"
+						id="username"
+						label={password == "" ? "Password" : ""}
+						variant="outlined"
+						value={password}
+						onChange={(event) => {
+							setPassword(event.target.value);
+						}}
+					/>
+				</Box>
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						gap: 1,
+						// background: "pink",
+						mt: 1,
+					}}
 				>
-					Login
-				</Button>
+					<Link
+						component={NextLink}
+						href="/create-account"
+						underline="hover"
+						color="black"
+						variant="body1"
+						width="50%"
+					>
+						Create Account
+					</Link>
+					<Button
+						onClick={() => onLogin()}
+						sx={{
+							color: "white",
+							background: "#3C3C3C",
+							textTransform: "none",
+						}}
+					>
+						Login
+					</Button>
+				</Box>
 			</Box>
 		</Box>
 	);

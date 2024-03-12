@@ -114,6 +114,7 @@ async def create_user(credentials: schemas.UserCredentials, db: Session = Depend
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)
 ) -> schemas.Token:
+    print("form_data:", form_data)
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
