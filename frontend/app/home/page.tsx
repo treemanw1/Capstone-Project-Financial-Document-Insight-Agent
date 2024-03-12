@@ -17,6 +17,10 @@ const styles = {
 	fontSize: "1.75vh",
 };
 
+const onSearch = () => {
+    
+}
+
 const Home = () => {
 	const router = useRouter();
 	useEffect(() => {
@@ -38,17 +42,17 @@ const Home = () => {
 				sx={{
 					mx: globalStyles.mx,
 					// mx: "6%",
-					backgroundColor: "",
+					// backgroundColor: "pink",
 					display: "flex",
 					flexGrow: 1,
 					flexDirection: "column",
-					justifyContent: "space-between",
+					justifyContent: "center",
 				}}
 			>
-				<Box sx={{ backgroundColor: "" }}>
+				<Box sx={{ backgroundColor: "", mb: 20 }}>
 					<Box
 						sx={{
-							width: "750px",
+							width: "100%",
 							mt: "3.5vh",
 							backgroundColor: "",
 						}}
@@ -56,7 +60,7 @@ const Home = () => {
 						<Typography
 							lineHeight={1.1}
 							sx={{
-								fontSize: "55px",
+								fontSize: "60px",
 								backgroundColor: "",
 							}}
 						>
@@ -99,11 +103,11 @@ const Home = () => {
 							height="6vh"
 							width="15%"
 							fontSize={styles.fontSize}
-							onClick={() => router.push("/results-page")}
+							onClick={() => onSearch()}
 						/>
 					</Box>
 				</Box>
-				<Box sx={{ backgroundColor: "", mb: "30px" }}>
+				{/* <Box sx={{ backgroundColor: "", mb: "30px" }}>
 					<Box sx={{ backgroundColor: "" }}>
 						<Typography
 							sx={{ fontSize: "16px", mt: "15px", mb: "7.5px" }}
@@ -160,7 +164,7 @@ const Home = () => {
 							/>
 						</Box>
 					</Box>
-				</Box>
+				</Box> */}
 			</Box>
 			<Footer />
 		</Box>

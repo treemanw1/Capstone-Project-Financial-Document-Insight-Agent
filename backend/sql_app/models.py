@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, BLOB
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -9,49 +9,54 @@ class User(Base):
     username = Column(String(30), nullable=False, unique=True)
     password = Column(String(97), nullable=False)
 
-    # sessions = relationship("Session", back_populates="user", cascade="all, delete-orphan")
+    sessions = relationship("Session", back_populates="user", cascade="all, delete-orphan")
     def __repr__(self):
         return f"User(id={self.id!r}, username={self.name!r})"
 
-class Session(Base):
-    __tablename__ = "SESSIONS"
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
-    created_at = Column(DateTime, nullable=False)
-
-    # user = relationship("User", back_populates="sessions")
-    # pdfs = relationship("SessionPDFs", back_populates="session", cascade="all, delete-orphan")
-    def __repr__(self):
-        return f"Session(id={self.id!r}, created_at={self.created_at!r})"
-
 class PDF(Base):
-    __tablename__ = "PDF"
+    __tablename__ = "EXTRACTED_PDF"
     id = Column(Integer, primary_key=True)
+    pdf_document_name = Column(String(122), nullable=False)
+    document_type = Column(String(30), nullable=False)
+    company_name = Column(String(100), nullable=False)
+    path = Column(String(200), nullable=False)
 
-    # session = relationship("SessionPDFs", back_populates="pdfs")
+    sessionPDF = relationship("SessionPDFs", back_populates="pdfs")
     def __repr__(self):
-        return f"PDF(id={self.id!r}, title={self.title!r})"
+        return f"PDF(id={self.id!r}, title={self.pdf_document_name!r})"
 
 class SessionPDFs(Base):
-    __tablename__ = "SESSION_PDFS"
+    __tablename__ = "session_pdfs"
     id = Column(Integer, primary_key=True)
-    session_id = Column(Integer, ForeignKey("session.id"), nullable=False)
-    pdf_id = Column(Integer, ForeignKey("pdf.id"), nullable=False, unique=True)
+    session_id = Column(Integer, ForeignKey("sessions.id"), nullable=False)
+    pdf_id = Column(Integer, ForeignKey("EXTRACTED_PDF.id"), nullable=False, unique=True)
 
-    # session = relationship("Session", back_populates="pdfs")
-    # pdfs = relationship("PDF", back_populates="session", cascade="all, delete-orphan")
+    pdfs = relationship("PDF", back_populates="sessionPDF")
+    session = relationship("Session", back_populates="sessionPDF")
     def __repr__(self):
         return f"SessionPDFs(id={self.id!r}, session_id={self.session_id!r}, pdf_id={self.pdf_id!r})"
 
-class ChatHistory(Base): 
-    __tablename__ = "CHAT_HISTORY"
+class Session(Base):
+    __tablename__ = "sessions"
     id = Column(Integer, primary_key=True)
-    session_id = Column(Integer, ForeignKey("session.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, nullable=False)
-    username = Column(String(500), nullable=False)
-    type = Column(String(4), nullable=False)
 
-    # session = relationship("Session", back_populates="pdfs")
+    user = relationship("User", back_populates="sessions")
+    sessionPDF = relationship("SessionPDFs", back_populates="session", cascade="all, delete-orphan")
+    chat_history = relationship("ChatHistory", back_populates="session")
+    def __repr__(self):
+        return f"Session(id={self.id!r}, created_at={self.created_at!r})"
+
+class ChatHistory(Base): 
+    __tablename__ = "chat_history"
+    id = Column(Integer, primary_key=True)
+    session_id = Column(Integer, ForeignKey("sessions.id"), nullable=False)
+    created_at = Column(DateTime, nullable=False)
+    role = Column(String(4), nullable=False) # user | bot
+    message = Column(String(500), nullable=False)
+    # chunk_id = Column(Integer, ForeignKey("chunks.id"), nullable=True)
+    
+    session = relationship("Session", back_populates="chat_history")
     def __repr__(self):
         return f"ChatHistory(id={self.id!r}, message={self.message!r})"
-

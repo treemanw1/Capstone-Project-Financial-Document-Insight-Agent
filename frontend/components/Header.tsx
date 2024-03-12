@@ -25,7 +25,7 @@ const Header = () => {
 					>
 						<Link
 							component={NextLink}
-							href="/"
+							href="/home"
 							underline="hover"
 							color="black"
 							variant="body1"

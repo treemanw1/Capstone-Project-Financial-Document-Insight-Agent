@@ -6,6 +6,8 @@ import { Box, Button, TextField, Typography, Link } from "@mui/material";
 import { useRouter } from "next/navigation";
 import NextLink from "next/link";
 
+import { post } from "utils";
+
 const Login = () => {
 	const router = useRouter();
 
@@ -13,28 +15,11 @@ const Login = () => {
 	const [password, setPassword] = useState<string>("");
 
 	const onLogin = async () => {
-		try {
-			const response = await fetch("http://localhost:8000/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					username: username,
-					password: password,
-				}),
-			});
-			if (!response.ok) {
-				throw new Error("Failed to login.");
-			} else {
-				const data = await response.json();
-				setUsername("");
-				setPassword("");
-				router.push("/home");
-			}
-		} catch (error) {
-			console.error("Error logging in:", error);
-		}
+		post({ username: username, password: password }, "/login", (data) => {
+			setUsername("");
+			setPassword("");
+			router.push("/home");
+		});
 	};
 
 	return (

@@ -140,7 +140,7 @@ export const ResultsPage = () => {
 			}}
 		>
 			<Header />
-			<Box
+			{/* <Box
 				sx={{
 					display: "flex",
 					mx: globalStyles.mx,
@@ -180,14 +180,14 @@ export const ResultsPage = () => {
 						fontSize="1.75vh"
 					/>
 				</Box>
-			</Box>
+			</Box> */}
 			<Box
 				sx={{
 					display: "flex",
 					flexDirection: "column",
 					mx: globalStyles.mx,
 					backgroundColor: "",
-					height: "70vh",
+					height: "80vh",
 				}}
 			>
 				<Box sx={{ mt: 3, mb: 2 }}>
