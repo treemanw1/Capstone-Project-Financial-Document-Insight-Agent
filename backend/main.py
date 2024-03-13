@@ -137,19 +137,19 @@ async def pdf_search(status: Annotated[schemas.User, Depends(get_login_status)],
     print(pdfs)
     return [{"id": pdf.id, "pdf_document_name": pdf.pdf_document_name, "company_name": pdf.company_name, "path": pdf.path} for pdf in pdfs]
 
-@app.post("/advanced-search", response_model=List[schemas.PDF])
-async def pdf_advanced_search(status: Annotated[schemas.User, Depends(get_login_status)],
-                     query: schemas.AdvancedSearchQuery, 
-                     db: Session = Depends(get_db)):
-    # perform full-text search? with user input query + document type
-    return [{ "id": 1, "name": "dummy.pdf", "data": "dummy data"}]
+# @app.post("/advanced-search", response_model=List[schemas.PDF])
+# async def pdf_advanced_search(status: Annotated[schemas.User, Depends(get_login_status)],
+#                      query: schemas.AdvancedSearchQuery, 
+#                      db: Session = Depends(get_db)):
+#     # perform full-text search? with user input query + document type
+#     return [{ "id": 1, "name": "dummy.pdf", "data": "dummy data"}]
 
 @app.post("/create-session", response_model=int)
-async def create_session(user_id: int, pdfs: List[schemas.PDF],
+async def create_session(user_id: int, pdf_ids: List[int],
                         token: Annotated[str, Depends(get_login_status)],
                         db: Session = Depends(get_db)):
     session = crud.create_session(db, user_id)
-    crud.link_session_pdfs(db, session.id, [pdf.id for pdf in pdfs])
+    crud.link_session_pdfs(db, session.id, pdf_ids)
     return session.id
 
 @app.post("/get-session_ids", response_model=List[int])
@@ -165,24 +165,26 @@ async def get_chat_history(session_id: int, token: Annotated[str, Depends(get_lo
 @app.post("/get-pdfs", response_model=List[schemas.PDF])
 async def get_pdfs(session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
     pdf_ids = crud.get_pdf_ids(db, session_id)
-    return crud.get_pdfs(db, pdf_ids)
+    print("pdf_ids:", pdf_ids)
+    print([id[0] for id in pdf_ids])
+    return crud.get_pdfs(db, [id[0] for id in pdf_ids])
 
 @app.post("/query", response_model=schemas.LLMResponse)
-async def query(query: schemas.Query, session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
-    userChatMessage = schemas.ChatMessage(session_id=session_id, role="user", message=query.message)
+async def query(query: str, session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
+    userChatMessage = schemas.ChatMessage(session_id=session_id, role="user", message=query)
     crud.create_chat_message(db, userChatMessage)
     # dummy response (replace with LLM response)
-    response = {"id": 1, "text": "This is a dummy response.", "chunk": "I don't want to live in a world"}
-    llmChatMessage = schemas.ChatMessage(session_id=session_id, role="bot", message="This is a dummy response.")
+    response = {"response": "This is a dummy response.", "chunk": "I don't want to live in a world"}
+    llmChatMessage = schemas.ChatMessage(session_id=session_id, role="bot", message=response["response"])
     crud.create_chat_message(db, llmChatMessage)
     return response
 
 
-@app.post("/upload-pdf", response_model=schemas.StatusResponse)
-async def upload_pdf(db: Session = Depends(get_db)):
-    pdf = { "name": "Antifragile", "pdf_filepath": "antifragile.pdf" }
-    with open(pdf.pdf_filepath, 'rb') as file:
-        pdf_data = file.read()
-    crud.create_pdf(db, pdf=pdf)
-    return {"success": True, "message": "PDF successfully uploaded!"}
+# @app.post("/upload-pdf", response_model=schemas.StatusResponse)
+# async def upload_pdf(db: Session = Depends(get_db)):
+#     pdf = { "name": "Antifragile", "pdf_filepath": "antifragile.pdf" }
+#     with open(pdf.pdf_filepath, 'rb') as file:
+#         pdf_data = file.read()
+#     crud.create_pdf(db, pdf=pdf)
+#     return {"success": True, "message": "PDF successfully uploaded!"}
 

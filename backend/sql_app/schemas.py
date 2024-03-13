@@ -32,7 +32,7 @@ class PDF(BaseModel):
     id: int
     pdf_document_name: str
     company_name: str
-    path: str
+    filepath: str
 
 class SearchQuery(BaseModel):
     document_type: str
@@ -45,19 +45,12 @@ class AdvancedSearchQuery(BaseModel):
     start_date: date
     end_date: date
 
-class Query(BaseModel):
-    query: str
-    pdf_ids: List[int]
-
 class LLMResponse(BaseModel):
-    id: int
-    text: str
+    response: str
     chunk: str
 
 class ChatMessage(BaseModel):
-    id: int
     session_id: int
-    timestamp: datetime
     role: str # user | bot
     message: str
 

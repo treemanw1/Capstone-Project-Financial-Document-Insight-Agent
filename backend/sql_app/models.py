@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, BLOB
+from sqlalchemy import Column, ForeignKey, Integer, String, Text, DateTime, func
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -19,7 +19,7 @@ class PDF(Base):
     pdf_document_name = Column(String(122), nullable=False)
     document_type = Column(String(30), nullable=False)
     company_name = Column(String(100), nullable=False)
-    path = Column(String(200), nullable=False)
+    filepath = Column(Text, nullable=False)
 
     sessionPDF = relationship("SessionPDFs", back_populates="pdfs")
     def __repr__(self):
@@ -40,7 +40,7 @@ class Session(Base):
     __tablename__ = "sessions"
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, default=func.now(), nullable=False)
 
     user = relationship("User", back_populates="sessions")
     sessionPDF = relationship("SessionPDFs", back_populates="session", cascade="all, delete-orphan")
@@ -52,7 +52,7 @@ class ChatHistory(Base):
     __tablename__ = "chat_history"
     id = Column(Integer, primary_key=True)
     session_id = Column(Integer, ForeignKey("sessions.id"), nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, default=func.now(), nullable=False)
     role = Column(String(4), nullable=False) # user | bot
     message = Column(String(500), nullable=False)
     # chunk_id = Column(Integer, ForeignKey("chunks.id"), nullable=True)

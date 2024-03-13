@@ -1,5 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from sqlalchemy import insert
 from fastapi import HTTPException
 
 from sql_app import models, schemas
@@ -42,7 +43,6 @@ def link_session_pdfs(db: Session, session_id: int, pdf_ids: List[int]):
         db.rollback()
         print("An unexpected error occurred:", e)
         raise HTTPException(status_code=400, detail=e)
-    db.refresh(db)
 
 def get_session_ids(db: Session, user_id: int):
     return db.query(models.Session.id).filter(models.Session.user_id == user_id).all()
@@ -63,7 +63,7 @@ def get_chat_history(db: Session, session_id: int):
     return db.query(models.ChatHistory).filter(models.ChatHistory.session_id == session_id).all()
 
 def get_pdf_ids(db: Session, session_id: int):
-    return db.query(models.SessionPDFs).filter(models.SessionPDFs.session_id == session_id).all()
+    return db.query(models.SessionPDFs.pdf_id).filter(models.SessionPDFs.session_id == session_id).all()
 
 def get_pdfs(db: Session, pdf_ids: List[int]):
     return db.query(models.PDF).filter(models.PDF.id.in_(pdf_ids)).all()
