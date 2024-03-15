@@ -2,10 +2,10 @@ import React from "react";
 import { FixedSizeList } from "react-window";
 
 import { Box, Button, Typography } from "@mui/material";
-import { Query, Chunk } from "interfaces";
+import { ChatMessage, Chunk } from "interfaces";
 
 interface MyComponentProps {
-	message: Query;
+	message: ChatMessage;
 	chunk?: Chunk | undefined;
 	setCurrentPage: (page: string) => void;
 	listRef: React.RefObject<FixedSizeList>;
@@ -22,7 +22,7 @@ const Message: React.FC<MyComponentProps> = ({
 		listRef.current?.scrollToItem(pageNum - 1, "start");
 	};
 
-	if (message.id % 2 == 0) {
+	if (message.role == "user") {
 		// User message
 		return (
 			<Box
@@ -41,7 +41,7 @@ const Message: React.FC<MyComponentProps> = ({
 						width: "fit-content",
 					}}
 				>
-					<Typography key={message.id}>{message.text}</Typography>
+					<Typography key={message.id}>{message.message}</Typography>
 				</Box>
 			</Box>
 		);
@@ -61,7 +61,7 @@ const Message: React.FC<MyComponentProps> = ({
 				}}
 			>
 				<Typography sx={{ mb: 0 }} key={message.id}>
-					{message.text}
+					{message.message}
 				</Typography>
 				<Button
 					sx={{

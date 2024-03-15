@@ -1,28 +1,48 @@
-export async function post(
-	body: Record<string, any>,
+export async function get(
+	token: string | null,
 	endpoint: string,
-	onSuccess: (data: Record<string, any>) => void
+	errorMessage: string,
+	onSuccess: (data: any) => void
+) {
+	try {
+		const response = await fetch(`http://localhost:8000${endpoint}`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		if (!response.ok) {
+			throw new Error(errorMessage);
+		} else {
+			const data = await response.json();
+			onSuccess(data);
+		}
+	} catch (error) {
+		console.error("Error:", error);
+	}
+}
+
+export async function post(
+	token: string | null,
+	body: any,
+	endpoint: string,
+	errorMessage: string,
+	onSuccess: (data: any) => void
 ) {
 	try {
 		const response = await fetch(`http://localhost:8000${endpoint}`, {
 			method: "POST",
 			headers: {
+				Authorization: `Bearer ${token}`,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(body),
 		});
 		if (!response.ok) {
-			throw new Error("Failed to fetch response.");
+			throw new Error(errorMessage);
 		} else {
 			const data = await response.json();
 			onSuccess(data);
-			// setMessages(
-			// 	messages.concat([query]).concat({
-			// 		id: data.response.id,
-			// 		text: data.response.text,
-			// 	})
-			// );
-			// setChunks(chunks.concat(data.chunks));
 		}
 	} catch (error) {
 		console.error("Error:", error);

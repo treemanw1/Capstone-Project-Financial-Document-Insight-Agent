@@ -1,17 +1,26 @@
 export interface PDF {
 	id: number;
-	name: string;
-	numPages: number;
-	path: string;
+	pdf_document_name: string;
+	company_name: string;
+	num_pages: number;
+	filepath: string;
 }
 
-export interface Query {
+export interface ChatMessage {
 	id: number;
-	text: string;
+	session_id: number;
+	role: string;
+	message: string;
 }
 
 export interface Chunk {
 	id: number;
 	text: string;
 	pageNum: number;
+}
+
+export interface Session {
+	id: number;
+	created_at: Date;
+	name: string;
 }

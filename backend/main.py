@@ -19,7 +19,7 @@ load_dotenv()
 
 SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 app = FastAPI()
 
@@ -34,6 +34,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+credentials_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Could not validate credentials",
+    headers={"WWW-Authenticate": "Bearer"},
+)
+timeout_error = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Session has timed out",
+    headers={"WWW-Authenticate": "Bearer"},
+)
 
 def get_db():
     db = SessionLocal()
@@ -60,32 +71,18 @@ def authenticate_user(db: Session, username: str, password: str):
         return False
     return user
 
-credentials_exception = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Could not validate credentials",
-    headers={"WWW-Authenticate": "Bearer"},
-)
-timeout_error = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Session has timed out",
-    headers={"WWW-Authenticate": "Bearer"},
-)
-
-# async def get_current_user(db: Session, token: Annotated[str, Depends(oauth2_scheme)]):
-    # try:
-    #     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    #     username: str = payload.get("sub")
-    #     if username is None:
-    #         raise credentials_exception
-    #     token_data = schemas.TokenData(username=username)
-    # except JWTError:
-    #     raise credentials_exception
-    # user = crud.get_user(db, username=token_data.username)
-    # if user is None:
-    #     raise credentials_exception
-    # return user
-
 async def get_login_status(token: Annotated[str, Depends(oauth2_scheme)]):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except JWTError:
+        raise credentials_exception
+
+async def get_current_user_id(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -99,11 +96,19 @@ async def get_login_status(token: Annotated[str, Depends(oauth2_scheme)]):
         token_data = schemas.TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    return
+    user = crud.get_user(db, username=token_data.username)
+    if user is None:
+        raise credentials_exception
+    return user.id
 
 @app.get("/")
 async def root():
     return {"message": "Welcome to FastAPI Backend"}
+
+@app.get("/get-company-names", response_model=List[str])
+async def get_company_names(status: Annotated[schemas.User, Depends(get_login_status)], db: Session = Depends(get_db)):
+    company_names = crud.get_company_names(db)
+    return [company[0] for company in company_names]
 
 @app.post("/create-user", response_model=schemas.StatusResponse)
 async def create_user(credentials: schemas.UserCredentials, db: Session = Depends(get_db)):
@@ -132,10 +137,8 @@ async def login_for_access_token(
 async def pdf_search(status: Annotated[schemas.User, Depends(get_login_status)],
                      query: schemas.SearchQuery, 
                      db: Session = Depends(get_db)):
-    # perform full-text search? with user input query + document type
-    pdfs = crud.get_five_pdfs(db)
-    print(pdfs)
-    return [{"id": pdf.id, "pdf_document_name": pdf.pdf_document_name, "company_name": pdf.company_name, "path": pdf.path} for pdf in pdfs]
+    pdfs = crud.filter_pdfs(db, query=query)
+    return pdfs
 
 # @app.post("/advanced-search", response_model=List[schemas.PDF])
 # async def pdf_advanced_search(status: Annotated[schemas.User, Depends(get_login_status)],
@@ -152,12 +155,12 @@ async def create_session(user_id: int, pdf_ids: List[int],
     crud.link_session_pdfs(db, session.id, pdf_ids)
     return session.id
 
-@app.post("/get-session_ids", response_model=List[int])
-async def get_session_ids(user_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
-    session_ids = crud.get_session_ids(db, user_id)
-    return [id[0] for id in session_ids]
+@app.get("/get-sessions", response_model=List[schemas.Session])
+async def get_sessions(user_id: Annotated[schemas.User, Depends(get_current_user_id)], db: Session = Depends(get_db)):
+    sessions = crud.get_sessions(db, user_id)
+    return sessions
 
-@app.post("/get-chat-history", response_model=List[schemas.ChatMessage])
+@app.get("/get-chat-history/${session_id}", response_model=List[schemas.ChatMessage])
 async def get_chat_history(session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
     chat_history = crud.get_chat_history(db, session_id)
     return chat_history
@@ -169,14 +172,17 @@ async def get_pdfs(session_id: int, token: Annotated[str, Depends(get_login_stat
     print([id[0] for id in pdf_ids])
     return crud.get_pdfs(db, [id[0] for id in pdf_ids])
 
-@app.post("/query", response_model=schemas.LLMResponse)
+@app.post("/query", response_model=schemas.QueryResponse)
 async def query(query: str, session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
     userChatMessage = schemas.ChatMessage(session_id=session_id, role="user", message=query)
-    crud.create_chat_message(db, userChatMessage)
-    # dummy response (replace with LLM response)
-    response = {"response": "This is a dummy response.", "chunk": "I don't want to live in a world"}
-    llmChatMessage = schemas.ChatMessage(session_id=session_id, role="bot", message=response["response"])
-    crud.create_chat_message(db, llmChatMessage)
+    usr_msg = crud.create_chat_message(db, userChatMessage)
+    
+    # <INSERT API CALL TO GENERATE LLM RESPONSE HERE>
+    response = {"chat_message_id": usr_msg.id, "llm_response": "This is a dummy response.", "chunk": "I don't want to live in a world"}
+
+    llmChatMessage = schemas.ChatMessage(session_id=session_id, role="bot", message=response["llm_response"])
+    llm_msg =  crud.create_chat_message(db, llmChatMessage)
+    response["llm_response_id"] = llm_msg.id
     return response
 
 

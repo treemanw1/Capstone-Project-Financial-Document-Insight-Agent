@@ -19,7 +19,7 @@ const Header = () => {
 						sx={{
 							display: "flex",
 							justifyContent: "space-between",
-							width: "28%",
+							width: "10%",
 							// background: "pink",
 						}}
 					>
@@ -30,25 +30,16 @@ const Header = () => {
 							color="black"
 							variant="body1"
 						>
-							Home
+							Filter
 						</Link>
 						<Link
 							component={NextLink}
-							href="/advanced-search"
+							href="/chat"
 							underline="hover"
 							color="black"
 							variant="body1"
 						>
-							Advanced Search
-						</Link>
-						<Link
-							component={NextLink}
-							href="/saved-reports"
-							underline="hover"
-							color="black"
-							variant="body1"
-						>
-							Saved Reports
+							Chat
 						</Link>
 					</Box>
 					<Box

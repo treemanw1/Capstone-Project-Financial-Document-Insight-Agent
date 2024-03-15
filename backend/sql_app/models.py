@@ -20,6 +20,8 @@ class PDF(Base):
     document_type = Column(String(30), nullable=False)
     company_name = Column(String(100), nullable=False)
     filepath = Column(Text, nullable=False)
+    date = Column(DateTime, nullable=False)
+    num_pages = Column(Integer, nullable=False)
 
     sessionPDF = relationship("SessionPDFs", back_populates="pdfs")
     def __repr__(self):
@@ -41,6 +43,7 @@ class Session(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=func.now(), nullable=False)
+    name = Column(Text, nullable=False)
 
     user = relationship("User", back_populates="sessions")
     sessionPDF = relationship("SessionPDFs", back_populates="session", cascade="all, delete-orphan")

@@ -5,7 +5,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, InputLabel } from "@mui/material";
 
 interface MyComponentProps {
 	headerText: string;
@@ -14,6 +14,7 @@ interface MyComponentProps {
 	width: string;
 	fontSize?: string;
 	options: string[];
+	multiple?: boolean;
 }
 
 const RoundedDropdown: React.FC<MyComponentProps> = ({
@@ -23,14 +24,18 @@ const RoundedDropdown: React.FC<MyComponentProps> = ({
 	width,
 	fontSize = "1.5vh",
 	options,
+	multiple = false,
 }) => {
-	const [personName, setPersonName] = useState<string>("");
+	const [companies, setCompanies] = useState<string[]>([]);
 
-	const handleChange = (event: SelectChangeEvent) => {
+	const handleChange = (event: SelectChangeEvent<typeof companies>) => {
 		const {
 			target: { value },
 		} = event;
-		setPersonName(value);
+		setCompanies(
+			// On autofill we get a stringified value.
+			typeof value === "string" ? value.split(",") : value
+		);
 	};
 
 	return (
@@ -61,8 +66,9 @@ const RoundedDropdown: React.FC<MyComponentProps> = ({
 				}}
 			>
 				<Select
+					multiple={multiple}
 					displayEmpty
-					value={personName}
+					value={companies}
 					onChange={handleChange}
 					input={<OutlinedInput />}
 					MenuProps={{

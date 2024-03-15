@@ -65,7 +65,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 			setCurrentPage(pageNumber);
 		} else if (
 			/^(?:[1-9]\d*)?$/.test(pageNumber) &&
-			parseInt(pageNumber) < pdf?.numPages! + 1
+			parseInt(pageNumber) < pdf?.num_pages! + 1
 		) {
 			setCurrentPage(pageNumber);
 			listRef.current?.scrollToItem(
@@ -104,7 +104,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 					borderBottom: 1,
 				}}
 			>
-				<Typography sx={{ m: 2 }}>{pdf?.name}</Typography>
+				<Typography sx={{ m: 2 }}>{pdf?.pdf_document_name}</Typography>
 				<TextField
 					sx={{
 						display: "flex",
@@ -117,7 +117,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 					value={currentPage.toString()}
 					onChange={handleInputPage}
 				/>
-				<Typography sx={{ m: 2 }}>/{pdf?.numPages}</Typography>
+				<Typography sx={{ m: 2 }}>/{pdf?.num_pages}</Typography>
 			</Box>
 			<Box
 				sx={{
@@ -130,13 +130,13 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 					overflow: "clip",
 				}}
 			>
-				<Document className={style.document} file={pdf?.path}>
+				<Document className={style.document} file={pdf?.filepath}>
 					<List
 						className={style.list}
 						itemData={{ pdfHeight, textRenderer }}
 						ref={listRef}
 						height={pdfHeight}
-						itemCount={pdf?.numPages!}
+						itemCount={pdf?.num_pages!}
 						itemSize={pdfHeight * 1.05}
 						width={pdfHeight * 0.801}
 						onItemsRendered={({ visibleStopIndex }) =>

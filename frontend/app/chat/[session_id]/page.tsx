@@ -5,25 +5,34 @@ import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 
 import { useRouter } from "next/navigation";
 
-import PDFViewer from "./PDFViewer";
+import PDFViewer from "../PDFViewer";
 
 import { pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import { globalStyles } from "styles";
-import { PDF, Query, Chunk } from "interfaces";
+import { PDF, ChatMessage, Chunk, Session } from "interfaces";
 import Message from "@components/Message";
 import { FixedSizeList } from "react-window";
 
+import { get, post } from "utils";
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
-const Chat = () => {
+const Chat = ({ params }: { params: { session_id: string } }) => {
+	const token = localStorage.getItem("jwtToken");
+
 	const router = useRouter();
 
 	const [pdfs, setPDFs] = useState<PDF[] | null>(null);
 	const [selectedPDFID, setSelectedPDFID] = useState<number | null>(null);
+	const [sessions, setSessions] = useState<Session[]>([]);
+
+	const [currentSessionId, setCurrentSessionId] = useState<number | null>(
+		null
+	);
 
 	const [currentQuery, setCurrentQuery] = useState<string>("");
-	const [messages, setMessages] = useState<Query[]>([]);
+	const [messages, setMessages] = useState<ChatMessage[]>([]);
 
 	const [chunks, setChunks] = useState<Chunk[]>([]);
 
@@ -31,34 +40,32 @@ const Chat = () => {
 	const listRef = useRef<FixedSizeList>(null);
 
 	useEffect(() => {
-		router.prefetch("/results-page");
-		const fetchData = () => {
-			// try {
-			// 	const response = await fetch("INSERT API ENDPOINT HERE");
-			// 	if (!response.ok) {
-			// 		throw new Error("Failed to fetch PDFs");
-			// 	}
-			// 	const data = await response.json();
-			// 	setPDFs(data);
-			// } catch (error) {
-			// 	console.error("Error fetching PDFs:", error);
-			// }
-			setPDFs([
-				{
-					id: 0,
-					name: "Antifragile - Nassim Taleb",
-					numPages: 581,
-					path: "antifragile.pdf",
-				},
-				{
-					id: 1,
-					name: "Shogun - James Clavell",
-					numPages: 1081,
-					path: "shogun.pdf",
-				},
-			]);
-		};
-		fetchData();
+		router.prefetch("/filter");
+		get(
+			token,
+			"/get-sessions",
+			"Failed to fetch sessions.",
+			(session_ids: any) => {
+				console.log("session ids:", session_ids);
+				setSessions(session_ids);
+			}
+		);
+		setPDFs([
+			{
+				id: 0,
+				pdf_document_name: "Antifragile - Nassim Taleb",
+				company_name: "Random House",
+				num_pages: 581,
+				filepath: "../antifragile.pdf",
+			},
+			{
+				id: 1,
+				pdf_document_name: "Shogun - James Clavell",
+				company_name: "Dell",
+				num_pages: 1081,
+				filepath: "../shogun.pdf",
+			},
+		]);
 	}, []);
 
 	useEffect(() => {
@@ -67,39 +74,47 @@ const Chat = () => {
 		}
 	}, [pdfs]);
 
-	useEffect(() => {
-		router.prefetch("/results-page");
-	}, []);
-
-	const onSendQuery = async () => {
-		const query: Query = {
-			id: messages.length == 0 ? 0 : messages[messages.length - 1].id + 1,
-			text: currentQuery,
-		};
-		try {
-			const response = await fetch("http://localhost:8000/query", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(query),
-			});
-			if (!response.ok) {
-				throw new Error("Failed to fetch LLM response and chunks.");
-			} else {
-				const data = await response.json();
+	const sendQuery = async () => {
+		post(
+			token,
+			currentQuery,
+			"/query",
+			"Failed to fetch LLM response and chunks.",
+			(queryResponse: any) => {
 				setMessages(
-					messages.concat([query]).concat({
-						id: data.response.id,
-						text: data.response.text,
+					messages.concat({
+						id: queryResponse.id,
+						session_id: currentSessionId!, // replace later
+						role: "user",
+						message: currentQuery,
 					})
 				);
-				setChunks(chunks.concat(data.chunks));
+				setChunks(chunks.concat(queryResponse.chunk));
+			}
+		);
+		setCurrentQuery("");
+	};
+
+	const getSessionHistory = async (session_id: number) => {
+		try {
+			const response = await fetch(
+				`http://localhost:8000/get-chat-history/${session_id}`,
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (!response.ok) {
+				throw new Error("Failed to fetch session history.");
+			} else {
+				const chat_history = await response.json();
+				setMessages(chat_history);
 			}
 		} catch (error) {
 			console.error("Error fetching PDFs:", error);
 		}
-		setCurrentQuery("");
 	};
 
 	return (
@@ -114,7 +129,63 @@ const Chat = () => {
 				sx={{
 					display: "flex",
 					flexDirection: "column",
-					width: "40%",
+					width: "18%",
+					// backgroundColor: "pink",
+					// justifyContent: "space-between",
+					borderRight: 1,
+				}}
+			>
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						// justifyContent: "center",
+						height: globalStyles.headerHeight,
+						borderBottom: 1,
+					}}
+				>
+					<Typography sx={{ ml: 2 }}>Sessions</Typography>
+				</Box>
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						flex: 1,
+						// background: "pink",
+						p: 1,
+						gap: 0.5,
+					}}
+				>
+					{sessions.map((session) => {
+						return (
+							<Button
+								key={session.id}
+								sx={{
+									textTransform: "none",
+									color: "black",
+									background: "#DDDDDD",
+									"&:hover": {
+										backgroundColor: "#EEEEEE",
+									},
+									textAlign: "left",
+									px: 1.5,
+								}}
+								onClick={() => {
+									setCurrentSessionId(session.id);
+									getSessionHistory(session.id);
+								}}
+							>
+								{session.name}
+							</Button>
+						);
+					})}
+				</Box>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					width: "50%",
 					// backgroundColor: "pink",
 					justifyContent: "space-between",
 					borderRight: 1,
@@ -142,7 +213,7 @@ const Chat = () => {
 							},
 						}}
 						onClick={() => {
-							router.push("/results-page");
+							router.push("/filter");
 						}}
 					>
 						Back to Document Selection
@@ -191,7 +262,7 @@ const Chat = () => {
 						}}
 						onKeyDown={(event) => {
 							if (event.key == "Enter" && currentQuery != "") {
-								onSendQuery();
+								sendQuery();
 							}
 						}}
 						placeholder="Start typing your question..."
@@ -222,7 +293,7 @@ const Chat = () => {
 						}}
 						onClick={() => {
 							if (currentQuery != "") {
-								onSendQuery();
+								sendQuery();
 							}
 						}}
 					>
@@ -243,7 +314,7 @@ const Chat = () => {
 					display: "flex",
 					// background: "pink",
 					flexDirection: "column",
-					width: "7.5%",
+					width: "5%",
 				}}
 			>
 				<Box
@@ -268,7 +339,7 @@ const Chat = () => {
 									borderRadius: 0,
 								}}
 							>
-								{pdf.name}
+								{pdf.pdf_document_name}
 							</Button>
 						);
 					})

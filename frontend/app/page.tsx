@@ -27,7 +27,8 @@ const Login = () => {
 				throw new Error("Failed to fetch response.");
 			} else {
 				const data = await response.json();
-				console.log(data);
+				localStorage.setItem("jwtToken", data.access_token);
+				router.push("/filter");
 			}
 		} catch (error) {
 			console.error("Error:", error);
@@ -97,6 +98,11 @@ const Login = () => {
 						onChange={(event) => {
 							setPassword(event.target.value);
 						}}
+						onKeyDown={(event) => {
+							if (event.key === "Enter") {
+								onLogin();
+							}
+						}}
 					/>
 				</Box>
 				<Box
@@ -125,6 +131,9 @@ const Login = () => {
 							color: "white",
 							background: "#3C3C3C",
 							textTransform: "none",
+							"&:hover": {
+								backgroundColor: "#666666",
+							},
 						}}
 					>
 						Login

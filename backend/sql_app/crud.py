@@ -1,6 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from sqlalchemy import insert
+from sqlalchemy import insert, and_
 from fastapi import HTTPException
 
 from sql_app import models, schemas
@@ -44,8 +44,11 @@ def link_session_pdfs(db: Session, session_id: int, pdf_ids: List[int]):
         print("An unexpected error occurred:", e)
         raise HTTPException(status_code=400, detail=e)
 
-def get_session_ids(db: Session, user_id: int):
-    return db.query(models.Session.id).filter(models.Session.user_id == user_id).all()
+def get_sessions(db: Session, user_id: int):
+    return db.query(models.Session.id, models.Session.name, models.Session.created_at).filter(models.Session.user_id == user_id).all()
+
+def get_company_names(db: Session):
+    return db.query(models.PDF.company_name).distinct().all()
 
 def create_chat_message(db: Session, chat_message: schemas.ChatMessage):
     db_chat_message = models.ChatHistory(**chat_message.dict())
@@ -68,8 +71,11 @@ def get_pdf_ids(db: Session, session_id: int):
 def get_pdfs(db: Session, pdf_ids: List[int]):
     return db.query(models.PDF).filter(models.PDF.id.in_(pdf_ids)).all()
 
-def get_pdf(db: Session, query: schemas.SearchQuery):
-    return db.query(models.PDF).filter(models.PDF.document_type == query.document_type).first()
+def filter_pdfs(db: Session, query: schemas.SearchQuery):
+    return db.query(models.PDF.company_name)\
+        .filter(models.PDF.company_name.in_(query.companies))\
+        .filter(and_(models.PDF.date >= query.start_date, models.PDF.date <= query.end_date))\
+        .all()
 
 def create_pdf(db: Session, pdf: schemas.PDF):
     db_pdf = models.PDF(data=pdf.data)
