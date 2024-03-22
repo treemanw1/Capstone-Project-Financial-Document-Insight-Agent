@@ -6,8 +6,6 @@ import { Box, Button, Input, TextField, Typography, Link } from "@mui/material";
 import { useRouter } from "next/navigation";
 import NextLink from "next/link";
 
-import { post } from "utils";
-
 const Login = () => {
 	const router = useRouter();
 
@@ -40,7 +38,6 @@ const Login = () => {
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				// background: "lightgray",
 				justifyContent: "center",
 				alignItems: "center",
 				height: "100vh",

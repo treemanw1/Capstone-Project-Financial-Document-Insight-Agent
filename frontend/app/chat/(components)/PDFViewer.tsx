@@ -12,12 +12,13 @@ import style from "./chat.module.css";
 
 import PageRenderer from "./PageRenderer";
 import { PDF, Chunk } from "interfaces";
+import { useTheme } from "@mui/material/styles";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface MyComponentProps {
 	pdf: PDF | null;
-	chunks: Chunk[];
+	highlightedChunks: Chunk[];
 	currentPage: string;
 	setCurrentPage: (page: string) => void;
 	listRef: React.RefObject<FixedSizeList>;
@@ -28,19 +29,26 @@ const bodyHeightPercentage =
 
 function highlightPattern(text: string, patterns: string[]) {
 	for (var i = 0; i < patterns.length; i++) {
-		text = text.replace(patterns[i], (value) => `<mark>${value}</mark>`);
+		text = text.replace(
+			patterns[i],
+			(value) =>
+				`<mark style="background-color: #D8E7F8;">${value}</mark>`
+		);
 	}
 	return text;
 }
 
 const PDFViewer: React.FC<MyComponentProps> = ({
 	pdf,
-	chunks,
+	highlightedChunks,
 	currentPage,
 	setCurrentPage,
 	listRef,
 }) => {
-	// const [currentPage, setCurrentPage] = useState<string>("1");
+	const theme = useTheme();
+	const listStyles =
+		theme.palette.mode === "dark" ? style.darkList : style.lightList;
+
 	const [pdfHeight, setPdfHeight] = useState<number>(
 		typeof window !== "undefined"
 			? window.innerHeight * bodyHeightPercentage
@@ -77,7 +85,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 
 	const textRenderer = useCallback(
 		(textItem: { str: string }) => {
-			const patterns = chunks
+			const patterns = highlightedChunks
 				.filter((o) => o.pageNum == parseInt(currentPage))
 				.map((o) => o.text);
 			return highlightPattern(textItem.str, patterns);
@@ -91,9 +99,9 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 				display: "flex",
 				flexDirection: "column",
 				// backgroundColor: "lightblue",
-				width: "52.5%",
+				width: "45%",
 				justifyContent: "space-between",
-				borderRight: 1,
+				// borderRight: 1,
 			}}
 		>
 			<Box
@@ -101,7 +109,6 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 					display: "flex",
 					alignItems: "center",
 					height: globalStyles.headerHeight,
-					borderBottom: 1,
 				}}
 			>
 				<Typography sx={{ m: 2 }}>{pdf?.pdf_document_name}</Typography>
@@ -112,6 +119,8 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 						width: "60px",
 						height: "40px",
 						border: 1,
+						borderColor: theme.palette.text.primary,
+						// borderRadius: 2,
 						"& fieldset": { border: "none" },
 					}}
 					value={currentPage.toString()}
@@ -121,7 +130,8 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 			</Box>
 			<Box
 				sx={{
-					background: "#F1F1F1",
+					background: theme.palette.primary.light,
+					// background: "pink",
 					display: "flex",
 					justifyContent: "center",
 					alignItems: "center",
@@ -132,7 +142,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 			>
 				<Document className={style.document} file={pdf?.filepath}>
 					<List
-						className={style.list}
+						className={listStyles}
 						itemData={{ pdfHeight, textRenderer }}
 						ref={listRef}
 						height={pdfHeight}

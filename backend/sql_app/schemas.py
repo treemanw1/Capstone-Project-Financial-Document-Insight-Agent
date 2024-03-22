@@ -31,7 +31,7 @@ class UserResponse(BaseModel):
 class PDF(BaseModel):
     id: int
     pdf_document_name: str
-    company_name: str
+    company: str
     num_pages: int
     filepath: str
 
@@ -47,19 +47,26 @@ class AdvancedSearchQuery(BaseModel):
     start_date: date
     end_date: date
 
+class Chunk(BaseModel):
+    text: str
+    page_num: int
+    pdf_id: int
+    chat_history_id: int
+    score: float
+
 class ChatMessage(BaseModel):
-    id: int
     session_id: int
     role: str # user | bot
     message: str
+
+class BotMessage(ChatMessage):
+    chunks: List[Chunk]
 
 class Session(BaseModel):
     id: int
     name: str
     created_at: datetime
 
-class QueryResponse(BaseModel):
-    chat_message_id: int
-    llm_response_id: int
-    llm_response: str
-    chunk: str
+class CreateSession(BaseModel):
+    user_id: int
+    pdf_ids: List[int]

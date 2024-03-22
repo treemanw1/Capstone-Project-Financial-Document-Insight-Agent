@@ -12,6 +12,7 @@ class PageRenderer extends PureComponent<ListChildComponentProps> {
 
 		return (
 			<Box sx={{ ...style }}>
+				{/* in case of emergency can attempt styles.page width = fit-content */}
 				<Page
 					className={styles.page}
 					height={pdfHeight}

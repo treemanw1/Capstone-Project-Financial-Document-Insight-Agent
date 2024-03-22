@@ -5,7 +5,9 @@ import { useTheme } from "@mui/material/styles";
 import { Box, Button, Drawer, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-import PDFViewer from "../(components)/PDFViewer";
+import PDFViewer from "./(components)/PDFViewer";
+import PDFList from "./(components)/PDFList";
+
 import { pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 
@@ -135,6 +137,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					new Date(a.created_at).getTime()
 			);
 			setSessions(sessions);
+			setCurrentSessionId(sessions[0].id);
 			get(
 				token,
 				`/get-pdfs/${sessions[0].id}`,
@@ -169,25 +172,15 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 	}, [pdfs]);
 
 	const getSessionHistory = async (session_id: number) => {
-		try {
-			const response = await fetch(
-				`http://localhost:8000/get-chat-history/${session_id}`,
-				{
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			if (!response.ok) {
-				throw new Error("Failed to fetch session history.");
-			} else {
-				const chat_history = await response.json();
+		get(
+			token,
+			`/get-chat-history/${session_id}`,
+			"Failed to fetch session history.",
+			(chat_history) => {
+				console.log("chat history:", chat_history);
 				setMessages(chat_history);
 			}
-		} catch (error) {
-			console.error("Error fetching PDFs:", error);
-		}
+		);
 	};
 
 	return (
@@ -216,6 +209,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					currentSessionId={currentSessionId}
 					sessions={sessions}
 					onClickSession={(id) => {
+						console.log("get session ", id);
 						setCurrentSessionId(id);
 						getSessionHistory(id);
 					}}
@@ -225,6 +219,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 			<Box
 				sx={{
 					display: "flex",
+					// background: "lightblue",
 					transition: "margin 150ms ease-in-out",
 					marginLeft: `-${globalStyles.drawerWidth}px`,
 					...(sidebarOpen && {
@@ -237,7 +232,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					token={token}
 					currentQuery={currentQuery}
 					setCurrentQuery={setCurrentQuery}
-					messages={dummyMessages}
+					messages={messages}
 					setMessages={setMessages}
 					currentSessionId={currentSessionId}
 					setHighlightedChunks={setHighlightedChunks}
@@ -254,63 +249,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					setCurrentPage={setCurrentPage}
 					listRef={listRef}
 				/>
-				<Box
-					sx={{
-						display: "flex",
-						// background: "pink",
-						borderLeft: 1,
-						borderColor: theme.palette.text.primary,
-						flexDirection: "column",
-						width: "15%",
-					}}
-				>
-					<Box
-						sx={{
-							height: globalStyles.headerHeight,
-							borderBottom: 1,
-							display: "flex",
-							pl: 1.5,
-							alignItems: "center",
-						}}
-					>
-						<Typography variant="body2">
-							Filtered documents
-						</Typography>
-					</Box>
-					{pdfs == null ? (
-						<Typography>Loading...</Typography>
-					) : (
-						pdfs.map((pdf) => {
-							return (
-								<Button
-									key={pdf.id}
-									onClick={() => {
-										setSelectedPDFID(pdf.id);
-									}}
-									sx={{
-										justifyContent: "flex-start",
-										color: theme.palette.text.primary,
-										textTransform: "none",
-										borderBottom: 1,
-										borderColor: theme.palette.text.primary,
-										borderRadius: 0,
-										"&:hover": {
-											background:
-												theme.palette.primary.dark,
-										},
-									}}
-								>
-									<Typography
-										variant="caption"
-										lineHeight={1.2}
-									>
-										{pdf.pdf_document_name}
-									</Typography>
-								</Button>
-							);
-						})
-					)}
-				</Box>
+				<PDFList pdfs={pdfs} setSelectedPDFID={setSelectedPDFID} />
 			</Box>
 		</Box>
 	);

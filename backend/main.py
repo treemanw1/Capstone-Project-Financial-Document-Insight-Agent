@@ -119,7 +119,6 @@ async def create_user(credentials: schemas.UserCredentials, db: Session = Depend
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)
 ) -> schemas.Token:
-    print("form_data:", form_data)
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -138,17 +137,12 @@ async def pdf_search(status: Annotated[schemas.User, Depends(get_login_status)],
                      query: schemas.SearchQuery, 
                      db: Session = Depends(get_db)):
     pdfs = crud.filter_pdfs(db, query=query)
+    print("pdfs:", pdfs)
     return pdfs
 
-# @app.post("/advanced-search", response_model=List[schemas.PDF])
-# async def pdf_advanced_search(status: Annotated[schemas.User, Depends(get_login_status)],
-#                      query: schemas.AdvancedSearchQuery, 
-#                      db: Session = Depends(get_db)):
-#     # perform full-text search? with user input query + document type
-#     return [{ "id": 1, "name": "dummy.pdf", "data": "dummy data"}]
-
 @app.post("/create-session", response_model=int)
-async def create_session(user_id: int, pdf_ids: List[int],
+async def create_session(user_id: Annotated[schemas.User, Depends(get_current_user_id)],
+                        pdf_ids: List[int], 
                         token: Annotated[str, Depends(get_login_status)],
                         db: Session = Depends(get_db)):
     session = crud.create_session(db, user_id)
@@ -160,37 +154,41 @@ async def get_sessions(user_id: Annotated[schemas.User, Depends(get_current_user
     sessions = crud.get_sessions(db, user_id)
     return sessions
 
-@app.get("/get-chat-history/${session_id}", response_model=List[schemas.ChatMessage])
+@app.get("/get-chat-history/{session_id}", response_model=List[schemas.ChatMessage])
 async def get_chat_history(session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
-    chat_history = crud.get_chat_history(db, session_id)
+    user_messages = crud.get_user_messages(db, session_id)
+    bot_messages = crud.get_bot_messages(db, session_id)
+    chat_history = user_messages + bot_messages
+    chat_history.sort(key=lambda x: x.created_at)
     return chat_history
 
-@app.post("/get-pdfs", response_model=List[schemas.PDF])
+@app.get("/get-pdfs/{session_id}", response_model=List[schemas.PDF])
 async def get_pdfs(session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
     pdf_ids = crud.get_pdf_ids(db, session_id)
-    print("pdf_ids:", pdf_ids)
-    print([id[0] for id in pdf_ids])
     return crud.get_pdfs(db, [id[0] for id in pdf_ids])
 
-@app.post("/query", response_model=schemas.QueryResponse)
+@app.post("/query", response_model=schemas.BotMessage)
 async def query(query: str, session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
-    userChatMessage = schemas.ChatMessage(session_id=session_id, role="user", message=query)
-    usr_msg = crud.create_chat_message(db, userChatMessage)
+    user_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=session_id, role="user", message=query))
+
+    # VICTORIA REPLACE THIS DUMMY DATA WITH THE ACTUAL RAG API CALL (user_message.message)
+    rag_response = {
+        "message": "This is a dummy response",
+        "chunks": [
+            {"text": "dummy_chunk1 text", "page_num": 1, "pdf_id": 1, "score": 1.5},
+            {"text": "dummy_chunk2 text", "page_num": 20, "pdf_id": 1, "score": 1}
+        ]
+    }
     
-    # <INSERT API CALL TO GENERATE LLM RESPONSE HERE>
-    response = {"chat_message_id": usr_msg.id, "llm_response": "This is a dummy response.", "chunk": "I don't want to live in a world"}
-
-    llmChatMessage = schemas.ChatMessage(session_id=session_id, role="bot", message=response["llm_response"])
-    llm_msg =  crud.create_chat_message(db, llmChatMessage)
-    response["llm_response_id"] = llm_msg.id
+    bot_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=session_id, role="bot", message=rag_response["message"]))
+    for chunk in rag_response["chunks"]:
+        chunk["chat_history_id"] = bot_message.id
+        
+    crud.create_chunks(db, [schemas.Chunk(**chunk) for chunk in rag_response["chunks"]])
+    response = {
+        "session_id": session_id,
+        "role": "bot",
+        "message": rag_response["message"],
+        "chunks": rag_response["chunks"]
+    }
     return response
-
-
-# @app.post("/upload-pdf", response_model=schemas.StatusResponse)
-# async def upload_pdf(db: Session = Depends(get_db)):
-#     pdf = { "name": "Antifragile", "pdf_filepath": "antifragile.pdf" }
-#     with open(pdf.pdf_filepath, 'rb') as file:
-#         pdf_data = file.read()
-#     crud.create_pdf(db, pdf=pdf)
-#     return {"success": True, "message": "PDF successfully uploaded!"}
-

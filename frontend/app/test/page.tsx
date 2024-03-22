@@ -1,61 +1,188 @@
 "use client";
 
-import React, { useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
-import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/TextLayer.css";
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import CssBaseline from "@mui/material/CssBaseline";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
 
-import { FixedSizeList } from "react-window";
+const drawerWidth = 240;
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+export default function PersistentDrawerLeft() {
+	const theme = useTheme();
+	const [open, setOpen] = React.useState(false);
 
-const Test = () => {
-	const [state, setState] = useState<string>("");
-	const [numPages, setNumPages] = useState<number | null>(null);
+	const handleDrawerOpen = () => {
+		setOpen(true);
+	};
 
-	function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
-		setNumPages(numPages);
-	}
+	const handleDrawerClose = () => {
+		setOpen(false);
+	};
 
 	return (
-		<Box sx={{ p: 5, width: "100%", height: "100vh", background: "pink" }}>
-			<Button
-				onClick={() => {
-					if (state === "clicked") {
-						setState("");
-					} else {
-						setState("clicked");
-					}
+		<Box sx={{ display: "flex" }}>
+			<CssBaseline />
+			<MuiAppBar
+				position="fixed"
+				sx={{
+					transition: theme.transitions.create(["margin", "width"], {
+						easing: theme.transitions.easing.sharp,
+						duration: theme.transitions.duration.leavingScreen,
+					}),
+					...(open && {
+						width: `calc(100% - ${drawerWidth}px)`,
+						marginLeft: `${drawerWidth}px`,
+						transition: theme.transitions.create(
+							["margin", "width"],
+							{
+								easing: theme.transitions.easing.easeOut,
+								duration:
+									theme.transitions.duration.enteringScreen,
+							}
+						),
+					}),
 				}}
-				sx={{ color: "black", textTransform: "none" }}
 			>
-				Button
-			</Button>
-			<Typography>State: {state}</Typography>
-			<Document
-				file="antifragile.pdf"
-				onLoadSuccess={onDocumentLoadSuccess}
+				<Toolbar>
+					<IconButton
+						color="inherit"
+						aria-label="open drawer"
+						onClick={handleDrawerOpen}
+						edge="start"
+						sx={{ mr: 2, ...(open && { display: "none" }) }}
+					>
+						<MenuIcon />
+					</IconButton>
+					<Typography variant="h6" noWrap component="div">
+						Persistent drawer
+					</Typography>
+				</Toolbar>
+			</MuiAppBar>
+			<Drawer
+				sx={{
+					width: drawerWidth,
+					flexShrink: 0,
+					"& .MuiDrawer-paper": {
+						width: drawerWidth,
+						boxSizing: "border-box",
+					},
+				}}
+				variant="persistent"
+				anchor="left"
+				open={open}
 			>
-				<FixedSizeList
-					height={640}
-					itemCount={100}
-					itemSize={820}
-					width={629}
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						padding: theme.spacing(0, 1),
+						// necessary for content to be below app bar
+						...theme.mixins.toolbar,
+						justifyContent: "flex-end",
+					}}
 				>
-					{({ index, style }) => (
-						<Box sx={{ ...style }}>
-							<Page
-								key={`page_${index + 1}`}
-								pageNumber={index + 1}
-								renderAnnotationLayer={false}
-								// onRenderSuccess={() => console.log("Page rendered")}
-							/>
-						</Box>
+					<IconButton onClick={handleDrawerClose}>
+						{theme.direction === "ltr" ? (
+							<ChevronLeftIcon />
+						) : (
+							<ChevronRightIcon />
+						)}
+					</IconButton>
+				</Box>
+				<Divider />
+				<List>
+					{["Inbox", "Starred", "Send email", "Drafts"].map(
+						(text, index) => (
+							<ListItem key={text} disablePadding>
+								<ListItemButton>
+									<ListItemIcon>
+										{index % 2 === 0 ? (
+											<InboxIcon />
+										) : (
+											<MailIcon />
+										)}
+									</ListItemIcon>
+									<ListItemText primary={text} />
+								</ListItemButton>
+							</ListItem>
+						)
 					)}
-				</FixedSizeList>
-			</Document>
+				</List>
+				<Divider />
+				<List>
+					{["All mail", "Trash", "Spam"].map((text, index) => (
+						<ListItem key={text} disablePadding>
+							<ListItemButton>
+								<ListItemIcon>
+									{index % 2 === 0 ? (
+										<InboxIcon />
+									) : (
+										<MailIcon />
+									)}
+								</ListItemIcon>
+								<ListItemText primary={text} />
+							</ListItemButton>
+						</ListItem>
+					))}
+				</List>
+			</Drawer>
+			<Box
+				component="main"
+				sx={{
+					flexGrow: 1,
+					padding: theme.spacing(3),
+					transition: theme.transitions.create("margin", {
+						easing: theme.transitions.easing.sharp,
+						duration: theme.transitions.duration.leavingScreen,
+					}),
+					marginLeft: `-${drawerWidth}px`,
+					...(open && {
+						transition: theme.transitions.create("margin", {
+							easing: theme.transitions.easing.easeOut,
+							duration: theme.transitions.duration.enteringScreen,
+						}),
+						marginLeft: 0,
+					}),
+				}}
+			>
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						padding: theme.spacing(0, 1),
+						// necessary for content to be below app bar
+						...theme.mixins.toolbar,
+						justifyContent: "flex-end",
+					}}
+				>
+					<IconButton onClick={handleDrawerClose}>
+						{theme.direction === "ltr" ? (
+							<ChevronLeftIcon />
+						) : (
+							<ChevronRightIcon />
+						)}
+					</IconButton>
+				</Box>
+				<Typography paragraph>
+					{/* Your content goes here */}
+				</Typography>
+			</Box>
 		</Box>
 	);
-};
-
-export default Test;
+}

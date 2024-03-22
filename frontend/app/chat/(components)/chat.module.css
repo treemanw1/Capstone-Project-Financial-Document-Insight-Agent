@@ -1,0 +1,75 @@
+.document {
+	height: 100%;
+}
+.page {
+	width: 100%;
+}
+.list {
+	width: 100%;
+}
+.list::-webkit-scrollbar {
+	background-color: #fff;
+	width: 14px;
+}
+
+.list::-webkit-scrollbar-track {
+	background-color: #fafafa;
+}
+
+.list::-webkit-scrollbar-thumb {
+	background-color: #babac0;
+	border-radius: 16px;
+	border: 4px solid #fafafa;
+}
+
+.list::-webkit-scrollbar-button {
+	display: none;
+}
+
+/* Styles for light mode */
+.lightList {
+	width: 100%;
+}
+
+.lightList::-webkit-scrollbar {
+	background-color: #fff;
+	width: 14px;
+}
+
+.lightList::-webkit-scrollbar-track {
+	background-color: #fafafa;
+}
+
+.lightList::-webkit-scrollbar-thumb {
+	background-color: #babac0;
+	border-radius: 16px;
+	border: 4px solid #fafafa;
+}
+
+.lightList::-webkit-scrollbar-button {
+	display: none;
+}
+
+/* Styles for dark mode */
+.darkList {
+	width: 100%;
+}
+
+.darkList::-webkit-scrollbar {
+	background-color: #000;
+	width: 14px;
+}
+
+.darkList::-webkit-scrollbar-track {
+	background-color: #222;
+}
+
+.darkList::-webkit-scrollbar-thumb {
+	background-color: #444;
+	border-radius: 16px;
+	border: 4px solid #222;
+}
+
+.darkList::-webkit-scrollbar-button {
+	display: none;
+}

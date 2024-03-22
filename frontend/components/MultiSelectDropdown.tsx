@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -14,25 +14,27 @@ interface MyComponentProps {
 	width: string;
 	fontSize?: string;
 	options: string[];
-	multiple?: boolean;
+	selectedOptions: string[];
+	setSelectedOptions: Dispatch<SetStateAction<string[]>>;
 }
 
-const RoundedDropdown: React.FC<MyComponentProps> = ({
+const MultiSelectDropdown: React.FC<MyComponentProps> = ({
 	headerText,
 	placeHolder,
 	height = "7.5vh",
 	width,
 	fontSize = "1.5vh",
 	options,
-	multiple = false,
+	selectedOptions,
+	setSelectedOptions,
 }) => {
-	const [companies, setCompanies] = useState<string[]>([]);
-
-	const handleChange = (event: SelectChangeEvent<typeof companies>) => {
+	const handleChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
 		const {
 			target: { value },
 		} = event;
-		setCompanies(typeof value === "string" ? value.split(",") : value);
+		setSelectedOptions(
+			typeof value === "string" ? value.split(",") : value
+		);
 	};
 
 	return (
@@ -63,9 +65,8 @@ const RoundedDropdown: React.FC<MyComponentProps> = ({
 				}}
 			>
 				<Select
-					multiple={multiple}
-					displayEmpty
-					value={companies}
+					multiple
+					value={selectedOptions}
 					onChange={handleChange}
 					input={<OutlinedInput />}
 					MenuProps={{
@@ -104,4 +105,4 @@ const RoundedDropdown: React.FC<MyComponentProps> = ({
 	);
 };
 
-export default RoundedDropdown;
+export default MultiSelectDropdown;
