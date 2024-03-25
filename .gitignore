@@ -5,6 +5,7 @@
 /frontend/.next
 /backend/__pycache__
 /backend/sql_app/__pycache__
+/backend/arched-forest-409209-d427c9c9f53d.json
 
 .env
 
