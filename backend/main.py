@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
-
+from durag import pipeline
 from typing import Annotated, List
 from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
@@ -201,13 +201,14 @@ async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_logi
     user_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="user", message=query.query))
 
     # VICTORIA REPLACE THIS DUMMY DATA WITH THE ACTUAL RAG API CALL (user_message.message)
-    rag_response = {
-        "message": "This is a dummy response",
-        "chunks": [
-            {"text": "dummy_chunk1 text", "page_num": 1, "pdf_id": 1, "score": 1.5},
-            {"text": "dummy_chunk2 text", "page_num": 20, "pdf_id": 1, "score": 1}
-        ]
-    }
+    # rag_response = {
+    #     "message": "This is a dummy response",
+    #     "chunks": [
+    #         {"text": "dummy_chunk1 text", "page_num": 1, "pdf_id": 1, "score": 1.5},
+    #         {"text": "dummy_chunk2 text", "page_num": 20, "pdf_id": 1, "score": 1}
+    #     ]
+    # }
+    rag_response = pipeline(query, [item[0] for item in crud.get_pdf_ids(db, session_id)])
     
     bot_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="bot", message=rag_response["message"]))
     for chunk in rag_response["chunks"]:
