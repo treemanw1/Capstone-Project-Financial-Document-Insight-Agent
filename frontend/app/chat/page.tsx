@@ -5,8 +5,8 @@ import { useTheme } from "@mui/material/styles";
 import { Box, Button, Drawer, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-import PDFViewer from "../(components)/PDFViewer";
-import PDFList from "../(components)/PDFList";
+import PDFViewer from "./(components)/PDFViewer";
+import PDFList from "./(components)/PDFList";
 
 import { pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -136,7 +136,6 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 
 	useEffect(() => {
 		router.prefetch("/filter");
-		// UNCOMMENT AFTER REMOVING DUMMY DATA
 		get(token, "/get-sessions", "Failed to fetch sessions.", (sessions) => {
 			sessions.sort(
 				(a: Session, b: Session) =>
@@ -248,8 +247,8 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					token={token}
 					currentQuery={currentQuery}
 					setCurrentQuery={setCurrentQuery}
-					messages={messages}
-					// messages={dummyMessages}
+					// messages={messages}
+					messages={dummyMessages}
 					setMessages={setMessages}
 					currentSessionId={currentSessionId}
 					setHighlightedChunks={setHighlightedChunks}

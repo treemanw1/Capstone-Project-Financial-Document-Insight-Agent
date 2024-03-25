@@ -101,7 +101,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				width: "41.25%",
+				width: "37.5%",
 				background: theme.palette.primary.main,
 				// background: "lightblue",
 				justifyContent: "space-between",
@@ -140,7 +140,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 						/>
 					)}
 				</IconButton>
-				<Typography fontWeight="bold" variant="h6">
+				<Typography sx={{ ml: 2 }} fontWeight="bold" variant="h6">
 					DuRAG Chat
 				</Typography>
 				<IconButton

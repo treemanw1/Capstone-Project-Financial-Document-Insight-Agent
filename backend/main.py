@@ -187,10 +187,6 @@ async def get_chat_history(session_id: int,
     chat_history.sort(key=lambda x: x['created_at'])
     return chat_history
 
-@app.get("/test", response_model=List[schemas.Chunk])
-async def test(db: Session = Depends(get_db)):
-    return crud.get_session_chunks(db, 8)
-
 @app.get("/get-pdfs/{session_id}", response_model=List[schemas.PDF])
 async def get_pdfs(session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
     pdf_ids = crud.get_pdf_ids(db, session_id)
@@ -200,15 +196,10 @@ async def get_pdfs(session_id: int, token: Annotated[str, Depends(get_login_stat
 async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
     user_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="user", message=query.query))
 
-    # VICTORIA REPLACE THIS DUMMY DATA WITH THE ACTUAL RAG API CALL (user_message.message)
-    # rag_response = {
-    #     "message": "This is a dummy response",
-    #     "chunks": [
-    #         {"text": "dummy_chunk1 text", "page_num": 1, "pdf_id": 1, "score": 1.5},
-    #         {"text": "dummy_chunk2 text", "page_num": 20, "pdf_id": 1, "score": 1}
-    #     ]
-    # }
-    rag_response = pipeline(query, [item[0] for item in crud.get_pdf_ids(db, session_id)])
+    pdf_ids = [item[0] for item in crud.get_pdf_ids(db, query.session_id)]
+    print('query: ', query.query)
+    print('pdf ids: ', pdf_ids)
+    rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
     
     bot_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="bot", message=rag_response["message"]))
     for chunk in rag_response["chunks"]:

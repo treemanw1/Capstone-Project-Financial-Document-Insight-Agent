@@ -53,7 +53,7 @@ const Message: React.FC<MyComponentProps> = ({
 				/>
 				<Box sx={{ display: "flex", flexDirection: "column" }}>
 					<Typography fontWeight="bold">You</Typography>
-					<Typography>{message.message}</Typography>
+					<Typography variant="body2">{message.message}</Typography>
 				</Box>
 			</Box>
 		);
@@ -70,7 +70,7 @@ const Message: React.FC<MyComponentProps> = ({
 					}}
 				>
 					<Typography fontWeight="bold">DuRAG</Typography>
-					<Typography>{message.message}</Typography>
+					<Typography variant="body2">{message.message}</Typography>
 					<Box
 						sx={{
 							background: theme.palette.primary.dark,

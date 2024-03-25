@@ -37,7 +37,7 @@ const SearchField = ({
 				height: height,
 			}}
 			PaperComponent={CustomPaper}
-			value={value}
+			// value={value}
 			inputValue={inputValue}
 			onInputChange={(event, newInputValue) => {
 				setInputValue(newInputValue);

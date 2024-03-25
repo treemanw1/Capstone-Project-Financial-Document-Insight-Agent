@@ -44,7 +44,7 @@ class Session(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=func.now(), nullable=False)
-    name = Column(Text, nullable=False)
+    name = Column(Text, default="Insert name here", nullable=False)
 
     user = relationship("User", back_populates="sessions")
     sessionPDF = relationship("SessionPDFs", back_populates="session", cascade="all, delete-orphan")

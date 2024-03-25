@@ -80,7 +80,7 @@ const Filter = () => {
 			"/create-session",
 			"Failed to create session.",
 			(session_id) => {
-				router.push(`/chat/${session_id}`);
+				router.push(`/chat`);
 			}
 		);
 	};
@@ -238,8 +238,9 @@ const Filter = () => {
 									{selectedCompanies.length})
 								</Typography>
 								<Box sx={{ border: 1, height: "100%" }}>
-									{selectedCompanies.map((company) => (
+									{selectedCompanies.map((company, index) => (
 										<Box
+											key={index}
 											sx={{
 												display: "flex",
 												alignItems: "center",
@@ -300,8 +301,9 @@ const Filter = () => {
 							Found documents
 						</Typography>
 						<Box sx={{ border: 1, height: "100%", mt: 1, mb: 1 }}>
-							{selectedPDFs.map((pdf) => (
+							{selectedPDFs.map((pdf, index) => (
 								<Box
+									key={index}
 									sx={{
 										display: "flex",
 										alignItems: "center",

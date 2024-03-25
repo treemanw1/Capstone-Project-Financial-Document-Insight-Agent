@@ -67,6 +67,10 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 		setCurrentPage((visibleStopIndex + 1).toString());
 	}, 20);
 
+	const scroll = (visibleStopIndex: number) => {
+		setCurrentPage((visibleStopIndex + 1).toString());
+	};
+
 	const handleInputPage = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const pageNumber: string = event.target.value;
 		if (pageNumber == "") {
@@ -99,7 +103,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 				display: "flex",
 				flexDirection: "column",
 				// backgroundColor: "lightblue",
-				width: "41.25%",
+				width: "45%",
 				justifyContent: "space-between",
 			}}
 		>
@@ -108,9 +112,15 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 					display: "flex",
 					alignItems: "center",
 					height: globalStyles.headerHeight,
+					// background: "lightblue",
 				}}
 			>
-				<Typography sx={{ m: 2 }}>{pdf?.pdf_document_name}</Typography>
+				<Typography
+					variant="body1"
+					sx={{ width: "70%", overflow: "clip", m: 2 }}
+				>
+					{pdf?.pdf_document_name}
+				</Typography>
 				<TextField
 					sx={{
 						display: "flex",
@@ -119,6 +129,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 						height: "40px",
 						border: 1,
 						borderColor: theme.palette.text.primary,
+						// background: "pink",
 						// borderRadius: 2,
 						"& fieldset": { border: "none" },
 					}}
@@ -141,8 +152,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 			>
 				<Document
 					className={style.document}
-					file={pdf?.filepath}
-					// file="../antifragile.pdf"
+					file={"../" + pdf?.filepath}
 				>
 					<List
 						className={listStyles}
@@ -152,8 +162,10 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 						itemCount={pdf?.num_pages!}
 						itemSize={pdfHeight * 1.05}
 						width={pdfHeight * 0.801}
-						onItemsRendered={({ visibleStopIndex }) =>
-							debouncedScroll(visibleStopIndex)
+						onItemsRendered={
+							({ visibleStopIndex }) =>
+								debouncedScroll(visibleStopIndex)
+							// scroll(visibleStopIndex)
 						}
 					>
 						{PageRenderer}
