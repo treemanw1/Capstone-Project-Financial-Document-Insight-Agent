@@ -1,4 +1,10 @@
-import React, { useContext, Dispatch, SetStateAction } from "react";
+import React, {
+	useEffect,
+	useRef,
+	useContext,
+	Dispatch,
+	SetStateAction,
+} from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import { globalStyles } from "styles";
 
@@ -21,7 +27,7 @@ interface MyComponentProps {
 	token: string | null;
 	currentQuery: string;
 	setCurrentQuery: (query: string) => void;
-	messages: ChatMessage[];
+	messages: ChatMessage[] | any[];
 	setMessages: Dispatch<SetStateAction<ChatMessage[]>>;
 	currentSessionId: number | null;
 	setHighlightedChunks: Dispatch<SetStateAction<Chunk[]>>;
@@ -49,24 +55,45 @@ const ChatSection: React.FC<MyComponentProps> = ({
 	const theme = useTheme();
 	const { toggleColorMode } = useContext(ColorModeContext);
 
-	const sendQuery = async () => {
-		post(
-			token,
-			currentQuery,
-			"/query",
-			"Failed to fetch LLM response and chunks.",
-			(queryResponse: any) => {
-				setMessages(
-					messages.concat({
-						session_id: currentSessionId!, // replace later
-						message: currentQuery,
+	const hasPageBeenRendered = useRef<boolean>(false);
+
+	useEffect(() => {
+		// if messages changes it means that the user has sent a query
+		if (
+			hasPageBeenRendered.current &&
+			messages.length > 0 &&
+			messages.slice(-1)[0].role == "user"
+		) {
+			post(
+				token,
+				{ query: currentQuery, session_id: currentSessionId },
+				"/query",
+				"Failed to fetch LLM response and chunks.",
+				(botMessage: any) => {
+					const message = {
+						message: botMessage.message,
+						session_id: currentSessionId!,
 						role: "bot",
-					})
-				);
-				setHighlightedChunks(queryResponse.chunks);
-			}
-		);
-		setCurrentQuery("");
+						chunks: botMessage.chunks,
+					};
+					setMessages([...messages, message]);
+					setHighlightedChunks(botMessage.chunks);
+				}
+			);
+			setCurrentQuery("");
+		}
+		hasPageBeenRendered.current = true;
+	}, [messages]);
+
+	const sendQuery = async (userMessage: string) => {
+		setMessages([
+			...messages,
+			{
+				message: currentQuery,
+				session_id: currentSessionId,
+				role: "user",
+			},
+		]);
 	};
 
 	return (
@@ -74,7 +101,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				width: "45%",
+				width: "41.25%",
 				background: theme.palette.primary.main,
 				// background: "lightblue",
 				justifyContent: "space-between",
@@ -130,8 +157,9 @@ const ChatSection: React.FC<MyComponentProps> = ({
 			</Box>
 			<Box
 				sx={{
+					scrollBehavior: "smooth",
 					display: "flex",
-					flexDirection: "column",
+					flexDirection: "column-reverse",
 					justifyContent: "end",
 					flex: 1,
 					overflow: "auto",
@@ -155,7 +183,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 					},
 				}}
 			>
-				<Box sx={{ minHeight: 0 }}>
+				<Box sx={{}}>
 					{messages.map((message, index) => {
 						return (
 							<Message

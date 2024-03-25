@@ -6,6 +6,8 @@ import { Box, Button, Drawer, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 import PDFViewer from "../(components)/PDFViewer";
+import PDFList from "../(components)/PDFList";
+
 import { pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 
@@ -47,11 +49,13 @@ const dummyMessages = [
 		id: 0,
 		session_id: 3,
 		message: "Hello, world!",
+		role: "user",
 	},
 	{
 		id: 1,
 		session_id: 3,
 		message: "Hello, user!",
+		role: "bot",
 		chunks: [
 			{
 				id: 0,
@@ -66,12 +70,14 @@ const dummyMessages = [
 		id: 2,
 		session_id: 3,
 		message: "What is a copypasta?",
+		role: "user",
 	},
 	{
 		id: 3,
 		session_id: 3,
 		message:
 			"A copypasta is a block of text copied and pasted to the Internet and social media. Copypasta containing controversial ideas or lengthy rants are often posted for humorous purposes, to provoke reactions from those unaware that the posted text is a meme.",
+		role: "bot",
 		chunks: [
 			{
 				id: 1,
@@ -86,12 +92,14 @@ const dummyMessages = [
 		id: 4,
 		session_id: 3,
 		message: "What is a copypasta?",
+		role: "user",
 	},
 	{
 		id: 4,
 		session_id: 3,
 		message:
 			'"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"',
+		role: "bot",
 		chunks: [
 			{
 				id: 2,
@@ -128,6 +136,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 
 	useEffect(() => {
 		router.prefetch("/filter");
+		// UNCOMMENT AFTER REMOVING DUMMY DATA
 		get(token, "/get-sessions", "Failed to fetch sessions.", (sessions) => {
 			sessions.sort(
 				(a: Session, b: Session) =>
@@ -135,6 +144,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					new Date(a.created_at).getTime()
 			);
 			setSessions(sessions);
+			setCurrentSessionId(sessions[0].id);
 			get(
 				token,
 				`/get-pdfs/${sessions[0].id}`,
@@ -144,20 +154,22 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 				}
 			);
 		});
+
+		// setSessions(dummySessions);
 		// setPDFs([
 		// 	{
 		// 		id: 0,
 		// 		pdf_document_name: "Antifragile - Nassim Taleb",
 		// 		company: "Random House",
 		// 		num_pages: 581,
-		// 		filepath: "../antifragile.pdf",
+		// 		filepath: "pdfs/antifragile.pdf",
 		// 	},
 		// 	{
 		// 		id: 1,
 		// 		pdf_document_name: "Shogun - James Clavell",
 		// 		company: "Dell",
 		// 		num_pages: 1081,
-		// 		filepath: "../shogun.pdf",
+		// 		filepath: "pdfs/shogun.pdf",
 		// 	},
 		// ]);
 	}, []);
@@ -169,25 +181,14 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 	}, [pdfs]);
 
 	const getSessionHistory = async (session_id: number) => {
-		try {
-			const response = await fetch(
-				`http://localhost:8000/get-chat-history/${session_id}`,
-				{
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			if (!response.ok) {
-				throw new Error("Failed to fetch session history.");
-			} else {
-				const chat_history = await response.json();
+		get(
+			token,
+			`/get-chat-history/${session_id}`,
+			"Failed to fetch session history.",
+			(chat_history) => {
 				setMessages(chat_history);
 			}
-		} catch (error) {
-			console.error("Error fetching PDFs:", error);
-		}
+		);
 	};
 
 	return (
@@ -215,9 +216,18 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 				<Sessions
 					currentSessionId={currentSessionId}
 					sessions={sessions}
+					// sessions={dummySessions}
 					onClickSession={(id) => {
 						setCurrentSessionId(id);
 						getSessionHistory(id);
+						get(
+							token,
+							`/get-pdfs/${id}`,
+							"Failed to fetch PDFs.",
+							(pdfs) => {
+								setPDFs(pdfs);
+							}
+						);
 					}}
 				/>
 			</Drawer>
@@ -225,6 +235,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 			<Box
 				sx={{
 					display: "flex",
+					// background: "lightblue",
 					transition: "margin 150ms ease-in-out",
 					marginLeft: `-${globalStyles.drawerWidth}px`,
 					...(sidebarOpen && {
@@ -237,7 +248,8 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					token={token}
 					currentQuery={currentQuery}
 					setCurrentQuery={setCurrentQuery}
-					messages={dummyMessages}
+					messages={messages}
+					// messages={dummyMessages}
 					setMessages={setMessages}
 					currentSessionId={currentSessionId}
 					setHighlightedChunks={setHighlightedChunks}
@@ -254,63 +266,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					setCurrentPage={setCurrentPage}
 					listRef={listRef}
 				/>
-				<Box
-					sx={{
-						display: "flex",
-						// background: "pink",
-						borderLeft: 1,
-						borderColor: theme.palette.text.primary,
-						flexDirection: "column",
-						width: "15%",
-					}}
-				>
-					<Box
-						sx={{
-							height: globalStyles.headerHeight,
-							borderBottom: 1,
-							display: "flex",
-							pl: 1.5,
-							alignItems: "center",
-						}}
-					>
-						<Typography variant="body2">
-							Filtered documents
-						</Typography>
-					</Box>
-					{pdfs == null ? (
-						<Typography>Loading...</Typography>
-					) : (
-						pdfs.map((pdf) => {
-							return (
-								<Button
-									key={pdf.id}
-									onClick={() => {
-										setSelectedPDFID(pdf.id);
-									}}
-									sx={{
-										justifyContent: "flex-start",
-										color: theme.palette.text.primary,
-										textTransform: "none",
-										borderBottom: 1,
-										borderColor: theme.palette.text.primary,
-										borderRadius: 0,
-										"&:hover": {
-											background:
-												theme.palette.primary.dark,
-										},
-									}}
-								>
-									<Typography
-										variant="caption"
-										lineHeight={1.2}
-									>
-										{pdf.pdf_document_name}
-									</Typography>
-								</Button>
-							);
-						})
-					)}
-				</Box>
+				<PDFList pdfs={pdfs} setSelectedPDFID={setSelectedPDFID} />
 			</Box>
 		</Box>
 	);

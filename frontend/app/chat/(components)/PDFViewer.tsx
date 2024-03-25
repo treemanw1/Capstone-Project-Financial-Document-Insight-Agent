@@ -99,9 +99,8 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 				display: "flex",
 				flexDirection: "column",
 				// backgroundColor: "lightblue",
-				width: "45%",
+				width: "41.25%",
 				justifyContent: "space-between",
-				// borderRight: 1,
 			}}
 		>
 			<Box
@@ -140,7 +139,11 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 					overflow: "clip",
 				}}
 			>
-				<Document className={style.document} file={pdf?.filepath}>
+				<Document
+					className={style.document}
+					file={pdf?.filepath}
+					// file="../antifragile.pdf"
+				>
 					<List
 						className={listStyles}
 						itemData={{ pdfHeight, textRenderer }}

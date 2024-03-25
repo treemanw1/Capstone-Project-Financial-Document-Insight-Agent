@@ -1,5 +1,5 @@
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, joinedload, aliased
 from sqlalchemy import insert, and_
 from fastapi import HTTPException
 
@@ -46,7 +46,6 @@ def link_session_pdfs(db: Session, session_id: int, pdf_ids: List[int]):
 
 def get_sessions(db: Session, user_id: int):
     sessions =  db.query(models.Session.id, models.Session.name, models.Session.created_at).filter(models.Session.user_id == user_id).all()
-    print("crud sessions:", sessions)
     return sessions
 
 
@@ -65,18 +64,27 @@ def create_chat_message(db: Session, chat_message: schemas.ChatMessage):
     db.refresh(db_chat_message)
     return db_chat_message
 
-def get_user_messages(db: Session, session_id: int):
-    return db.query(models.ChatHistory).\
-        filter(models.ChatHistory.session_id == session_id).\
-        filter(models.ChatHistory.role == "user").\
+def get_session_user_messages(db: Session, session_id: int):
+    Chat = aliased(models.ChatHistory)
+    return db.query(Chat.id, Chat.role, Chat.message, Chat.created_at, Chat.session_id).\
+        filter(Chat.session_id == session_id).\
+        filter(Chat.role == "user").\
         all()
 
 def get_bot_messages(db: Session, session_id: int):
-    # join(models.Chunk, models.ChatHistory.id == models.Chunk.chat_history_id).\
-    # options(joinedload(models.ChatHistory.chunk)).\
-    return db.query(models.ChatHistory).\
-        filter(models.ChatHistory.session_id == session_id).\
-        filter(models.ChatHistory.role == "bot").\
+    Chat = aliased(models.ChatHistory)
+    return db.query(Chat.id, Chat.role, Chat.message, Chat.created_at, Chat.session_id).\
+        filter(Chat.session_id == session_id).\
+        filter(Chat.role == "bot").\
+        all()
+
+def get_session_chunks(db: Session, session_id: int):
+    Chunk = aliased(models.Chunk)
+    Chat = aliased(models.ChatHistory)
+    return db.query(Chat.id, Chunk.chat_history_id , Chunk.text, Chunk.page_num, Chunk.pdf_id, Chunk.score).\
+        select_from(Chat).\
+        join(Chunk, Chat.id == Chunk.chat_history_id).\
+        filter(Chat.session_id == session_id, Chat.role == 'bot').\
         all()
 
 def create_chunks(db: Session, chunks: List[schemas.Chunk]):
@@ -95,9 +103,18 @@ def get_pdf_ids(db: Session, session_id: int):
 def get_pdfs(db: Session, pdf_ids: List[int]):
     return db.query(models.PDF).filter(models.PDF.id.in_(pdf_ids)).all()
 
+def get_all_pdfs(db: Session):
+    columns_desired = (models.PDF.id, models.PDF.pdf_document_name, models.PDF.company, models.PDF.num_pages, models.PDF.filepath)
+    return db.query(*columns_desired).all()
+
 def filter_pdfs(db: Session, query: schemas.SearchQuery):
     return db.query(models.PDF)\
         .filter(models.PDF.company.in_(query.companies))\
+        .filter(and_(models.PDF.date >= query.start_date, models.PDF.date <= query.end_date))\
+        .all()
+
+def filter_pdfs_by_date(db: Session, query: schemas.SearchQuery):
+    return db.query(models.PDF)\
         .filter(and_(models.PDF.date >= query.start_date, models.PDF.date <= query.end_date))\
         .all()
 

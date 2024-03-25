@@ -22,7 +22,7 @@ const PDFList: React.FC<MyComponentProps> = ({ pdfs, setSelectedPDFID }) => {
 				borderLeft: 1,
 				borderColor: theme.palette.text.primary,
 				flexDirection: "column",
-				width: "10%",
+				width: "17.5%",
 			}}
 		>
 			<Box
@@ -34,9 +34,7 @@ const PDFList: React.FC<MyComponentProps> = ({ pdfs, setSelectedPDFID }) => {
 					justifyContent: "center",
 				}}
 			>
-				<Typography variant="body2" fontSize={13}>
-					Filtered documents
-				</Typography>
+				<Typography variant="body1">Filtered documents</Typography>
 			</Box>
 			{pdfs == null ? (
 				<Typography>Loading...</Typography>
@@ -49,6 +47,7 @@ const PDFList: React.FC<MyComponentProps> = ({ pdfs, setSelectedPDFID }) => {
 								setSelectedPDFID(pdf.id);
 							}}
 							sx={{
+								display: "flex",
 								justifyContent: "flex-start",
 								color: theme.palette.text.primary,
 								textTransform: "none",
@@ -61,9 +60,14 @@ const PDFList: React.FC<MyComponentProps> = ({ pdfs, setSelectedPDFID }) => {
 							}}
 						>
 							<Typography
-								variant="caption"
 								lineHeight={1.2}
-								fontSize={5}
+								fontSize="1.5vh"
+								noWrap
+								sx={{
+									flex: "auto",
+									// background: "lightblue",
+									width: "",
+								}}
 							>
 								{pdf.pdf_document_name}
 							</Typography>

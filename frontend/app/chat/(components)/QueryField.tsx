@@ -7,7 +7,7 @@ import { useTheme } from "@mui/material";
 interface MyComponentProps {
 	currentQuery: string;
 	setCurrentQuery: (query: string) => void;
-	sendQuery: () => void;
+	sendQuery: (userMessage: string) => void;
 	messages: ChatMessage[];
 	setMessages: Dispatch<SetStateAction<ChatMessage[]>>;
 	sessionId: number;
@@ -42,7 +42,7 @@ const QueryField: React.FC<MyComponentProps> = ({
 				}}
 				onKeyDown={(event) => {
 					if (event.key == "Enter" && currentQuery != "") {
-						sendQuery();
+						sendQuery(currentQuery);
 					}
 				}}
 				placeholder="Start typing your question..."
@@ -65,13 +65,7 @@ const QueryField: React.FC<MyComponentProps> = ({
 				disableRipple
 				onClick={() => {
 					if (currentQuery != "") {
-						sendQuery();
-						setMessages(
-							messages.concat({
-								message: currentQuery,
-								session_id: sessionId,
-							})
-						);
+						sendQuery(currentQuery);
 					}
 				}}
 			>

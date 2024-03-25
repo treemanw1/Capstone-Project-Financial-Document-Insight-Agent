@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional, Union
 from datetime import date, datetime
 
 class StatusResponse(BaseModel):
@@ -36,9 +36,9 @@ class PDF(BaseModel):
     filepath: str
 
 class SearchQuery(BaseModel):
-    start_date: datetime
-    end_date: datetime
-    companies: List[str]
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    companies: Optional[List[str]] = None
 
 class AdvancedSearchQuery(BaseModel):
     document_type: str
@@ -61,6 +61,13 @@ class ChatMessage(BaseModel):
 
 class BotMessage(ChatMessage):
     chunks: List[Chunk]
+
+IntOrString = Union[int, str]
+EitherMessage = Union[BotMessage, ChatMessage]
+
+class UserQuery(BaseModel):
+    query: str
+    session_id: int
 
 class Session(BaseModel):
     id: int

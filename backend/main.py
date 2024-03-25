@@ -110,6 +110,11 @@ async def get_company_names(status: Annotated[schemas.User, Depends(get_login_st
     company_names = crud.get_company_names(db)
     return [company[0] for company in company_names]
 
+@app.get("/get-all-pdfs", response_model=List[schemas.PDF])
+async def get_all_pdfs(status: Annotated[schemas.User, Depends(get_login_status)], db: Session = Depends(get_db)):
+    pdfs = crud.get_all_pdfs(db)
+    return pdfs
+
 @app.post("/create-user", response_model=schemas.StatusResponse)
 async def create_user(credentials: schemas.UserCredentials, db: Session = Depends(get_db)):
     crud.create_user(db, user=credentials)
@@ -136,8 +141,14 @@ async def login_for_access_token(
 async def pdf_search(status: Annotated[schemas.User, Depends(get_login_status)],
                      query: schemas.SearchQuery, 
                      db: Session = Depends(get_db)):
-    pdfs = crud.filter_pdfs(db, query=query)
-    print("pdfs:", pdfs)
+    if not query.start_date or query.start_date == "":
+        query.start_date = datetime.min
+    if not query.end_date or query.end_date == "":
+        query.end_date = datetime.max
+    if query.companies:
+        pdfs = crud.filter_pdfs(db, query=query)
+    else:
+        pdfs = crud.filter_pdfs_by_date(db, query=query)
     return pdfs
 
 @app.post("/create-session", response_model=int)
@@ -154,13 +165,31 @@ async def get_sessions(user_id: Annotated[schemas.User, Depends(get_current_user
     sessions = crud.get_sessions(db, user_id)
     return sessions
 
-@app.get("/get-chat-history/{session_id}", response_model=List[schemas.ChatMessage])
-async def get_chat_history(session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
-    user_messages = crud.get_user_messages(db, session_id)
+@app.get("/get-chat-history/{session_id}", response_model=List[schemas.EitherMessage])
+async def get_chat_history(session_id: int,
+                        # token: Annotated[str, Depends(get_login_status)],
+                        db: Session = Depends(get_db)):
+    user_messages = crud.get_session_user_messages(db, session_id)
+    user_messages = [msg._mapping for msg in user_messages]
     bot_messages = crud.get_bot_messages(db, session_id)
+    chunks = crud.get_session_chunks(db, session_id)
+
+    id_to_chunks = {}
+    for msg in chunks:
+        chunk = schemas.Chunk(text=msg.text, chat_history_id=msg.chat_history_id ,page_num=msg.page_num, pdf_id=msg.pdf_id, score=msg.score)
+        if msg.id not in id_to_chunks:
+            id_to_chunks[msg.id] = [chunk]
+        else:
+            id_to_chunks[msg.id].append(chunk)
+    bot_messages = [msg._mapping for msg in bot_messages]
+    bot_messages = [{**msg, "chunks": id_to_chunks.get(msg.id, [])} for msg in bot_messages]
     chat_history = user_messages + bot_messages
-    chat_history.sort(key=lambda x: x.created_at)
+    chat_history.sort(key=lambda x: x['created_at'])
     return chat_history
+
+@app.get("/test", response_model=List[schemas.Chunk])
+async def test(db: Session = Depends(get_db)):
+    return crud.get_session_chunks(db, 8)
 
 @app.get("/get-pdfs/{session_id}", response_model=List[schemas.PDF])
 async def get_pdfs(session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
@@ -168,8 +197,8 @@ async def get_pdfs(session_id: int, token: Annotated[str, Depends(get_login_stat
     return crud.get_pdfs(db, [id[0] for id in pdf_ids])
 
 @app.post("/query", response_model=schemas.BotMessage)
-async def query(query: str, session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
-    user_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=session_id, role="user", message=query))
+async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
+    user_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="user", message=query.query))
 
     # VICTORIA REPLACE THIS DUMMY DATA WITH THE ACTUAL RAG API CALL (user_message.message)
     rag_response = {
@@ -180,13 +209,13 @@ async def query(query: str, session_id: int, token: Annotated[str, Depends(get_l
         ]
     }
     
-    bot_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=session_id, role="bot", message=rag_response["message"]))
+    bot_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="bot", message=rag_response["message"]))
     for chunk in rag_response["chunks"]:
         chunk["chat_history_id"] = bot_message.id
         
     crud.create_chunks(db, [schemas.Chunk(**chunk) for chunk in rag_response["chunks"]])
     response = {
-        "session_id": session_id,
+        "session_id": query.session_id,
         "role": "bot",
         "message": rag_response["message"],
         "chunks": rag_response["chunks"]

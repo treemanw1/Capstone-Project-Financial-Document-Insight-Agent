@@ -1,52 +1,63 @@
-import React from "react";
-import { Box, TextField, Typography } from "@mui/material";
+import React, { useState, Dispatch, SetStateAction } from "react";
+import { Box, TextField, Typography, Autocomplete, Paper } from "@mui/material";
+import { PaperProps } from "@mui/material";
 
-interface MyObjectProp {
+interface MyComponentProps {
 	title: string;
 	height: string;
 	width: string;
 	fontSize: string;
+	options?: string[];
+	// setSelected: Dispatch<SetStateAction<T[]>>;
+	onSelect: (newValue: string) => void;
 }
 
-interface MyComponentProps {
-	props: MyObjectProp;
-}
+const CustomPaper = (props: PaperProps) => {
+	return <Paper sx={{ width: "fit-content" }} {...props} />;
+};
 
-const SearchField: React.FC<MyComponentProps> = ({ props }) => {
+const SearchField = ({
+	title,
+	height,
+	width,
+	fontSize,
+	options = ["dummy1", "dummy2", "dummy3"],
+	// setSelected,
+	onSelect,
+}: MyComponentProps) => {
+	const [value, setValue] = useState<string>("");
+	const [inputValue, setInputValue] = useState<string>("");
+
 	return (
-		<Box
+		<Autocomplete
+			disableCloseOnSelect
+			options={options}
 			sx={{
-				// background: "pink",
-				width: props.width,
-				height: props.height,
+				width: width,
+				height: height,
 			}}
-		>
-			<Typography
-				sx={{
-					height: `calc(${props.fontSize} + 5px)`,
-					fontSize: props.fontSize,
-					color: "#757575",
-					mb: "5px",
-				}}
-			>
-				{props.title}
-			</Typography>
-			<TextField
-				inputProps={{ style: { fontSize: props.fontSize } }}
-				sx={{
-					width: "100%",
-					color: "success.main",
-					height: "100%",
-					borderRadius: "40px",
-					"& .MuiOutlinedInput-root": {
-						borderRadius: "50px",
-					},
-					"& .MuiInputBase-root": {
-						height: `calc(100% - ${props.fontSize} - 10px)`,
-					},
-				}}
-			></TextField>
-		</Box>
+			PaperComponent={CustomPaper}
+			value={value}
+			inputValue={inputValue}
+			onInputChange={(event, newInputValue) => {
+				setInputValue(newInputValue);
+			}}
+			onChange={(event, newValue) => {
+				if (newValue === null) return;
+				setInputValue("");
+				onSelect(newValue);
+			}}
+			renderInput={(params) => (
+				<TextField
+					{...params}
+					// InputLabelProps={{
+					// 	...params.InputLabelProps,
+					// 	style: { color: "black" },
+					// }}
+					label={title}
+				/>
+			)}
+		/>
 	);
 };
 

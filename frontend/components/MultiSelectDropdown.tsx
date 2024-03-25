@@ -42,7 +42,7 @@ const MultiSelectDropdown: React.FC<MyComponentProps> = ({
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				// backgroundColor: "lightblue",
+				// background: "lightblue",
 				height: height,
 				width: width,
 			}}
@@ -72,19 +72,24 @@ const MultiSelectDropdown: React.FC<MyComponentProps> = ({
 					MenuProps={{
 						PaperProps: {
 							style: {
-								maxHeight: 150,
+								maxHeight: "30vh",
 								width: 250,
 								backgroundColor: "#F1F1F1",
 								borderRadius: "15px",
 							},
 						},
 					}}
-					inputProps={{ "aria-label": "Without label" }}
+					inputProps={{
+						"aria-label": "Without label",
+					}}
 					sx={{
 						borderRadius: "50px",
 						fontSize: fontSize,
 						// backgroundColor: "pink",
 						height: "100%",
+						"&:focused": {
+							backgroundColor: "pink",
+						},
 					}}
 				>
 					<MenuItem sx={{ fontSize: fontSize }} disabled value="">

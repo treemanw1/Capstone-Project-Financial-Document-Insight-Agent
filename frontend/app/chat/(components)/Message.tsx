@@ -15,8 +15,6 @@ interface MyComponentProps {
 	setSelectedPDFID: Dispatch<SetStateAction<number | null>>;
 }
 
-import { isBotMessage } from "utils/type_utils";
-
 const Message: React.FC<MyComponentProps> = ({
 	message,
 	chunks,
@@ -26,14 +24,14 @@ const Message: React.FC<MyComponentProps> = ({
 	setSelectedPDFID,
 }) => {
 	const theme = useTheme();
-	const goToChunk = (pageNum: number) => {
+	const goToPage = (pageNum: number) => {
 		setCurrentPage(pageNum.toString());
 		listRef.current?.scrollToItem(pageNum - 1, "start");
 	};
 
 	const handleOnClick = (chunk: Chunk) => {
-		// setSelectedPDFID(chunk.pdfID);
-		goToChunk(chunk.pageNum);
+		setSelectedPDFID(chunk.pdfID);
+		setTimeout(() => goToPage(chunk.pageNum), 200);
 		setHighlightedChunks(chunks!);
 	};
 
@@ -89,7 +87,7 @@ const Message: React.FC<MyComponentProps> = ({
 							Cited sources
 						</Typography>
 						{/* Uncomment when chunks table settled */}
-						{/* {chunks!.map((chunk, index) => {
+						{chunks!.map((chunk, index) => {
 							return (
 								<Box
 									key={index}
@@ -130,7 +128,7 @@ const Message: React.FC<MyComponentProps> = ({
 									</Typography>
 								</Box>
 							);
-						})} */}
+						})}
 					</Box>
 				</Box>
 			</Box>
