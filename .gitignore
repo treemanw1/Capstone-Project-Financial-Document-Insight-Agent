@@ -1,9 +1,18 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+/frontend/node_modules
+/frontend/.next
+/backend/__pycache__
+/backend/sql_app/__pycache__
+/backend/arched-forest-409209-d427c9c9f53d.json
+
+.env
+
 /.pnp
 .pnp.js
+
+/frontend/public/pdfs
 
 # testing
 /coverage
@@ -21,5 +30,3 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-.next
