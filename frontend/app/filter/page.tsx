@@ -6,10 +6,11 @@ import Footer from "@components/Footer";
 import RoundButton from "@components/RoundButton";
 import MultiSelectDropdown from "@components/MultiSelectDropdown";
 import DateDropdown from "@components/DateDropdown";
-import { Box, Typography, IconButton } from "@mui/material";
+import { Box, Divider, Typography, IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { globalStyles } from "styles";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@mui/material/styles";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -28,6 +29,7 @@ const Filter = () => {
 	const token =
 		typeof window !== "undefined" ? localStorage.getItem("jwtToken") : null;
 	const router = useRouter();
+	const theme = useTheme();
 
 	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [endDate, setEndDate] = useState<Date | null>(null);
@@ -38,6 +40,7 @@ const Filter = () => {
 	const [selectedPDFs, setSelectedPDFs] = useState<PDF[]>([]);
 
 	useEffect(() => {
+		router.prefetch("/chat");
 		get(
 			token,
 			"/get-company-names",
@@ -91,7 +94,8 @@ const Filter = () => {
 				sx={{
 					display: "flex",
 					flexDirection: "column",
-					minHeight: "100vh",
+					// minHeight: "100vh",
+					height: "100vh",
 					// backgroundColor: "pink",
 					justifyContent: "space-between",
 				}}
@@ -100,8 +104,7 @@ const Filter = () => {
 				<Box
 					sx={{
 						mx: globalStyles.mx,
-						mt: 5,
-						// background: "pink",
+						// background: "lightblue",
 						display: "flex",
 						flexGrow: 1,
 						justifyContent: "space-between",
@@ -110,236 +113,325 @@ const Filter = () => {
 					<Box
 						sx={{
 							display: "flex",
-							flexDirection: "column",
-							// background: "lightblue",
-							width: "47.5%",
+							width: "100%",
+							alignItems: "center",
+							justifyContent: "space-between",
+							// background: "pink",
 						}}
 					>
-						<Typography
-							variant="h4"
-							lineHeight={1.1}
-							sx={{
-								backgroundColor: "",
-								mb: 1,
-							}}
-						>
-							Search for documents
-						</Typography>
 						<Box
 							sx={{
 								display: "flex",
-								// background: "pink",
-								gap: 1,
-								mb: 3,
+								flexDirection: "column",
+								// background: "lightblue",
+								justifyContent: "space-between",
+								height: "70vh",
+								width: "45vw",
 							}}
 						>
-							<SearchField
-								title="Search documents by name"
-								height={styles.barHeight}
-								width="100%"
-								fontSize={styles.fontSize}
-								onSelect={(newValue: string) => {
-									const pdf = pdfs.find(
-										(pdf) =>
-											pdf.pdf_document_name === newValue
-									)!;
-									setSelectedPDFs([...selectedPDFs, pdf]);
+							<Typography
+								variant="h4"
+								lineHeight={1.1}
+								sx={{
+									backgroundColor: "",
+									mb: 1,
 								}}
-								options={pdfs.map(
-									(pdf) => pdf.pdf_document_name
-								)}
-							/>
-						</Box>
-						<Typography
-							variant="h4"
-							lineHeight={1.1}
-							sx={{
-								backgroundColor: "",
-							}}
-						>
-							Find documents through filters
-						</Typography>
-						<Box
-							sx={{
-								display: "flex",
-								mt: 1,
-								// justifyContent: "space-between",
-								gap: 2,
-							}}
-						>
+							>
+								Search for documents
+							</Typography>
 							<Box
 								sx={{
 									display: "flex",
-									flexDirection: "column",
-									width: "50%",
 									gap: 1,
-									// background: "pink",
+									mb: 3,
 								}}
 							>
 								<SearchField
-									title="Search companies by name"
+									title="Search documents by name"
 									height={styles.barHeight}
 									width="100%"
 									fontSize={styles.fontSize}
 									onSelect={(newValue: string) => {
-										setSelectedCompanies([
-											...selectedCompanies,
-											newValue,
-										]);
+										const pdf = pdfs.find(
+											(pdf) =>
+												pdf.pdf_document_name ===
+												newValue
+										)!;
+										setSelectedPDFs([...selectedPDFs, pdf]);
 									}}
-									options={companyNames}
+									options={pdfs.map(
+										(pdf) => pdf.pdf_document_name
+									)}
 								/>
-
-								<DateDropdown
-									props={{
-										title: "Select start date",
-										label: "Start Date",
-										date: startDate,
-										onChange: (d) => setStartDate(d),
-										width: "100%",
-										height: styles.barHeight,
-										mt: "-3px",
-										fontSize: styles.fontSize,
-									}}
-								/>
-								<DateDropdown
-									props={{
-										title: "Select end date",
-										label: "End Date",
-										date: endDate,
-										onChange: (d) => setEndDate(d),
-										width: "100%",
-										height: styles.barHeight,
-										mt: "-3px",
-										fontSize: styles.fontSize,
-									}}
-								/>
-								<Box sx={{ mt: 1 }}>
-									<RoundButton
-										text="Add"
-										height="6vh"
-										width="100%"
-										fontSize={styles.fontSize}
-										onClick={() => {
-											addDocuments();
-										}}
-									/>
-								</Box>
 							</Box>
+							<Typography
+								variant="h4"
+								lineHeight={1.1}
+								sx={{
+									backgroundColor: "",
+								}}
+							>
+								Find documents through filters
+							</Typography>
 							<Box
 								sx={{
 									display: "flex",
-									flexDirection: "column",
-									width: "50%",
+									mt: 1,
+									// background: "pink",
+									justifyContent: "space-between",
+									height: "44vh",
 								}}
 							>
-								<Typography sx={{}}>
-									Companies selected (
-									{selectedCompanies.length})
-								</Typography>
-								<Box sx={{ border: 1, height: "100%" }}>
-									{selectedCompanies.map((company, index) => (
-										<Box
-											key={index}
-											sx={{
-												display: "flex",
-												alignItems: "center",
-												// background: "pink",
-												height: "fit-content",
-												justifyContent: "space-between",
+								<Box
+									sx={{
+										display: "flex",
+										flexDirection: "column",
+										width: "47.5%",
+									}}
+								>
+									<Box
+										sx={{
+											height: "4vh",
+											// background: "lightblue",
+										}}
+									/>
+									<Box
+										sx={{
+											display: "flex",
+											flexDirection: "column",
+											justifyContent: "space-between",
+											// background: "lightblue",
+											height: "100%",
+										}}
+									>
+										<Box sx={{ height: "4vh" }} />
+										<SearchField
+											title="Search companies by name"
+											height={styles.barHeight}
+											width="100%"
+											fontSize={styles.fontSize}
+											onSelect={(newValue: string) => {
+												setSelectedCompanies([
+													...selectedCompanies,
+													newValue,
+												]);
 											}}
-										>
-											<Typography
-												variant="body2"
-												// sx={{ background: "lightblue" }}
-											>
-												{company}
-											</Typography>
-											<IconButton
-												size="small"
-												sx={
-													{
-														// background: "lightblue",
-													}
-												}
-												disableRipple
-												onClick={() =>
-													setSelectedCompanies(
-														selectedCompanies.filter(
-															(item) =>
-																item != company
-														)
-													)
-												}
-											>
-												<Delete
-												// sx={{ fontSize: "3vh" }}
-												/>
-											</IconButton>
+											options={companyNames}
+										/>
+										<Divider sx={{ width: 0, mt: 0.5 }} />
+										<DateDropdown
+											props={{
+												title: "Select start date",
+												label: "Start Date",
+												date: startDate,
+												onChange: (d) =>
+													setStartDate(d),
+												width: "100%",
+												height: styles.barHeight,
+												mt: "-3px",
+												fontSize: styles.fontSize,
+											}}
+										/>
+										<Divider sx={{ width: 0, mt: 0.5 }} />
+										<DateDropdown
+											props={{
+												title: "Select end date",
+												label: "End Date",
+												date: endDate,
+												onChange: (d) => setEndDate(d),
+												width: "100%",
+												height: styles.barHeight,
+												mt: "-3px",
+												fontSize: styles.fontSize,
+											}}
+										/>
+										<Box sx={{ mt: 3 }}>
+											<RoundButton
+												text="Add"
+												height="6vh"
+												width="100%"
+												fontSize={styles.fontSize}
+												onClick={() => {
+													addDocuments();
+												}}
+											/>
 										</Box>
-									))}
+									</Box>
+								</Box>
+								<Box
+									sx={{
+										display: "flex",
+										flexDirection: "column",
+										width: "47.5%",
+										// background: "lightgreen",
+									}}
+								>
+									<Box
+										sx={{
+											height: "4vh",
+											// background: "lightblue",
+										}}
+									>
+										<Typography sx={{ width: "100%" }}>
+											Companies selected (
+											{selectedCompanies.length})
+										</Typography>
+									</Box>
+									<Box
+										sx={{
+											display: "flex",
+											flexDirection: "column",
+											border: 1,
+											borderColor: "#C4C4C4",
+											overflow: "auto",
+											height: "100%",
+											// background: "pink",
+											"&::-webkit-scrollbar": {
+												backgroundColor:
+													theme.palette.primary.main,
+												width: "14px",
+											},
+											"&::-webkit-scrollbar-track": {
+												backgroundColor:
+													theme.palette.primary.light,
+											},
+											"&::-webkit-scrollbar-thumb": {
+												background:
+													theme.palette.primary.dark,
+												borderRadius: "16px",
+												border: `4px solid ${theme.palette.primary.light}`,
+											},
+											"&::-webkit-scrollbar-button": {
+												display: "none",
+											},
+										}}
+									>
+										{selectedCompanies.map(
+											(company, index) => (
+												<Box
+													key={index}
+													sx={{
+														display: "flex",
+														alignItems: "center",
+														// background: "pink",
+														height: "fit-content",
+														justifyContent:
+															"space-between",
+													}}
+												>
+													<Typography variant="body2">
+														{company}
+													</Typography>
+													<IconButton
+														size="small"
+														disableRipple
+														onClick={() =>
+															setSelectedCompanies(
+																selectedCompanies.filter(
+																	(item) =>
+																		item !=
+																		company
+																)
+															)
+														}
+													>
+														<Delete
+														// sx={{ fontSize: "3vh" }}
+														/>
+													</IconButton>
+												</Box>
+											)
+										)}
+									</Box>
 								</Box>
 							</Box>
 						</Box>
-					</Box>
-					<Box
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							// background: "lightgreen",
-							width: "47.5%",
-							mb: 5,
-						}}
-					>
-						<Typography
-							variant="h4"
-							lineHeight={1.1}
+						<Divider sx={{ width: 0, ml: "2.5vw" }} />
+						<Box
 							sx={{
-								backgroundColor: "",
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "space-between",
+								height: "70vh",
+								width: "45vw",
 							}}
 						>
-							Found documents
-						</Typography>
-						<Box sx={{ border: 1, height: "100%", mt: 1, mb: 1 }}>
-							{selectedPDFs.map((pdf, index) => (
-								<Box
-									key={index}
-									sx={{
-										display: "flex",
-										alignItems: "center",
-										// background: "pink",
-										height: "fit-content",
-										justifyContent: "space-between",
-									}}
-								>
-									<Typography variant="body2">
-										{pdf.pdf_document_name}
-									</Typography>
-									<IconButton
-										size="small"
-										disableRipple
-										onClick={() =>
-											setSelectedPDFs(
-												selectedPDFs.filter(
-													(item) => item != pdf
-												)
-											)
-										}
+							<Typography
+								variant="h4"
+								lineHeight={1.1}
+								sx={{
+									backgroundColor: "",
+								}}
+							>
+								Found documents
+							</Typography>
+							<Box
+								sx={{
+									border: 1,
+									borderColor: "#C4C4C4",
+									height: "100%",
+									overflow: "auto",
+									my: 1,
+									"&::-webkit-scrollbar": {
+										backgroundColor:
+											theme.palette.primary.main,
+										width: "14px",
+									},
+									"&::-webkit-scrollbar-track": {
+										backgroundColor:
+											theme.palette.primary.light,
+									},
+									"&::-webkit-scrollbar-thumb": {
+										background: theme.palette.primary.dark,
+										borderRadius: "16px",
+										border: `4px solid ${theme.palette.primary.light}`,
+									},
+									"&::-webkit-scrollbar-button": {
+										display: "none",
+									},
+								}}
+							>
+								{selectedPDFs.map((pdf, index) => (
+									<Box
+										key={index}
+										sx={{
+											display: "flex",
+											alignItems: "center",
+											// background: "pink",
+											height: "fit-content",
+											justifyContent: "space-between",
+										}}
 									>
-										<Delete />
-									</IconButton>
-								</Box>
-							))}
+										<Typography variant="body2">
+											{pdf.pdf_document_name}
+										</Typography>
+										<IconButton
+											size="small"
+											disableRipple
+											onClick={() =>
+												setSelectedPDFs(
+													selectedPDFs.filter(
+														(item) => item != pdf
+													)
+												)
+											}
+										>
+											<Delete />
+										</IconButton>
+									</Box>
+								))}
+							</Box>
+							<Divider sx={{ width: 0, mt: 1 }} />
+							<RoundButton
+								text="Start Chat Session"
+								height="6vh"
+								width={styles.barWidth + "vh"}
+								fontSize={styles.fontSize}
+								onClick={() => {
+									createSession();
+								}}
+							/>
 						</Box>
-						<RoundButton
-							text="Start Chat Session"
-							height="6vh"
-							width={styles.barWidth + "vh"}
-							fontSize={styles.fontSize}
-							onClick={() => {
-								createSession();
-							}}
-						/>
 					</Box>
 				</Box>
 				<Footer />

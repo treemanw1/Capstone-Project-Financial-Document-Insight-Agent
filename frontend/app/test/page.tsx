@@ -2,36 +2,16 @@
 
 import React from "react";
 import PDFViewer from "app/chat/(components)/PDFViewer";
-import { Box, TextField, Input, Select } from "@mui/material";
+import { Box, TextField, Input, Select, Typography } from "@mui/material";
+import { Document, pdfjs } from "react-pdf";
+import "react-pdf/dist/Page/TextLayer.css";
+import PageRenderer from "../chat/(components)/PageRenderer";
+import { FixedSizeList as List, FixedSizeList } from "react-window";
 
 const page = () => {
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				flexDirection: "column-reverse",
-				height: "100px",
-				overflow: "auto",
-			}}
-		>
-			<div>Bottom</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Hi</div>
-			<div>Top</div>{" "}
+		<Box sx={{ background: "pink", width: "100vw" }}>
+			<Typography variant="h4">PDF Viewer</Typography>
 		</Box>
 	);
 };

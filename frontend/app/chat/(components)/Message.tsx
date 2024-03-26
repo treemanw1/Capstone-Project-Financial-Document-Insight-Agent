@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { FixedSizeList } from "react-window";
 
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Typography } from "@mui/material";
 import { ChatMessage, Chunk } from "interfaces";
 import { AccountCircle, CloudCircle } from "@mui/icons-material";
 import { useTheme } from "@mui/material";
@@ -30,8 +30,8 @@ const Message: React.FC<MyComponentProps> = ({
 	};
 
 	const handleOnClick = (chunk: Chunk) => {
-		setSelectedPDFID(chunk.pdfID);
-		setTimeout(() => goToPage(chunk.pageNum), 200);
+		setSelectedPDFID(chunk.pdf_id);
+		setTimeout(() => goToPage(chunk.page_num + 1), 250);
 		setHighlightedChunks(chunks!);
 	};
 
@@ -67,6 +67,8 @@ const Message: React.FC<MyComponentProps> = ({
 						display: "flex",
 						flexDirection: "column",
 						width: "100%",
+						// background: "pink",
+						mr: 3,
 					}}
 				>
 					<Typography fontWeight="bold">DuRAG</Typography>
@@ -74,10 +76,13 @@ const Message: React.FC<MyComponentProps> = ({
 					<Box
 						sx={{
 							background: theme.palette.primary.dark,
+							// background: "pink",
 							px: 2,
 							py: 1,
 							mt: 1,
 							borderRadius: 1,
+							width: "24vw",
+							height: "100%",
 						}}
 					>
 						<Typography
@@ -95,12 +100,42 @@ const Message: React.FC<MyComponentProps> = ({
 										display: "flex",
 										flexDirection: "column",
 										// background: "pink",
+										mb: 1,
 									}}
 								>
-									<Button
+									<ButtonBase
+										onClick={() => {
+											handleOnClick(chunk);
+										}}
+									>
+										<Typography
+											sx={{
+												// background: "pink",
+												textOverflow: "ellipsis",
+												overflow: "hidden",
+												whiteSpace: "nowrap",
+											}}
+											variant="body2"
+										>
+											{index + 1}. {chunk.text}
+										</Typography>
+									</ButtonBase>
+									<Typography
+										variant="caption"
+										sx={{ ml: 1 }}
+									>
+										{chunk.pdfName} p. {chunk.page_num + 1}
+									</Typography>
+									{/* <Button
+										variant="text"
 										disableRipple
 										sx={{
-											width: "fit-content",
+											// background: "pink",
+											// width: "fit-content",
+											// overflow: "hidden",
+											// textOverflow: "ellipsis",
+											// whiteSpace: "nowrap",
+											width: "100%",
 											justifyContent: "flex-start",
 											flexDirection: "column",
 											textTransform: "none",
@@ -111,21 +146,12 @@ const Message: React.FC<MyComponentProps> = ({
 													theme.palette.primary.dark,
 												color: "#454F59",
 											},
+											mb: 0.5,
 										}}
 										onClick={() => {
 											handleOnClick(chunk);
 										}}
-									>
-										<Typography>
-											{index + 1}. "{chunk.text}"
-										</Typography>
-									</Button>
-									<Typography
-										variant="caption"
-										sx={{ ml: 2 }}
-									>
-										{chunk.pdfName} p. {chunk.pageNum}
-									</Typography>
+									></Button> */}
 								</Box>
 							);
 						})}

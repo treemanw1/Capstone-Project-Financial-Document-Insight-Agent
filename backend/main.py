@@ -197,8 +197,6 @@ async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_logi
     user_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="user", message=query.query))
 
     pdf_ids = [item[0] for item in crud.get_pdf_ids(db, query.session_id)]
-    print('query: ', query.query)
-    print('pdf ids: ', pdf_ids)
     rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
     
     bot_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="bot", message=rag_response["message"]))

@@ -103,7 +103,8 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 				display: "flex",
 				flexDirection: "column",
 				// backgroundColor: "lightblue",
-				width: "45%",
+				width: "43%",
+				// width: "43vh",
 				justifyContent: "space-between",
 			}}
 		>
@@ -162,11 +163,10 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 						itemCount={pdf?.num_pages!}
 						itemSize={pdfHeight * 1.05}
 						width={pdfHeight * 0.801}
-						onItemsRendered={
-							({ visibleStopIndex }) =>
-								debouncedScroll(visibleStopIndex)
-							// scroll(visibleStopIndex)
-						}
+						onItemsRendered={({ visibleStopIndex }) => {
+							debouncedScroll(visibleStopIndex);
+							// scroll(visibleStopIndex);
+						}}
 					>
 						{PageRenderer}
 					</List>

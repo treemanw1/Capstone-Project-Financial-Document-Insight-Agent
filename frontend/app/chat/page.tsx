@@ -98,9 +98,41 @@ const dummyMessages = [
 		id: 4,
 		session_id: 3,
 		message:
-			'"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"',
+			'"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system."',
 		role: "bot",
 		chunks: [
+			{
+				id: 2,
+				text: "THE INVERSE TURKEY PROBLEM",
+				pageNum: 250,
+				pdfName: "Antifragile - Nassim Taleb",
+				pdfID: 0,
+			},
+		],
+	},
+	{
+		id: 4,
+		session_id: 3,
+		message: "What were Blackrock's earnings last quarter?",
+		role: "user",
+	},
+	{
+		id: 4,
+		session_id: 3,
+		message: "What is the iShares fund?",
+		role: "bot",
+		chunks: [
+			{
+				id: 2,
+				text: `iShares MSCI India Index ETF (“MSCI India ETF”), a sub-fund of
+                the iShares Southeast Asia Trust (the “Trust”), was launched
+                and commenced trading on 15 June 2006 on the Singapore
+                Exchange Securities `,
+				pageNum: 3,
+				pdfName:
+					"SG220831OTHRXDF6_Blackrock (Singapore) Limited_20220831171053_00_GA_4Q_20220831.1.pdf",
+				pdfID: 0,
+			},
 			{
 				id: 2,
 				text: "THE INVERSE TURKEY PROBLEM",
@@ -230,16 +262,21 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					}}
 				/>
 			</Drawer>
-
 			<Box
 				sx={{
+					width: `calc(100vw - ${globalStyles.drawerWidth}px)`,
 					display: "flex",
+					flexGrow: 1,
 					// background: "lightblue",
-					transition: "margin 150ms ease-in-out",
+					justifyContent: "flex-end",
+					transition:
+						"margin 100ms ease-in-out, width 10ms ease-in-out",
 					marginLeft: `-${globalStyles.drawerWidth}px`,
 					...(sidebarOpen && {
-						transition: "margin 210ms ease-out",
+						transition:
+							"margin 210ms ease-out, width 210ms ease-out",
 						marginLeft: 0,
+						// width: `calc(100vw - ${globalStyles.drawerWidth}px)`,
 					}),
 				}}
 			>
@@ -247,8 +284,8 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					token={token}
 					currentQuery={currentQuery}
 					setCurrentQuery={setCurrentQuery}
-					// messages={messages}
-					messages={dummyMessages}
+					messages={messages}
+					// messages={dummyMessages}
 					setMessages={setMessages}
 					currentSessionId={currentSessionId}
 					setHighlightedChunks={setHighlightedChunks}

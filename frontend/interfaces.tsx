@@ -19,9 +19,10 @@ export interface BotMessage extends ChatMessage {
 export interface Chunk {
 	id: number;
 	text: string;
-	pageNum: number;
+	page_num: number;
 	pdfName: string;
-	pdfID: number;
+	pdf_id: number;
+	score: number;
 }
 
 export interface Session {

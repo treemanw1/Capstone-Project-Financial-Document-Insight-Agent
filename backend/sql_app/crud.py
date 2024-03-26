@@ -105,17 +105,17 @@ def get_pdfs(db: Session, pdf_ids: List[int]):
 
 def get_all_pdfs(db: Session):
     columns_desired = (models.PDF.id, models.PDF.pdf_document_name, models.PDF.company, models.PDF.num_pages, models.PDF.filepath)
-    return db.query(*columns_desired).all()
+    return db.query(*columns_desired).filter(models.PDF.document_type == 'AR').all()
 
 def filter_pdfs(db: Session, query: schemas.SearchQuery):
     return db.query(models.PDF)\
         .filter(models.PDF.company.in_(query.companies))\
-        .filter(and_(models.PDF.date >= query.start_date, models.PDF.date <= query.end_date))\
+        .filter(and_(models.PDF.date >= query.start_date, models.PDF.date <= query.end_date, models.PDF.document_type == "AR"))\
         .all()
 
 def filter_pdfs_by_date(db: Session, query: schemas.SearchQuery):
     return db.query(models.PDF)\
-        .filter(and_(models.PDF.date >= query.start_date, models.PDF.date <= query.end_date))\
+        .filter(and_(models.PDF.date >= query.start_date, models.PDF.date <= query.end_date, models.PDF.document_type == "AR"))\
         .all()
 
 def create_pdf(db: Session, pdf: schemas.PDF):

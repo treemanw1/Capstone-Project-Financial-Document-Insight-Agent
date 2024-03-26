@@ -25,7 +25,7 @@ const Header = () => {
 					>
 						<Link
 							component={NextLink}
-							href="/home"
+							href="/filter"
 							underline="hover"
 							color="black"
 							variant="body1"
@@ -49,7 +49,7 @@ const Header = () => {
 							marginLeft: "auto",
 						}}
 					>
-						<Typography>Hello, Cleopatra</Typography>
+						<Typography>Hello, Zhong Hern</Typography>
 						<Icon />
 					</Box>
 				</Box>

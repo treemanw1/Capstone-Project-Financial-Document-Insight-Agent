@@ -101,7 +101,8 @@ const ChatSection: React.FC<MyComponentProps> = ({
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				width: "37.5%",
+				width: "43%",
+				// width: "43vh",
 				background: theme.palette.primary.main,
 				// background: "lightblue",
 				justifyContent: "space-between",
@@ -143,7 +144,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 				<Typography sx={{ ml: 2 }} fontWeight="bold" variant="h6">
 					DuRAG Chat
 				</Typography>
-				<IconButton
+				{/* <IconButton
 					sx={{ ml: 1 }}
 					onClick={toggleColorMode}
 					color="inherit"
@@ -153,7 +154,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 					) : (
 						<Brightness4Icon />
 					)}
-				</IconButton>
+				</IconButton> */}
 			</Box>
 			<Box
 				sx={{
@@ -164,8 +165,8 @@ const ChatSection: React.FC<MyComponentProps> = ({
 					flex: 1,
 					overflow: "auto",
 					gap: 2,
-					width: "90%",
-					// background: "pink",
+					width: "92.5%",
+					ml: 1.5,
 					"&::-webkit-scrollbar": {
 						backgroundColor: theme.palette.primary.main,
 						width: "14px",

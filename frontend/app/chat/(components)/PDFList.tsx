@@ -22,7 +22,7 @@ const PDFList: React.FC<MyComponentProps> = ({ pdfs, setSelectedPDFID }) => {
 				borderLeft: 1,
 				borderColor: theme.palette.text.primary,
 				flexDirection: "column",
-				width: "17.5%",
+				width: "14%",
 			}}
 		>
 			<Box

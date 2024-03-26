@@ -13,7 +13,7 @@ const Footer = () => {
 					alignItems: "center",
 					height: globalStyles.footerHeight,
 					justifyContent: "space-between",
-					backgroundColor: "",
+					background: "",
 				}}
 			>
 				<Typography
