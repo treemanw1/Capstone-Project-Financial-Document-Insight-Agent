@@ -101,26 +101,26 @@ async def get_current_user_id(token: Annotated[str, Depends(oauth2_scheme)], db:
         raise credentials_exception
     return user.id
 
-@app.get("/")
+@app.get("/api")
 async def root():
     return {"message": "Welcome to FastAPI Backend"}
 
-@app.get("/get-company-names", response_model=List[str])
+@app.get("/api/get-company-names", response_model=List[str])
 async def get_company_names(status: Annotated[schemas.User, Depends(get_login_status)], db: Session = Depends(get_db)):
     company_names = crud.get_company_names(db)
     return [company[0] for company in company_names]
 
-@app.get("/get-all-pdfs", response_model=List[schemas.PDF])
+@app.get("/api/get-all-pdfs", response_model=List[schemas.PDF])
 async def get_all_pdfs(status: Annotated[schemas.User, Depends(get_login_status)], db: Session = Depends(get_db)):
     pdfs = crud.get_all_pdfs(db)
     return pdfs
 
-@app.post("/create-user", response_model=schemas.StatusResponse)
+@app.post("/api/create-user", response_model=schemas.StatusResponse)
 async def create_user(credentials: schemas.UserCredentials, db: Session = Depends(get_db)):
     crud.create_user(db, user=credentials)
     return {"success": True, "message": "User successfully created!"}
 
-@app.post("/token")
+@app.post("/api/token")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)
 ) -> schemas.Token:
@@ -137,7 +137,7 @@ async def login_for_access_token(
     )
     return schemas.Token(access_token=access_token, token_type="bearer")
 
-@app.post("/search", response_model=List[schemas.PDF])
+@app.post("/api/search", response_model=List[schemas.PDF])
 async def pdf_search(status: Annotated[schemas.User, Depends(get_login_status)],
                      query: schemas.SearchQuery, 
                      db: Session = Depends(get_db)):
@@ -151,7 +151,7 @@ async def pdf_search(status: Annotated[schemas.User, Depends(get_login_status)],
         pdfs = crud.filter_pdfs_by_date(db, query=query)
     return pdfs
 
-@app.post("/create-session", response_model=int)
+@app.post("/api/create-session", response_model=int)
 async def create_session(user_id: Annotated[schemas.User, Depends(get_current_user_id)],
                         pdf_ids: List[int], 
                         token: Annotated[str, Depends(get_login_status)],
@@ -160,12 +160,12 @@ async def create_session(user_id: Annotated[schemas.User, Depends(get_current_us
     crud.link_session_pdfs(db, session.id, pdf_ids)
     return session.id
 
-@app.get("/get-sessions", response_model=List[schemas.Session])
+@app.get("/api/get-sessions", response_model=List[schemas.Session])
 async def get_sessions(user_id: Annotated[schemas.User, Depends(get_current_user_id)], db: Session = Depends(get_db)):
     sessions = crud.get_sessions(db, user_id)
     return sessions
 
-@app.get("/get-chat-history/{session_id}", response_model=List[schemas.EitherMessage])
+@app.get("/api/get-chat-history/{session_id}", response_model=List[schemas.EitherMessage])
 async def get_chat_history(session_id: int,
                         # token: Annotated[str, Depends(get_login_status)],
                         db: Session = Depends(get_db)):
@@ -187,12 +187,12 @@ async def get_chat_history(session_id: int,
     chat_history.sort(key=lambda x: x['created_at'])
     return chat_history
 
-@app.get("/get-pdfs/{session_id}", response_model=List[schemas.PDF])
+@app.get("/api/get-pdfs/{session_id}", response_model=List[schemas.PDF])
 async def get_pdfs(session_id: int, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
     pdf_ids = crud.get_pdf_ids(db, session_id)
     return crud.get_pdfs(db, [id[0] for id in pdf_ids])
 
-@app.post("/query", response_model=schemas.BotMessage)
+@app.post("/api/query", response_model=schemas.BotMessage)
 async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
     user_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="user", message=query.query))
 
