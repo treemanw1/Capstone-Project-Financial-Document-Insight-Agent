@@ -62,7 +62,6 @@ class ChatMessage(BaseModel):
 class BotMessage(ChatMessage):
     chunks: List[Chunk]
 
-IntOrString = Union[int, str]
 EitherMessage = Union[BotMessage, ChatMessage]
 
 class UserQuery(BaseModel):

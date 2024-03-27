@@ -199,6 +199,9 @@ async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_logi
     pdf_ids = [item[0] for item in crud.get_pdf_ids(db, query.session_id)]
     rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
     
+    # generated_session_name = generate_session_name(query.query)
+    # crud.update_session_name(db, query.session_id, generated_session_name);
+
     bot_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="bot", message=rag_response["message"]))
     for chunk in rag_response["chunks"]:
         chunk["chat_history_id"] = bot_message.id

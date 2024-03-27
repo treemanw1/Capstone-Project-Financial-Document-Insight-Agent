@@ -130,7 +130,11 @@ def create_pdf(db: Session, pdf: schemas.PDF):
     db.refresh(db_pdf)
     return db_pdf
 
-
-# dummy methods (to be deleted later)
-def get_five_pdfs(db: Session):
-    return db.query(models.PDF).limit(5).all()
+def update_session_name(db: Session, session_id: int, name: str):
+    db.query(models.Session).filter(models.Session.id == session_id).update({"name": name})
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print("An unexpected error occurred:", e)
+        raise HTTPException(status_code=400, detail=e)
