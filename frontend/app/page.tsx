@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Button, Input, TextField, Typography, Link } from "@mui/material";
+import { Box, Button, TextField, Typography, Link } from "@mui/material";
 
 import { useRouter } from "next/navigation";
 import NextLink from "next/link";
@@ -17,7 +17,7 @@ const Login = () => {
 		formData.append("username", username);
 		formData.append("password", password);
 		try {
-			const response = await fetch(`http://localhost:8000/token`, {
+			const response = await fetch(`http://13.213.71.123/8000/token`, {
 				method: "POST",
 				body: formData,
 			});

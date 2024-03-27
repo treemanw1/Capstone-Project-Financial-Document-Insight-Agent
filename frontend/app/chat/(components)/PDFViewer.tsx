@@ -90,7 +90,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 	const textRenderer = useCallback(
 		(textItem: { str: string }) => {
 			const patterns = highlightedChunks
-				.filter((o) => o.pageNum == parseInt(currentPage))
+				.filter((o) => o.page_num == parseInt(currentPage))
 				.map((o) => o.text);
 			return highlightPattern(textItem.str, patterns);
 		},
