@@ -8,12 +8,11 @@ interface MyComponentProps {
 	width: string;
 	fontSize: string;
 	options?: string[];
-	// setSelected: Dispatch<SetStateAction<T[]>>;
 	onSelect: (newValue: string) => void;
 }
 
 const CustomPaper = (props: PaperProps) => {
-	return <Paper sx={{ width: "fit-content" }} {...props} />;
+	return <Paper sx={{ width: "fit-content", background: "" }} {...props} />;
 };
 
 const SearchField = ({
@@ -34,7 +33,8 @@ const SearchField = ({
 			options={options}
 			sx={{
 				width: width,
-				height: height,
+				height: "fit-content",
+				// background: "pink",
 			}}
 			PaperComponent={CustomPaper}
 			// value={value}
@@ -49,12 +49,27 @@ const SearchField = ({
 			}}
 			renderInput={(params) => (
 				<TextField
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						background: "#E3E4E7",
+						// height: height,
+						borderColor: "transparent",
+						borderRadius: "10px",
+						"& fieldset": { border: "none" },
+						"&:hover": { background: "" },
+						"& .Mui-focused": {
+							color: "#A3A4A8",
+							borderColor: "transparent",
+						},
+					}}
 					{...params}
-					// InputLabelProps={{
-					// 	...params.InputLabelProps,
-					// 	style: { color: "black" },
-					// }}
-					label={title}
+					InputLabelProps={{
+						shrink: false,
+						// ...params.InputLabelProps,
+					}}
+					label={inputValue ? "" : title}
 				/>
 			)}
 		/>

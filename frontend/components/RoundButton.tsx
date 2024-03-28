@@ -20,13 +20,16 @@ const RoundButton: React.FC<MyComponentProps> = ({
 }) => {
 	return (
 		<Button
+			size="large"
 			sx={{
+				boxShadow: 3,
 				// background: "pink",
 				height: height,
 				width: width,
-				fontSize: fontSize,
+				// fontSize: fontSize,
+				// fontWeight: "bold",
 				backgroundColor: "#D9D9D9",
-				borderRadius: "50px",
+				borderRadius: "25px",
 				color: "black",
 				textTransform: "none",
 				py: 1,

@@ -19,50 +19,72 @@ interface MyComponentProps {
 
 const DateDropdown: React.FC<MyComponentProps> = ({ props }) => {
 	return (
-		<Box sx={{ background: "", height: props.height }}>
-			<Typography
-				sx={{
-					height: `calc(${props.fontSize} + 5px)`,
-					color: "#757575",
-					mb: "5px",
-					fontSize: props.fontSize,
-				}}
-			>
-				{props.title}
-			</Typography>
-			<DatePicker
-				label={props.date == null ? props.label : ""}
-				value={props.date}
-				onChange={props.onChange}
-				renderInput={(params) => (
-					<TextField
-						InputLabelProps={{ shrink: false }}
-						sx={{
-							fontSize: "11px",
-							width: props.width,
+		<DatePicker
+			label={props.date == null ? props.label : ""}
+			value={props.date}
+			onChange={props.onChange}
+			renderInput={(params) => (
+				<TextField
+					InputLabelProps={{ shrink: false }}
+					sx={{
+						fontSize: props.fontSize,
+						width: props.width,
+						// background: "pink",
+						"& fieldset": { border: "none" },
+						"&:hover": { background: "" },
+						"& .MuiOutlinedInput-root": {
+							background: "#E3E4E7",
+							borderColor: "transparent",
+							borderRadius: "10px",
+							// height: `calc(100% - ${props.fontSize} - 10px)`,
+							// fontSize: props.fontSize,
+						},
+						"& .MuiFormLabel-root": {
+							// ml: "6px",
+							// color: "#333333",
+						},
+						"& .MuiInputBase-inputAdornedEnd": {
 							height: "100%",
-							"& .MuiOutlinedInput-root": {
-								borderRadius: "30px",
-								height: `calc(100% - ${props.fontSize} - 10px)`,
-								fontSize: props.fontSize,
-							},
-							"& .MuiFormLabel-root": {
-								ml: "6px",
-								color: "#333333",
-								mt: props.mt,
-								fontSize: props.fontSize,
-							},
-							"& .MuiInputBase-inputAdornedEnd": {
-								height: "100%",
-								ml: "6px",
-								color: "#333333",
-							},
-						}}
-						{...params}
-					/>
-				)}
-			/>
-		</Box>
+							// ml: "6px",
+							// color: "#333333",
+						},
+					}}
+					{...params}
+				/>
+			)}
+		/>
+		// <Box sx={{ background: "", height: props.height }}>
+		// 	<DatePicker
+		// 		label={props.date == null ? props.label : ""}
+		// 		value={props.date}
+		// 		onChange={props.onChange}
+		// 		renderInput={(params) => (
+		// 			<TextField
+		// 				InputLabelProps={{ shrink: false }}
+		// 				sx={{
+		// 					fontSize: props.fontSize,
+		// 					width: props.width,
+		// 					height: "100%",
+		// 					"& .MuiOutlinedInput-root": {
+		// 						// borderRadius: "30px",
+		// 						// height: `calc(100% - ${props.fontSize} - 10px)`,
+		// 						fontSize: props.fontSize,
+		// 					},
+		// 					"& .MuiFormLabel-root": {
+		// 						// ml: "6px",
+		// 						// color: "#333333",
+		// 					},
+		// 					"& .MuiInputBase-inputAdornedEnd": {
+		// 						height: "100%",
+		// 						// ml: "6px",
+		// 						// color: "#333333",
+		// 					},
+		// 				}}
+		// 				{...params}
+		// 			/>
+		// 		)}
+		// 	/>
+		// </Box>
 	);
 };
 

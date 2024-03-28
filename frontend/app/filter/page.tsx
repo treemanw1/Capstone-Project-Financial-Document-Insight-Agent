@@ -22,7 +22,7 @@ import SearchField from "@components/SearchField";
 const styles = {
 	fontSize: "2vh",
 	barWidth: 43, // vh
-	barHeight: "10vh",
+	barHeight: "7vh",
 };
 
 const Filter = () => {
@@ -191,7 +191,7 @@ const Filter = () => {
 								>
 									<Box
 										sx={{
-											height: "4vh",
+											height: "5vh",
 											// background: "lightblue",
 										}}
 									/>
@@ -204,7 +204,6 @@ const Filter = () => {
 											height: "100%",
 										}}
 									>
-										<Box sx={{ height: "4vh" }} />
 										<SearchField
 											title="Search companies by name"
 											height={styles.barHeight}
@@ -218,11 +217,10 @@ const Filter = () => {
 											}}
 											options={companyNames}
 										/>
-										<Divider sx={{ width: 0, mt: 0.5 }} />
 										<DateDropdown
 											props={{
 												title: "Select start date",
-												label: "Start Date",
+												label: "Select Start Date",
 												date: startDate,
 												onChange: (d) =>
 													setStartDate(d),
@@ -232,11 +230,10 @@ const Filter = () => {
 												fontSize: styles.fontSize,
 											}}
 										/>
-										<Divider sx={{ width: 0, mt: 0.5 }} />
 										<DateDropdown
 											props={{
 												title: "Select end date",
-												label: "End Date",
+												label: "Select End Date",
 												date: endDate,
 												onChange: (d) => setEndDate(d),
 												width: "100%",
@@ -245,13 +242,24 @@ const Filter = () => {
 												fontSize: styles.fontSize,
 											}}
 										/>
-										<Box sx={{ mt: 3 }}>
+										<Box sx={{}}>
 											<RoundButton
-												text="Add"
+												text="Add documents"
 												height="6vh"
 												width="100%"
 												fontSize={styles.fontSize}
 												onClick={() => {
+													if (
+														startDate === null &&
+														endDate === null &&
+														selectedCompanies.length ===
+															0
+													) {
+														alert(
+															"Please enter at least 1 search field before adding documents."
+														);
+														return;
+													}
 													addDocuments();
 												}}
 											/>
@@ -268,11 +276,14 @@ const Filter = () => {
 								>
 									<Box
 										sx={{
-											height: "4vh",
+											height: "5vh",
 											// background: "lightblue",
 										}}
 									>
-										<Typography sx={{ width: "100%" }}>
+										<Typography
+											variant="h6"
+											sx={{ width: "100%" }}
+										>
 											Companies selected (
 											{selectedCompanies.length})
 										</Typography>
@@ -285,6 +296,8 @@ const Filter = () => {
 											borderColor: "#C4C4C4",
 											overflow: "auto",
 											height: "100%",
+											borderRadius: "10px",
+											p: 2,
 											// background: "pink",
 											"&::-webkit-scrollbar": {
 												backgroundColor:
@@ -336,7 +349,12 @@ const Filter = () => {
 														}
 													>
 														<Delete
-														// sx={{ fontSize: "3vh" }}
+															sx={{
+																"&: hover": {
+																	color: "#900018",
+																},
+															}}
+															// sx={{ fontSize: "3vh" }}
 														/>
 													</IconButton>
 												</Box>
@@ -361,14 +379,17 @@ const Filter = () => {
 								lineHeight={1.1}
 								sx={{
 									backgroundColor: "",
+									mb: 1,
 								}}
 							>
-								Found documents
+								Selected documents
 							</Typography>
 							<Box
 								sx={{
 									border: 1,
 									borderColor: "#C4C4C4",
+									borderRadius: "10px",
+									p: 2,
 									height: "100%",
 									overflow: "auto",
 									my: 1,
@@ -416,7 +437,14 @@ const Filter = () => {
 												)
 											}
 										>
-											<Delete />
+											<Delete
+												sx={{
+													"&: hover": {
+														color: "#900018",
+													},
+												}}
+												// sx={{ fontSize: "3vh" }}
+											/>
 										</IconButton>
 									</Box>
 								))}
@@ -428,6 +456,12 @@ const Filter = () => {
 								width={styles.barWidth + "vh"}
 								fontSize={styles.fontSize}
 								onClick={() => {
+									if (selectedPDFs.length === 0) {
+										alert(
+											"Please select at least one document to start a chat session."
+										);
+										return;
+									}
 									createSession();
 								}}
 							/>
