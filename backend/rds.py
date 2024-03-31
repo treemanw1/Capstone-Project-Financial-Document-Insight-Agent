@@ -1,8 +1,11 @@
 import os
 from contextlib import contextmanager
+
 import psycopg2
-from psycopg2 import pool
 from dotenv import load_dotenv
+from psycopg2 import pool
+
+from DuRAG.logger import logger
 
 load_dotenv()
 
@@ -26,11 +29,13 @@ class Database:
             yield con.cursor()
             con.commit()
         except psycopg2.DatabaseError as e:
-            print(f"Database error: {e}")
+            logger.error(f"Database error: {e}")
             con.rollback()
         finally:
+            logger.info("Closing RDS connection")
             con.close()
             self.connection_pool.putconn(con)
+            logger.info("Closed RDS connection sucessfully")
 
 
 db = Database()
