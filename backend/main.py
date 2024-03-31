@@ -120,7 +120,7 @@ async def create_user(credentials: schemas.UserCredentials, db: Session = Depend
     crud.create_user(db, user=credentials)
     return {"success": True, "message": "User successfully created!"}
 
-@app.post("/api/token")
+@app.post("/token")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)
 ) -> schemas.Token:
@@ -197,6 +197,7 @@ async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_logi
     user_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="user", message=query.query))
 
     pdf_ids = [item[0] for item in crud.get_pdf_ids(db, query.session_id)]
+    print(pdf_ids)
     rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
     
     # generated_session_name = generate_session_name(query.query)
