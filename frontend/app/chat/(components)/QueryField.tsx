@@ -31,7 +31,8 @@ const QueryField: React.FC<MyComponentProps> = ({
 				mb: 1,
 				// background: "pink",
 				border: 1,
-				borderColor: theme.palette.secondary.main,
+				borderColor: "#C4C4C4",
+				// borderColor: theme.palette.secondary.main,
 				// borderColor: "pink",
 				borderRadius: 2,
 			}}
@@ -48,6 +49,8 @@ const QueryField: React.FC<MyComponentProps> = ({
 				}}
 				placeholder="Start typing your question..."
 				sx={{
+					// background: "white",
+					// borderRadius: 2,
 					width: "100%",
 					"& .MuiOutlinedInput-root": {
 						"& fieldset": {

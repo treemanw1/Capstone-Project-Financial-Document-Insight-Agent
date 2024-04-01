@@ -55,6 +55,13 @@ class Chunk(BaseModel):
     score: float
     pdf_name: str
 
+class ChunkCreation(BaseModel):
+    text: str
+    page_num: int
+    pdf_id: int
+    chat_history_id: int
+    score: float
+
 class ChatMessage(BaseModel):
     session_id: int
     role: str # user | bot

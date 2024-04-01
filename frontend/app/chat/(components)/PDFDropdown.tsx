@@ -40,7 +40,7 @@ const PDFDropdown: React.FC<MyComponentProps> = ({
 					MenuProps={{
 						PaperProps: {
 							style: {
-								marginLeft: 70,
+								marginLeft: 0,
 								marginRight: "auto",
 							},
 						},

@@ -74,12 +74,12 @@ const ChunkBox: React.FC<MyComponentProps> = ({
 								whiteSpace: "nowrap",
 								overflow: "hidden",
 								textOverflow: "ellipsis",
-								maxWidth: "7vw",
+								maxWidth: "6vw",
 							}}
 						>
 							{pdf_name}
 						</Typography>
-						<Typography variant="caption">
+						<Typography sx={{ minWidth: "2vw" }} variant="caption">
 							p. {page_num + 1}
 						</Typography>
 					</Box>

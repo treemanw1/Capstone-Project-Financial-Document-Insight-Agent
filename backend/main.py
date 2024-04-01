@@ -225,11 +225,11 @@ async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_logi
     # rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
     rag_response = {'message': "Dhanush and Chia Yu hurry up",
                     "chunks": [
-                        {"text": "dummy text hehehehehehe", "page_num": 1, 'pdf_id': 245, "chat_history_id": 261, "score": 5},
-                        {"text": "dummy text hehehehehehe", "page_num": 2, 'pdf_id': 245, "chat_history_id": 261, "score": 4},
-                        {"text": "dummy text hehehehehehe", "page_num": 3, 'pdf_id': 245, "chat_history_id": 261, "score": 3},
-                        {"text": "dummy text hehehehehehe", "page_num": 4, 'pdf_id': 245, "chat_history_id": 261, "score": 2},
-                        {"text": "dummy text hehehehehehe", "page_num": 5, 'pdf_id': 245, "chat_history_id": 261, "score": 1},
+                        {"text": "dummy text hehehehehehe", "page_num": 1, 'pdf_id': 245, "chat_history_id": 261, "score": 5, "pdf_name": "dummy pdf name 1"},
+                        {"text": "dummy text hehehehehehe", "page_num": 2, 'pdf_id': 245, "chat_history_id": 261, "score": 4, "pdf_name": "dummy pdf name 1"},
+                        {"text": "dummy text hehehehehehe", "page_num": 3, 'pdf_id': 245, "chat_history_id": 261, "score": 3, "pdf_name": "dummy pdf name 1"},
+                        {"text": "dummy text hehehehehehe", "page_num": 4, 'pdf_id': 245, "chat_history_id": 261, "score": 2, "pdf_name": "dummy pdf name 1"},
+                        {"text": "dummy text hehehehehehe", "page_num": 5, 'pdf_id': 245, "chat_history_id": 261, "score": 1, "pdf_name": "dummy pdf name 1"},
                         ]
                     }
 
@@ -238,7 +238,7 @@ async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_logi
     for chunk in rag_response["chunks"]:
         chunk["chat_history_id"] = bot_message.id
         
-    crud.create_chunks(db, [schemas.Chunk(**chunk) for chunk in rag_response["chunks"]])
+    crud.create_chunks(db, [schemas.ChunkCreation(**chunk) for chunk in rag_response["chunks"]])
     response = {
         "session_name": generated_session_name,
         "session_id": query.session_id,

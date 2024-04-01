@@ -128,7 +128,9 @@ const Message: React.FC<MyComponentProps> = ({
 							variant="body2"
 							sx={{ color: theme.palette.text.secondary }}
 						>
-							{timeFormat(message?.created_at.toString())}
+							{message.created_at == undefined
+								? ""
+								: timeFormat(message.created_at.toString())}
 						</Typography>
 					</Box>
 				</Box>

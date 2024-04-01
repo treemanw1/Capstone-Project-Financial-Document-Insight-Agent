@@ -168,6 +168,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 
 	useEffect(() => {
 		router.prefetch("/filter");
+		console.log("get-sessions");
 		get(token, "/get-sessions", "Failed to fetch sessions.", (sessions) => {
 			sessions.sort(
 				(a: Session, b: Session) =>
@@ -184,6 +185,7 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					setPDFs(pdfs);
 				}
 			);
+			getSessionHistory(sessions[0].id);
 		});
 		// setSessions(dummySessions);
 		// setPDFs([
