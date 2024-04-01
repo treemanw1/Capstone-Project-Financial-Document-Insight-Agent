@@ -16,10 +16,15 @@ import Message from "app/chat/(components)/Message";
 import QueryField from "app/chat/(components)/QueryField";
 
 import { FixedSizeList } from "react-window";
-import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import {
+	ArrowBackIos,
+	ArrowForwardIos,
+	CloudCircle,
+} from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 
 import { ColorModeContext } from "@components/ThemeWrapper";
+import style from "./chat.module.css";
 
 interface MyComponentProps {
 	token: string | null;
@@ -66,6 +71,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 			messages.length > 0 &&
 			messages.slice(-1)[0].role == "user"
 		) {
+			console.log("First render");
 			post(
 				token,
 				{ query: currentQuery, session_id: currentSessionId },
@@ -235,6 +241,48 @@ const ChatSection: React.FC<MyComponentProps> = ({
 							/>
 						);
 					})}
+
+					{messages.length > 0 ? (
+						messages[messages.length - 1].role == "user" ? (
+							<Box
+								sx={{
+									display: "flex",
+									flexDirection: "column",
+									p: 2,
+									pb: 4,
+									background: "",
+								}}
+							>
+								<Box sx={{ display: "flex" }}>
+									<CloudCircle
+										sx={{
+											fontSize: 45,
+											color: "secondary",
+											mr: 1,
+										}}
+									/>
+									<Box
+										sx={{
+											display: "flex",
+											flexDirection: "column",
+										}}
+									>
+										<Typography
+											sx={{ mb: 1 }}
+											fontWeight="bold"
+										>
+											FELX AI
+										</Typography>
+										<Box className={style.dotflashing} />
+									</Box>
+								</Box>
+							</Box>
+						) : (
+							<></>
+						)
+					) : (
+						<></>
+					)}
 				</Box>
 			</Box>
 			<QueryField

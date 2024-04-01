@@ -16,7 +16,7 @@ const CustomPaper = (props: PaperProps) => {
 	return (
 		<Paper
 			sx={{
-				width: "fit-content",
+				// width: "fit-content",
 				// height: "200px",
 				background: "",
 			}}

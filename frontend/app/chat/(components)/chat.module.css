@@ -74,3 +74,52 @@
 .darkList::-webkit-scrollbar-button {
 	display: none;
 }
+
+.dotflashing {
+	position: relative;
+	margin-left: 15px;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background-color: #000000;
+	color: #000000;
+	animation: dotflashing 1s infinite linear alternate;
+	animation-delay: 0.5s;
+}
+.dotflashing::before,
+.dotflashing::after {
+	content: "";
+	display: inline-block;
+	position: absolute;
+	top: 0;
+}
+.dotflashing::before {
+	left: -15px;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background-color: #000000;
+	color: #000000;
+	animation: dotflashing 1s infinite alternate;
+	animation-delay: 0s;
+}
+.dotflashing::after {
+	left: 15px;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background-color: #000000;
+	color: #000000;
+	animation: dotflashing 1s infinite alternate;
+	animation-delay: 1s;
+}
+
+@keyframes dotflashing {
+	0% {
+		background-color: #000000;
+	}
+	50%,
+	100% {
+		background-color: rgba(129, 129, 129, 0.2);
+	}
+}

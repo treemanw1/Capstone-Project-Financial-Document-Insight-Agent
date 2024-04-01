@@ -185,7 +185,6 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 				}
 			);
 		});
-
 		// setSessions(dummySessions);
 		// setPDFs([
 		// 	{
@@ -217,7 +216,6 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 			`/get-chat-history/${session_id}`,
 			"Failed to fetch session history.",
 			(chat_history) => {
-				console.log("chat_history: ", chat_history);
 				setMessages(chat_history);
 			}
 		);

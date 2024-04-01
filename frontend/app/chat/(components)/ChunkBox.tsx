@@ -29,7 +29,7 @@ const ChunkBox: React.FC<MyComponentProps> = ({
 			<Box
 				sx={{
 					display: "flex",
-					height: "11vh",
+					height: "12.5vh",
 					flex: 1,
 					// background: "lightblue",
 				}}

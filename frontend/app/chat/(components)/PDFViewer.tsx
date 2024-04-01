@@ -6,7 +6,6 @@ import React, {
 	useEffect,
 	useState,
 	useCallback,
-	createRef,
 } from "react";
 import { Box, Typography, TextField } from "@mui/material";
 import { Document, pdfjs } from "react-pdf";
@@ -17,6 +16,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { globalStyles } from "styles";
 import style from "./chat.module.css";
 
+import PDFDropdown from "./PDFDropdown";
 import PageRenderer from "./PageRenderer";
 import { PDF, Chunk } from "interfaces";
 import { useTheme } from "@mui/material/styles";
@@ -124,16 +124,15 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 					display: "flex",
 					alignItems: "center",
 					height: globalStyles.headerHeight,
-					background: theme.palette.primary.main,
+					// background: theme.palette.primary.main,
 					// background: "lightblue",
 				}}
 			>
-				<Typography
-					variant="body1"
-					sx={{ width: "70%", overflow: "clip", m: 2 }}
-				>
-					{pdf?.pdf_document_name}
-				</Typography>
+				<PDFDropdown
+					pdfs={pdfs}
+					pdf={pdf}
+					setSelectedPDFID={setSelectedPDFID}
+				/>
 				<TextField
 					sx={{
 						display: "flex",
@@ -142,6 +141,8 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 						height: "40px",
 						border: 1,
 						borderColor: theme.palette.text.primary,
+						// background: theme.palette.primary.light,
+						background: "white",
 						// background: "pink",
 						// borderRadius: 2,
 						"& fieldset": { border: "none" },

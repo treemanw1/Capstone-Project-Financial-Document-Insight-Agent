@@ -276,6 +276,7 @@ const Filter = () => {
 										}}
 									>
 										<Typography
+											textAlign="left"
 											variant="caption"
 											whiteSpace="nowrap"
 											textOverflow="ellipsis"
