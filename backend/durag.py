@@ -1,11 +1,9 @@
 from dotenv import load_dotenv
 load_dotenv()
 from DuRAG.reranker import Reranker
-from DuRAG.retriever.swr.swr_retriever import SentenceWindowRetriever
 from DuRAG.retriever.data_models import QueryObj
-from DuRAG.pipelines.rag_amr import amr_pipeline
 from DuRAG.rds import db
-from DuRAG.pipelines.rag_swr import swr_pipeline
+from DuRAG.pipelines.rag_pipeline import RAGpipeline
 import weaviate
 from tqdm import tqdm
 import os
@@ -26,9 +24,10 @@ def pipeline(query, filters):
     #         {"text": "bla bla bla", "page_num": 20, "pdf_id": 1, "score": 1} 
     #         ] 
     #     }
+    query = QueryObj(query=query, filters = filters)
+    rag = RAGpipeline()
     rag_response = {}
-    print(filters)
-    response_object = swr_pipeline(QueryObj(query=query, filters = filters))
+    response_object = rag.pipeline(query,alpha=0.5,limit=5,retrieve_type='swr')
     rag_response["message"] = response_object.message
     response_chunks = response_object.chunks
 
@@ -45,6 +44,7 @@ def pipeline(query, filters):
             proc_chunks.append(chunk)
 
         rag_response["chunks"] = proc_chunks
+        print(proc_chunks)
         print(json.dumps(rag_response, indent=4))
         
         return rag_response

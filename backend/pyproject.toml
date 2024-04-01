@@ -16,8 +16,7 @@ psycopg2 = "^2.9.9"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-multipart = "^0.0.9"
-durag = {git = "https://github.com/Capstone-S17/DuRAG.git"}
-pytz = "^2024.1"
+durag = {git = "https://github.com/Capstone-S17/DuRAG.git", branch = "chiayu"}
 
 
 
