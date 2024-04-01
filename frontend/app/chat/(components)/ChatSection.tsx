@@ -116,6 +116,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 				message: currentQuery,
 				session_id: currentSessionId,
 				role: "user",
+				created_at: new Date(),
 			},
 		]);
 	};
@@ -225,9 +226,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 								key={index}
 								message={message}
 								chunks={
-									isBotMessage(message)
-										? message.chunks
-										: null
+									isBotMessage(message) ? message.chunks : []
 								}
 								setCurrentPage={setCurrentPage}
 								listRef={listRef}

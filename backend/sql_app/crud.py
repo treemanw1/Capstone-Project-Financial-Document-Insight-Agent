@@ -81,9 +81,11 @@ def get_bot_messages(db: Session, session_id: int):
 def get_session_chunks(db: Session, session_id: int):
     Chunk = aliased(models.Chunk)
     Chat = aliased(models.ChatHistory)
-    return db.query(Chat.id, Chunk.chat_history_id , Chunk.text, Chunk.page_num, Chunk.pdf_id, Chunk.score).\
-        select_from(Chat).\
-        join(Chunk, Chat.id == Chunk.chat_history_id).\
+    PDFs = aliased(models.PDF)
+    return db.query(Chat.id, Chunk.chat_history_id , Chunk.text, Chunk.page_num, Chunk.pdf_id, Chunk.score, PDFs.pdf_document_name).\
+        select_from(Chunk).\
+        join(Chat, Chat.id == Chunk.chat_history_id).\
+        join(PDFs, Chunk.pdf_id == PDFs.id).\
         filter(Chat.session_id == session_id, Chat.role == 'bot').\
         all()
 

@@ -21,7 +21,7 @@ export interface Chunk {
 	id: number;
 	text: string;
 	page_num: number;
-	pdfName: string;
+	pdf_name: string;
 	pdf_id: number;
 	score: number;
 }

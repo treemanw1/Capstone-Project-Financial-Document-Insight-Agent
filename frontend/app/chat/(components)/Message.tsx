@@ -9,7 +9,7 @@ import { useTheme } from "@mui/material";
 
 interface MyComponentProps {
 	message: ChatMessage;
-	chunks?: Chunk[] | null;
+	chunks: Chunk[];
 	setHighlightedChunks: (chunks: Chunk[]) => void;
 	setCurrentPage: (page: string) => void;
 	listRef: React.RefObject<FixedSizeList>;
@@ -128,7 +128,7 @@ const Message: React.FC<MyComponentProps> = ({
 							variant="body2"
 							sx={{ color: theme.palette.text.secondary }}
 						>
-							{timeFormat(message.created_at.toString())}
+							{timeFormat(message?.created_at.toString())}
 						</Typography>
 					</Box>
 				</Box>
@@ -146,30 +146,82 @@ const Message: React.FC<MyComponentProps> = ({
 					}}
 				>
 					<Typography variant="body2">{message.message}</Typography>
-					<Typography
-						fontWeight="bold"
-						sx={{
-							textDecoration: "underline",
-							mt: 1,
-						}}
-					>
-						Cited sources
-					</Typography>
-					<Box
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							background: "pink",
-						}}
-					>
-						<Box sx={{ display: "flex" }}>
-							<ChunkBox
-								pdf_name={chunks![0].pdfName}
-								chunk_text={chunks![0].text}
-								page_num={chunks![0].page_num}
-							/>
-						</Box>
-					</Box>
+					{chunks.length == 5 ? (
+						<>
+							<Typography
+								fontWeight="bold"
+								sx={{
+									textDecoration: "underline",
+									my: 1,
+								}}
+							>
+								Cited sources
+							</Typography>
+							<Box
+								sx={{
+									display: "flex",
+									flexDirection: "column",
+									// background: "pink",
+									gap: 2,
+								}}
+							>
+								<Box
+									sx={{
+										display: "flex",
+										// background: "pink",
+										justifyContent: "space-between",
+										gap: 2,
+									}}
+								>
+									<ChunkBox
+										pdf_name={chunks[0].pdf_name}
+										chunk_text={chunks[0].text}
+										page_num={chunks[0].page_num}
+										onClickChunk={() =>
+											handleOnClick(chunks[0])
+										}
+									/>
+									<ChunkBox
+										pdf_name={chunks[1].pdf_name}
+										chunk_text={chunks[1].text}
+										page_num={chunks[1].page_num}
+										onClickChunk={() =>
+											handleOnClick(chunks[1])
+										}
+									/>
+									<ChunkBox
+										pdf_name={chunks[2].pdf_name}
+										chunk_text={chunks[2].text}
+										page_num={chunks[2].page_num}
+										onClickChunk={() =>
+											handleOnClick(chunks[2])
+										}
+									/>
+								</Box>
+								<Box sx={{ display: "flex", gap: 2 }}>
+									<ChunkBox
+										pdf_name={chunks[3].pdf_name}
+										chunk_text={chunks[3].text}
+										page_num={chunks[3].page_num}
+										onClickChunk={() =>
+											handleOnClick(chunks[3])
+										}
+									/>
+									<ChunkBox
+										pdf_name={chunks[4].pdf_name}
+										chunk_text={chunks[4].text}
+										page_num={chunks[4].page_num}
+										onClickChunk={() =>
+											handleOnClick(chunks[4])
+										}
+									/>
+									<Box sx={{ flex: 1 }} />
+								</Box>
+							</Box>
+						</>
+					) : (
+						<></>
+					)}
 				</Box>
 			</Box>
 		);

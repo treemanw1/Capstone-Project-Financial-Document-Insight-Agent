@@ -184,13 +184,13 @@ async def get_chat_history(session_id: int,
 
     id_to_chunks = {}
     for msg in chunks:
-        chunk = schemas.Chunk(text=msg.text, chat_history_id=msg.chat_history_id ,page_num=msg.page_num, pdf_id=msg.pdf_id, score=msg.score)
+        chunk = schemas.Chunk(text=msg.text, chat_history_id=msg.chat_history_id ,page_num=msg.page_num, pdf_id=msg.pdf_id, score=msg.score, pdf_name=msg.pdf_document_name)
         if msg.id not in id_to_chunks:
             id_to_chunks[msg.id] = [chunk]
         else:
             id_to_chunks[msg.id].append(chunk)
     bot_messages = [msg._mapping for msg in bot_messages]
-    bot_messages = [{**msg, "chunks": id_to_chunks.get(msg.id, [])} for msg in bot_messages]
+    bot_messages = [{**msg, "chunks": sorted(id_to_chunks.get(msg.id, []), key=lambda x: x.score, reverse=True)} for msg in bot_messages]
     chat_history = user_messages + bot_messages
     chat_history.sort(key=lambda x: x['created_at'])
     # return chat_history
@@ -222,10 +222,19 @@ async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_logi
     crud.create_chat_message(db, schemas.ChatMessageCreation(session_id=query.session_id, role="user", message=query.query))
 
     pdf_ids = [item[0] for item in crud.get_pdf_ids(db, query.session_id)]
-    rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
-    # rag_response = {'message': "dummy message", "chunks": [{"text": "I don't want to live in a world", "page_num": 2, 'pdf_id': 245, "chat_history_id": 3, "score": 4}]}
+    # rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
+    rag_response = {'message': "Dhanush and Chia Yu hurry up",
+                    "chunks": [
+                        {"text": "dummy text hehehehehehe", "page_num": 1, 'pdf_id': 245, "chat_history_id": 261, "score": 5},
+                        {"text": "dummy text hehehehehehe", "page_num": 2, 'pdf_id': 245, "chat_history_id": 261, "score": 4},
+                        {"text": "dummy text hehehehehehe", "page_num": 3, 'pdf_id': 245, "chat_history_id": 261, "score": 3},
+                        {"text": "dummy text hehehehehehe", "page_num": 4, 'pdf_id': 245, "chat_history_id": 261, "score": 2},
+                        {"text": "dummy text hehehehehehe", "page_num": 5, 'pdf_id': 245, "chat_history_id": 261, "score": 1},
+                        ]
+                    }
 
     bot_message = crud.create_chat_message(db, schemas.ChatMessageCreation(session_id=query.session_id, role="bot", message=rag_response["message"]))
+    print("datetime: ", bot_message.created_at)
     for chunk in rag_response["chunks"]:
         chunk["chat_history_id"] = bot_message.id
         

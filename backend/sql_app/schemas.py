@@ -53,6 +53,7 @@ class Chunk(BaseModel):
     pdf_id: int
     chat_history_id: int
     score: float
+    pdf_name: str
 
 class ChatMessage(BaseModel):
     session_id: int
@@ -69,7 +70,10 @@ class BotMessage(ChatMessage):
     session_name: str | None
     chunks: List[Chunk]
 
-EitherMessage = Union[BotMessage, ChatMessage]
+class BotMessageChatHistory(ChatMessage):
+    chunks: List[Chunk]
+
+EitherMessage = Union[BotMessageChatHistory, ChatMessage]
 
 class UserQuery(BaseModel):
     query: str
