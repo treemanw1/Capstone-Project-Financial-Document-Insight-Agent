@@ -40,8 +40,9 @@ const PDFDropdown: React.FC<MyComponentProps> = ({
 					MenuProps={{
 						PaperProps: {
 							style: {
-								marginLeft: 0,
-								marginRight: "auto",
+								width: "100px",
+								// marginLeft: 0,
+								// marginRight: "auto",
 							},
 						},
 					}}
@@ -54,7 +55,9 @@ const PDFDropdown: React.FC<MyComponentProps> = ({
 				>
 					{pdfs?.map((pdf) => (
 						<MenuItem sx={{ maxWidth: "100%" }} value={pdf.id}>
-							{pdf.pdf_document_name}
+							<Typography sx={{ overflow: "clip" }}>
+								{pdf.pdf_document_name}
+							</Typography>
 						</MenuItem>
 					))}
 				</Select>

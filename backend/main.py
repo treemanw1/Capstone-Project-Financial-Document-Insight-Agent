@@ -216,27 +216,25 @@ async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_logi
     if crud.get_num_messages(db, session_id=query.session_id) == 0:
         generator = Generator()
         generated_session_name = generator.query_summary(query.query)
-        # generated_session_name = "generated session name"
         crud.update_session_name(db, query.session_id, generated_session_name);
     crud.create_chat_message(db, schemas.ChatMessageCreation(session_id=query.session_id, role="user", message=query.query))
 
     pdf_ids = [item[0] for item in crud.get_pdf_ids(db, query.session_id)]
-    # rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
-    rag_response = {'message': "Dhanush and Chia Yu hurry up",
-                    "chunks": [
-                        {"text": "dummy text hehehehehehe", "page_num": 1, 'pdf_id': 245, "chat_history_id": 261, "score": 5, "pdf_name": "dummy pdf name 1"},
-                        {"text": "dummy text hehehehehehe", "page_num": 2, 'pdf_id': 245, "chat_history_id": 261, "score": 4, "pdf_name": "dummy pdf name 1"},
-                        {"text": "dummy text hehehehehehe", "page_num": 3, 'pdf_id': 245, "chat_history_id": 261, "score": 3, "pdf_name": "dummy pdf name 1"},
-                        {"text": "dummy text hehehehehehe", "page_num": 4, 'pdf_id': 245, "chat_history_id": 261, "score": 2, "pdf_name": "dummy pdf name 1"},
-                        {"text": "dummy text hehehehehehe", "page_num": 5, 'pdf_id': 245, "chat_history_id": 261, "score": 1, "pdf_name": "dummy pdf name 1"},
-                        ]
-                    }
+    rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
+    # rag_response = {'message': "Dhanush and Chia Yu hurry up",
+    #                 "chunks": [
+    #                     {"text": "dummy text hehehehehehe", "page_num": 1, 'pdf_id': 245, "chat_history_id": 261, "score": 5, "pdf_name": "dummy pdf name 1"},
+    #                     {"text": "dummy text hehehehehehe", "page_num": 2, 'pdf_id': 245, "chat_history_id": 261, "score": 4, "pdf_name": "dummy pdf name 1"},
+    #                     {"text": "dummy text hehehehehehe", "page_num": 3, 'pdf_id': 245, "chat_history_id": 261, "score": 3, "pdf_name": "dummy pdf name 1"},
+    #                     {"text": "dummy text hehehehehehe", "page_num": 4, 'pdf_id': 245, "chat_history_id": 261, "score": 2, "pdf_name": "dummy pdf name 1"},
+    #                     {"text": "dummy text hehehehehehe", "page_num": 5, 'pdf_id': 245, "chat_history_id": 261, "score": 1, "pdf_name": "dummy pdf name 1"},
+    #                     ]
+    #                 }
 
     bot_message = crud.create_chat_message(db, schemas.ChatMessageCreation(session_id=query.session_id, role="bot", message=rag_response["message"]))
-    print("datetime: ", bot_message.created_at)
     for chunk in rag_response["chunks"]:
         chunk["chat_history_id"] = bot_message.id
-        
+    
     crud.create_chunks(db, [schemas.ChunkCreation(**chunk) for chunk in rag_response["chunks"]])
     response = {
         "session_name": generated_session_name,
