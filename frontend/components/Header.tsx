@@ -5,56 +5,42 @@ import NextLink from "next/link";
 
 const Header = () => {
 	return (
-		<Box>
-			<Box sx={{ mx: globalStyles.mx, backgroundColor: "" }}>
-				<Box
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						// background: "lightblue",
-						height: globalStyles.headerHeight,
-					}}
+		<Box
+			sx={{
+				display: "flex",
+				flexDirection: "column",
+				width: "100%",
+				justifyContent: "center",
+				height: globalStyles.headerHeight,
+				color: "white",
+				background:
+					"linear-gradient(to right bottom, #04223E, #1A88C5)",
+				// background: "pink",
+			}}
+		>
+			<Box
+				sx={{
+					display: "flex",
+					px: globalStyles.mx,
+					justifyContent: "space-between",
+					alignItems: "center",
+					height: "100%",
+					// background: "pink",
+				}}
+			>
+				<Link
+					component={NextLink}
+					href="/chat"
+					underline="hover"
+					variant="body1"
+					// color="black"
 				>
-					<Box
-						sx={{
-							display: "flex",
-							justifyContent: "space-between",
-							width: "10%",
-							// background: "pink",
-						}}
-					>
-						<Link
-							component={NextLink}
-							href="/filter"
-							underline="hover"
-							color="black"
-							variant="body1"
-						>
-							Filter
-						</Link>
-						<Link
-							component={NextLink}
-							href="/chat"
-							underline="hover"
-							color="black"
-							variant="body1"
-						>
-							Chat
-						</Link>
-					</Box>
-					<Box
-						sx={{
-							display: "flex",
-							// background: "pink",
-							marginLeft: "auto",
-						}}
-					>
-						<Typography>Hello, Zhong Hern</Typography>
-						<Icon />
-					</Box>
-				</Box>
+					Chat
+				</Link>
+				<Typography>Hello, Superadmin</Typography>
+				{/* <Icon /> */}
 			</Box>
-			<Divider />
+			{/* <Divider sx={{ width: "100%", background: "darkblue" }} /> */}
 		</Box>
 	);
 };

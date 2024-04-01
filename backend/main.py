@@ -3,12 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from durag import pipeline
+from DuRAG.generator import Generator
 from typing import Annotated, List
 from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sql_app import crud, schemas
 from sql_app.database import SessionLocal
+import pytz
 
 import os
 from dotenv import load_dotenv
@@ -19,7 +21,7 @@ load_dotenv()
 
 SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 app = FastAPI()
 
@@ -71,6 +73,11 @@ def authenticate_user(db: Session, username: str, password: str):
         return False
     return user
 
+def utc_to_sg_time(d : datetime):
+    utc_timezone = pytz.timezone('UTC')
+    sg_timezone = pytz.timezone('Asia/Singapore')
+    return d.replace(tzinfo=utc_timezone).astimezone(sg_timezone)
+
 async def get_login_status(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -120,7 +127,8 @@ async def create_user(credentials: schemas.UserCredentials, db: Session = Depend
     crud.create_user(db, user=credentials)
     return {"success": True, "message": "User successfully created!"}
 
-@app.post("/api/token")
+# @app.post("/api/token")
+@app.post("/token")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)
 ) -> schemas.Token:
@@ -185,6 +193,8 @@ async def get_chat_history(session_id: int,
     bot_messages = [{**msg, "chunks": id_to_chunks.get(msg.id, [])} for msg in bot_messages]
     chat_history = user_messages + bot_messages
     chat_history.sort(key=lambda x: x['created_at'])
+    # return chat_history
+    chat_history = [{**msg, 'created_at': utc_to_sg_time(msg['created_at'])} for msg in chat_history]
     return chat_history
 
 @app.get("/api/get-pdfs/{session_id}", response_model=List[schemas.PDF])
@@ -192,25 +202,45 @@ async def get_pdfs(session_id: int, token: Annotated[str, Depends(get_login_stat
     pdf_ids = crud.get_pdf_ids(db, session_id)
     return crud.get_pdfs(db, [id[0] for id in pdf_ids])
 
+@app.get("/test/get-time/{chat_id}", response_model=datetime)
+async def get_time(chat_id: int, db: Session = Depends(get_db)):
+    created_at =  crud.get_chat_message_time(db, chat_id)
+    utc_timezone = pytz.timezone('UTC')
+    sg_timezone = pytz.timezone('Asia/Singapore')
+    sg_time = created_at.replace(tzinfo=utc_timezone).astimezone(sg_timezone)
+    return sg_time
+
+
 @app.post("/api/query", response_model=schemas.BotMessage)
 async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_login_status)], db: Session = Depends(get_db)):
-    user_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="user", message=query.query))
+    generated_session_name = None
+    if crud.get_num_messages(db, session_id=query.session_id) == 0:
+        generator = Generator()
+        generated_session_name = generator.query_summary(query.query)
+        # generated_session_name = "generated session name"
+        crud.update_session_name(db, query.session_id, generated_session_name);
+    crud.create_chat_message(db, schemas.ChatMessageCreation(session_id=query.session_id, role="user", message=query.query))
 
     pdf_ids = [item[0] for item in crud.get_pdf_ids(db, query.session_id)]
     rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
-    
-    # generated_session_name = generate_session_name(query.query)
-    # crud.update_session_name(db, query.session_id, generated_session_name);
+    # rag_response = {'message': "dummy message", "chunks": [{"text": "I don't want to live in a world", "page_num": 2, 'pdf_id': 245, "chat_history_id": 3, "score": 4}]}
 
-    bot_message = crud.create_chat_message(db, schemas.ChatMessage(session_id=query.session_id, role="bot", message=rag_response["message"]))
+    bot_message = crud.create_chat_message(db, schemas.ChatMessageCreation(session_id=query.session_id, role="bot", message=rag_response["message"]))
     for chunk in rag_response["chunks"]:
         chunk["chat_history_id"] = bot_message.id
         
     crud.create_chunks(db, [schemas.Chunk(**chunk) for chunk in rag_response["chunks"]])
     response = {
+        "session_name": generated_session_name,
         "session_id": query.session_id,
         "role": "bot",
+        "created_at": bot_message.created_at,
         "message": rag_response["message"],
         "chunks": rag_response["chunks"]
     }
     return response
+
+@app.get("/api/delete-session/{session_id}", response_model=bool)
+async def delete_session(session_id: int, user_id: Annotated[schemas.User, Depends(get_current_user_id)], db: Session = Depends(get_db)):
+    return crud.delete_session(db, session_id)
+

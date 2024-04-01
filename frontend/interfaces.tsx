@@ -10,6 +10,7 @@ export interface ChatMessage {
 	session_id: number;
 	role: string;
 	message: string;
+	created_at: Date;
 }
 
 export interface BotMessage extends ChatMessage {

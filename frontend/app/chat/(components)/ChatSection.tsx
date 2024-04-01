@@ -11,7 +11,7 @@ import { globalStyles } from "styles";
 import { post } from "utils/rest_utils";
 import { isBotMessage } from "utils/type_utils";
 
-import { ChatMessage, Chunk } from "interfaces";
+import { ChatMessage, Chunk, Session } from "interfaces";
 import Message from "app/chat/(components)/Message";
 import QueryField from "app/chat/(components)/QueryField";
 
@@ -20,8 +20,6 @@ import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 
 import { ColorModeContext } from "@components/ThemeWrapper";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
 
 interface MyComponentProps {
 	token: string | null;
@@ -36,6 +34,8 @@ interface MyComponentProps {
 	sidebarOpen: boolean;
 	setSidebarOpen: Dispatch<SetStateAction<boolean>>;
 	setSelectedPDFID: Dispatch<SetStateAction<number | null>>;
+	sessions: Session[];
+	setSessions: Dispatch<SetStateAction<Session[]>>;
 }
 
 const ChatSection: React.FC<MyComponentProps> = ({
@@ -51,6 +51,8 @@ const ChatSection: React.FC<MyComponentProps> = ({
 	sidebarOpen,
 	setSidebarOpen,
 	setSelectedPDFID,
+	sessions,
+	setSessions,
 }) => {
 	const theme = useTheme();
 	const { toggleColorMode } = useContext(ColorModeContext);
@@ -70,6 +72,28 @@ const ChatSection: React.FC<MyComponentProps> = ({
 				"/query",
 				"Failed to fetch LLM response and chunks.",
 				(botMessage: any) => {
+					console.log("botMessage:", botMessage);
+					if (botMessage.session_name) {
+						var i = sessions.findIndex(
+							(s) => s.id == currentSessionId
+						);
+						if (i !== -1) {
+							const updatedSessions = sessions.map(
+								(session, index) => {
+									if (index === i) {
+										// Return a new session object with the updated name
+										return {
+											...session,
+											name: botMessage.session_name,
+										};
+									}
+									return session;
+								}
+							);
+							// Update the state with the new array
+							setSessions(updatedSessions);
+						}
+					}
 					const message = {
 						message: botMessage.message,
 						session_id: currentSessionId!,
@@ -101,10 +125,10 @@ const ChatSection: React.FC<MyComponentProps> = ({
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				width: "43%",
-				// width: "43vh",
-				background: theme.palette.primary.main,
-				// background: "lightblue",
+				// width: "43%",
+				width: "50%",
+				// background: theme.palette.primary.main,
+				// background: "pink",
 				justifyContent: "space-between",
 				alignItems: "center",
 			}}
@@ -142,7 +166,7 @@ const ChatSection: React.FC<MyComponentProps> = ({
 					)}
 				</IconButton>
 				<Typography sx={{ ml: 2 }} fontWeight="bold" variant="h6">
-					DuRAG Chat
+					FELIX Chat
 				</Typography>
 				{/* <IconButton
 					sx={{ ml: 1 }}
@@ -162,29 +186,39 @@ const ChatSection: React.FC<MyComponentProps> = ({
 					display: "flex",
 					flexDirection: "column-reverse",
 					justifyContent: "end",
+					alignItems: "center",
 					flex: 1,
 					overflow: "auto",
 					gap: 2,
-					width: "92.5%",
-					ml: 1.5,
+					// background: "lightgreen",
+					width: "100%",
 					"&::-webkit-scrollbar": {
 						backgroundColor: theme.palette.primary.main,
 						width: "14px",
 					},
 					"&::-webkit-scrollbar-track": {
-						backgroundColor: theme.palette.primary.main,
+						backgroundColor: theme.palette.primary.light,
 					},
 					"&::-webkit-scrollbar-thumb": {
 						background: theme.palette.primary.dark,
 						borderRadius: "16px",
-						border: `4px solid ${theme.palette.primary.main}`,
+						border: `4px solid ${theme.palette.primary.light}`,
 					},
 					"&::-webkit-scrollbar-button": {
 						display: "none",
 					},
 				}}
 			>
-				<Box sx={{}}>
+				<Box
+					sx={{
+						// background: "lightblue",
+						width: "85%",
+						display: "flex",
+						flexDirection: "column",
+						// justifyContent: "center",
+						// alignItems: "center",
+					}}
+				>
 					{messages.map((message, index) => {
 						return (
 							<Message

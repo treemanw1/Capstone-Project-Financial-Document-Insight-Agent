@@ -56,7 +56,7 @@ class ChatHistory(Base):
     __tablename__ = "chat_history"
     id = Column(Integer, primary_key=True)
     session_id = Column(Integer, ForeignKey("sessions.id"), nullable=False)
-    created_at = Column(DateTime, default=func.now(), nullable=False)
+    created_at = Column(DateTime(), default=func.now(), nullable=False)
     role = Column(String(4), nullable=False) # user | bot
     message = Column(String(500), nullable=False)
     # chunk_id = Column(Integer, ForeignKey("chunks.id"), nullable=True)

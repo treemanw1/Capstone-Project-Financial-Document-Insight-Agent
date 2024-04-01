@@ -1,6 +1,7 @@
 import React, { useState, Dispatch, SetStateAction } from "react";
 import { Box, TextField, Typography, Autocomplete, Paper } from "@mui/material";
 import { PaperProps } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 interface MyComponentProps {
 	title: string;
@@ -12,7 +13,16 @@ interface MyComponentProps {
 }
 
 const CustomPaper = (props: PaperProps) => {
-	return <Paper sx={{ width: "fit-content", background: "" }} {...props} />;
+	return (
+		<Paper
+			sx={{
+				width: "fit-content",
+				// height: "200px",
+				background: "",
+			}}
+			{...props}
+		/>
+	);
 };
 
 const SearchField = ({
@@ -24,6 +34,8 @@ const SearchField = ({
 	// setSelected,
 	onSelect,
 }: MyComponentProps) => {
+	const theme = useTheme();
+
 	const [value, setValue] = useState<string>("");
 	const [inputValue, setInputValue] = useState<string>("");
 
@@ -53,14 +65,15 @@ const SearchField = ({
 						display: "flex",
 						alignItems: "center",
 						justifyContent: "center",
-						background: "#E3E4E7",
+						// background: "lightblue",
+						background: theme.palette.primary.main,
 						// height: height,
 						borderColor: "transparent",
-						borderRadius: "10px",
+						borderRadius: "25px",
 						"& fieldset": { border: "none" },
-						"&:hover": { background: "" },
+						"&:hover": { color: "black" },
 						"& .Mui-focused": {
-							color: "#A3A4A8",
+							color: "black",
 							borderColor: "transparent",
 						},
 					}}

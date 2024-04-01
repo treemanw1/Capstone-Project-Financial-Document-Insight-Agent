@@ -81,7 +81,24 @@ const Sessions: React.FC<MyComponentProps> = ({
 				flexDirection: "column",
 				height: "100%",
 				width: "100%",
-				background: theme.palette.primary.light,
+				background: theme.palette.primary.main,
+				// background: "pink",
+				overflow: "auto",
+				"&::-webkit-scrollbar": {
+					backgroundColor: theme.palette.primary.main,
+					width: "14px",
+				},
+				"&::-webkit-scrollbar-track": {
+					backgroundColor: theme.palette.primary.main,
+				},
+				"&::-webkit-scrollbar-thumb": {
+					background: theme.palette.primary.dark,
+					borderRadius: "16px",
+					border: `4px solid ${theme.palette.primary.main}`,
+				},
+				"&::-webkit-scrollbar-button": {
+					display: "none",
+				},
 			}}
 		>
 			<Box
@@ -119,7 +136,7 @@ const Sessions: React.FC<MyComponentProps> = ({
 							whiteSpace: "nowrap",
 						}}
 					>
-						Back to filter
+						Back to filters
 					</Typography>
 				</Button>
 			</Box>

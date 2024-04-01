@@ -5,7 +5,8 @@ export async function get(
 	onSuccess: (data: any) => void
 ) {
 	try {
-		const response = await fetch(`http://13.213.71.123/api${endpoint}`, {
+		// "http://13.213.71.123"
+		const response = await fetch(`http://localhost:8000/api${endpoint}`, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -30,7 +31,7 @@ export async function post(
 	onSuccess: (data: any) => void
 ) {
 	try {
-		const response = await fetch(`http://13.213.71.123/api${endpoint}`, {
+		const response = await fetch(`http://localhost:8000/api${endpoint}`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${token}`,

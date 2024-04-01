@@ -1,6 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload, aliased
-from sqlalchemy import insert, and_
+from sqlalchemy import insert, and_, func, delete
 from fastapi import HTTPException
 
 from sql_app import models, schemas
@@ -138,3 +138,31 @@ def update_session_name(db: Session, session_id: int, name: str):
         db.rollback()
         print("An unexpected error occurred:", e)
         raise HTTPException(status_code=400, detail=e)
+
+def get_num_messages(db: Session, session_id: int):
+    return db.query(func.count(models.ChatHistory.id)).filter(models.ChatHistory.session_id == session_id).scalar()
+
+def delete_session(db: Session, session_id: int):
+    delete_session_pdfs = delete(models.SessionPDFs).where(models.SessionPDFs.session_id == session_id)
+    db.execute(delete_session_pdfs)
+    delete_chat_messages = delete(models.ChatHistory).where(models.ChatHistory.session_id == session_id)
+    db.execute(delete_chat_messages)
+    delete_session = delete(models.Session).where(models.Session.id == session_id)
+    db.execute(delete_session)
+    try:
+        db.commit()
+        return True
+    except Exception as e:
+        db.rollback()
+        print("Error deleting session {session_id}:", e)
+        raise HTTPException(status_code=400, detail=e)
+
+
+# testing functions
+def get_chat_message_time(db: Session, chat_id: int):
+    chat_message = (
+        db.query(models.ChatHistory.created_at)
+        .filter(models.ChatHistory.id == chat_id)
+        .first()
+    )
+    return chat_message.created_at if chat_message else None

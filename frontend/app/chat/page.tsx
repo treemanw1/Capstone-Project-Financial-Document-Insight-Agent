@@ -294,15 +294,19 @@ const Chat = ({ params }: { params: { session_id: string } }) => {
 					sidebarOpen={sidebarOpen}
 					setSidebarOpen={setSidebarOpen}
 					setSelectedPDFID={setSelectedPDFID}
+					sessions={sessions}
+					setSessions={setSessions}
 				/>
 				<PDFViewer
+					pdfs={pdfs}
+					setSelectedPDFID={setSelectedPDFID}
 					pdf={pdfs?.find((pdf) => pdf.id == selectedPDFID) || null}
 					highlightedChunks={highlightedChunks}
 					currentPage={currentPage}
 					setCurrentPage={setCurrentPage}
 					listRef={listRef}
 				/>
-				<PDFList pdfs={pdfs} setSelectedPDFID={setSelectedPDFID} />
+				{/* <PDFList pdfs={pdfs} setSelectedPDFID={setSelectedPDFID} /> */}
 			</Box>
 		</Box>
 	);

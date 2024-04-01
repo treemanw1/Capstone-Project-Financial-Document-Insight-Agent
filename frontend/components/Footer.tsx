@@ -4,8 +4,8 @@ import { globalStyles } from "styles";
 
 const Footer = () => {
 	return (
-		<Box sx={{ justifySelf: "flex-end" }}>
-			<Divider />
+		<Box sx={{ background: "", justifySelf: "flex-end", width: "100%" }}>
+			<Divider sx={{}} />
 			<Box
 				sx={{
 					mx: globalStyles.mx,
@@ -13,7 +13,7 @@ const Footer = () => {
 					alignItems: "center",
 					height: globalStyles.footerHeight,
 					justifyContent: "space-between",
-					background: "",
+					// background: "pink",
 				}}
 			>
 				<Typography

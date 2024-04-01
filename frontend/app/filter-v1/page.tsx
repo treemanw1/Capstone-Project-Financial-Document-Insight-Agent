@@ -6,12 +6,19 @@ import Footer from "@components/Footer";
 import RoundButton from "@components/RoundButton";
 import MultiSelectDropdown from "@components/MultiSelectDropdown";
 import DateDropdown from "@components/DateDropdown";
-import { Box, Container, Divider, Typography, IconButton } from "@mui/material";
+import {
+	Box,
+	Container,
+	Divider,
+	Typography,
+	IconButton,
+	Link,
+} from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { globalStyles } from "styles";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
-
+import NextLink from "next/link";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
@@ -102,21 +109,53 @@ const Filter = () => {
 					// 	"linear-gradient(to right bottom, #BB84F8, #FEBF87)",
 					// background:
 					// 	"linear-gradient(to right bottom, #A9F0DE, #FFBABB)",
-					// background:
-					// 	"linear-gradient(to right bottom, #04223E, #1A88C5)",
+					background:
+						"linear-gradient(to right bottom, #04223E, #1A88C5)",
 					// background: "white",
 					justifyContent: "space-between",
 					alignItems: "center",
-					// color: "#f1f1ff",
+					color: "#f1f1ff",
 				}}
 			>
-				<Header />
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						width: "100%",
+						justifyContent: "center",
+						height: globalStyles.headerHeight,
+					}}
+				>
+					<Box
+						sx={{
+							display: "flex",
+							px: globalStyles.mx,
+							justifyContent: "space-between",
+							alignItems: "center",
+							height: "100%",
+							// background: "pink",
+						}}
+					>
+						<Link
+							component={NextLink}
+							href="/chat"
+							underline="hover"
+							variant="body1"
+							// color="black"
+						>
+							Chat
+						</Link>
+						<Typography>Hello, Superadmin</Typography>
+						{/* <Icon /> */}
+					</Box>
+				</Box>
 				<Box
 					sx={{
 						display: "flex",
 						flexDirection: "column",
 						textAlign: "center",
 						width: "60vw",
+						mb: 2,
 						// background: "pink",
 					}}
 				>
@@ -239,7 +278,7 @@ const Filter = () => {
 								display: "flex",
 								flexDirection: "column",
 								justifyContent: "flex-start",
-								background: theme.palette.primary.main,
+								background: theme.palette.primary.light,
 								height: "100%",
 								flex: 1,
 								borderRadius: 3,

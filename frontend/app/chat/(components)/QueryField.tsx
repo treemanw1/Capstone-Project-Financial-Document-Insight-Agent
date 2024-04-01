@@ -31,7 +31,8 @@ const QueryField: React.FC<MyComponentProps> = ({
 				mb: 1,
 				// background: "pink",
 				border: 1,
-				borderColor: theme.palette.text.primary,
+				borderColor: theme.palette.secondary.main,
+				// borderColor: "pink",
 				borderRadius: 2,
 			}}
 		>

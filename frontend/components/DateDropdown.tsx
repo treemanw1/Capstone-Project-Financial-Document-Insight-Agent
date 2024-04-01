@@ -1,6 +1,7 @@
 import React from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Box, TextField, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 interface MyObjectProp {
 	title: string;
@@ -18,6 +19,8 @@ interface MyComponentProps {
 }
 
 const DateDropdown: React.FC<MyComponentProps> = ({ props }) => {
+	const theme = useTheme();
+
 	return (
 		<DatePicker
 			label={props.date == null ? props.label : ""}
@@ -33,9 +36,9 @@ const DateDropdown: React.FC<MyComponentProps> = ({ props }) => {
 						"& fieldset": { border: "none" },
 						"&:hover": { background: "" },
 						"& .MuiOutlinedInput-root": {
-							background: "#E3E4E7",
+							background: theme.palette.primary.main,
 							borderColor: "transparent",
-							borderRadius: "10px",
+							borderRadius: "25px",
 							// height: `calc(100% - ${props.fontSize} - 10px)`,
 							// fontSize: props.fontSize,
 						},

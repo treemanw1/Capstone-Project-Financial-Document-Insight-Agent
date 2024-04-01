@@ -58,8 +58,15 @@ class ChatMessage(BaseModel):
     session_id: int
     role: str # user | bot
     message: str
+    created_at: datetime
+
+class ChatMessageCreation(BaseModel):
+    session_id: int
+    role: str # user | bot
+    message: str
 
 class BotMessage(ChatMessage):
+    session_name: str | None
     chunks: List[Chunk]
 
 EitherMessage = Union[BotMessage, ChatMessage]

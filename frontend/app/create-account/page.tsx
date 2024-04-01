@@ -19,7 +19,8 @@ const CreateAccount = () => {
 		}
 		try {
 			const response = await fetch(
-				"http://13.213.71.123/api/create-user",
+				// "http://13.213.71.123/api/create-user"
+				"http://localhost:8000/api/create-user",
 				{
 					method: "POST",
 					headers: {

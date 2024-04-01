@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, createRef } from "react";
+import React, {
+	Dispatch,
+	SetStateAction,
+	useEffect,
+	useState,
+	useCallback,
+	createRef,
+} from "react";
 import { Box, Typography, TextField } from "@mui/material";
 import { Document, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -17,6 +24,8 @@ import { useTheme } from "@mui/material/styles";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface MyComponentProps {
+	pdfs: PDF[] | null;
+	setSelectedPDFID: Dispatch<SetStateAction<number | null>>;
 	pdf: PDF | null;
 	highlightedChunks: Chunk[];
 	currentPage: string;
@@ -44,6 +53,8 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 	currentPage,
 	setCurrentPage,
 	listRef,
+	pdfs,
+	setSelectedPDFID,
 }) => {
 	const theme = useTheme();
 	const listStyles =
@@ -103,7 +114,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 				display: "flex",
 				flexDirection: "column",
 				// backgroundColor: "lightblue",
-				width: "43%",
+				width: "50%",
 				// width: "43vh",
 				justifyContent: "space-between",
 			}}
@@ -113,6 +124,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 					display: "flex",
 					alignItems: "center",
 					height: globalStyles.headerHeight,
+					background: theme.palette.primary.main,
 					// background: "lightblue",
 				}}
 			>
@@ -141,7 +153,7 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 			</Box>
 			<Box
 				sx={{
-					background: theme.palette.primary.light,
+					background: theme.palette.primary.main,
 					// background: "pink",
 					display: "flex",
 					justifyContent: "center",

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Button } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 interface MyComponentProps {
 	text: string;
@@ -18,6 +19,8 @@ const RoundButton: React.FC<MyComponentProps> = ({
 	fontSize = "1.75vh",
 	onClick,
 }) => {
+	const theme = useTheme();
+
 	return (
 		<Button
 			size="large"
@@ -28,14 +31,14 @@ const RoundButton: React.FC<MyComponentProps> = ({
 				width: width,
 				// fontSize: fontSize,
 				// fontWeight: "bold",
-				backgroundColor: "#D9D9D9",
+				backgroundColor: theme.palette.primary.dark,
 				borderRadius: "25px",
 				color: "black",
 				textTransform: "none",
 				py: 1,
 				px: 2,
 				"&:hover": {
-					backgroundColor: "#B5B5B5",
+					backgroundColor: theme.palette.secondary.light,
 					color: "white",
 				},
 			}}
