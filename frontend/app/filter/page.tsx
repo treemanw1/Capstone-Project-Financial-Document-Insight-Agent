@@ -6,7 +6,15 @@ import Footer from "@components/Footer";
 import RoundButton from "@components/RoundButton";
 import MultiSelectDropdown from "@components/MultiSelectDropdown";
 import DateDropdown from "@components/DateDropdown";
-import { Box, Container, Divider, Typography, IconButton } from "@mui/material";
+import {
+	Box,
+	Container,
+	Divider,
+	TextField,
+	Link,
+	Typography,
+	IconButton,
+} from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { globalStyles } from "styles";
 import { useRouter } from "next/navigation";
@@ -14,7 +22,7 @@ import { useTheme } from "@mui/material/styles";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
+import NextLink from "next/link";
 import { PDF } from "interfaces";
 import { get, post } from "utils/rest_utils";
 import SearchField from "@components/SearchField";
@@ -98,87 +106,118 @@ const Filter = () => {
 					// height: `calc(100vh-${globalStyles.headerHeight}-${globalStyles.footerHeight})`,
 					height: "100vh",
 					width: "100vw",
-					// background:
-					// 	"linear-gradient(to right bottom, #BB84F8, #FEBF87)",
-					// background:
-					// 	"linear-gradient(to right bottom, #A9F0DE, #FFBABB)",
-					// background:
-					// 	"linear-gradient(to right bottom, #04223E, #1A88C5)",
-					// background: "white",
 					justifyContent: "space-between",
 					alignItems: "center",
 					// color: "#f1f1ff",
 				}}
 			>
-				<Header />
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						width: "100%",
+						justifyContent: "center",
+						height: globalStyles.headerHeight,
+						color: "white",
+						background: "#2052B5",
+						// background: "pink",
+					}}
+				>
+					<Box
+						sx={{
+							display: "flex",
+							px: globalStyles.mx,
+							justifyContent: "space-between",
+							alignItems: "center",
+							height: "100%",
+							// background: "pink",
+						}}
+					>
+						<Link
+							component={NextLink}
+							href="/chat"
+							underline="hover"
+							variant="body1"
+							// color="black"
+						>
+							Chat
+						</Link>
+						<Typography>Hello, Superadmin</Typography>
+						{/* <Icon /> */}
+					</Box>
+					{/* <Divider sx={{ width: "100%", background: "darkblue" }} /> */}
+				</Box>
 				<Box
 					sx={{
 						display: "flex",
 						flexDirection: "column",
 						textAlign: "center",
-						width: "60vw",
-						// background: "pink",
+						width: "70vw",
+						height: "77.5vh",
+						// background: "lightblue",
 					}}
 				>
-					<Typography variant="h2" fontWeight={500}>
-						Find documents within minutes
-					</Typography>
-					<Typography>
-						Search using document names and/or filters to quickly
-						streamline documents for the references you need.
-					</Typography>
-					{/* <Typography>
-						Start your conversation by selecting the documents you
-						want to explore
-					</Typography> */}
-					<Typography
-						variant="body1"
-						// textAlign="left"
-						sx={{ mt: 2, mb: 1 }}
-					>
-						Search for documents by name
-					</Typography>
-					<SearchField
-						title="Document Name"
-						height={styles.barHeight}
-						width="100%"
-						fontSize={styles.fontSize}
-						onSelect={(newValue: string) => {
-							const pdf = pdfs.find(
-								(pdf) => pdf.pdf_document_name === newValue
-							)!;
-							setSelectedPDFs([...selectedPDFs, pdf]);
-						}}
-						options={pdfs.map((pdf) => pdf.pdf_document_name)}
-					/>
-					<Typography
-						variant="body1"
-						// textAlign="left"
-						sx={{ mt: 2, mb: 1 }}
-					>
-						Or find documents with filters
-					</Typography>
 					<Box
 						sx={{
 							display: "flex",
-							gap: 2,
-							height: "35vh",
-							// background: "lightblue",
+							flexDirection: "column",
+							// background: "pink",
+							width: "40%",
 						}}
 					>
+						<Typography
+							textAlign="left"
+							variant="h3"
+							fontWeight={600}
+							sx={{ mb: 0 }}
+						>
+							Find documents within minutes
+						</Typography>
+						<Typography textAlign="left" sx={{ mb: 1 }}>
+							Search using document names and/or filters to
+							quickly streamline documents for the references you
+							need.
+						</Typography>
+					</Box>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							background: theme.palette.primary.dark,
+							justifyContent: "space-between",
+							// justifyContent: "space-around",
+							height: "52.5vh",
+							p: 2,
+							borderRadius: 4,
+						}}
+					>
+						<SearchField
+							background="white"
+							title="Document Name"
+							height={styles.barHeight}
+							width="100%"
+							fontSize={styles.fontSize}
+							onSelect={(newValue: string) => {
+								const pdf = pdfs.find(
+									(pdf) => pdf.pdf_document_name === newValue
+								)!;
+								setSelectedPDFs([...selectedPDFs, pdf]);
+							}}
+							options={pdfs.map((pdf) => pdf.pdf_document_name)}
+						/>
 						<Box
 							sx={{
 								display: "flex",
-								flexDirection: "column",
-								justifyContent: "space-between",
+								// alignItems: "center",
+								// background: "lightblue",
+								my: 1,
 								gap: 1,
-								width: "35%",
-								// background: "green",
-								height: "100%",
+								height: "fit-content",
 							}}
 						>
 							<SearchField
-								title="Search companies by name"
+								background="white"
+								title="Search companies"
 								height={styles.barHeight}
 								width="100%"
 								fontSize={styles.fontSize}
@@ -192,6 +231,7 @@ const Filter = () => {
 							/>
 							<DateDropdown
 								props={{
+									background: "white",
 									title: "Select start date",
 									label: "Select Start Date",
 									date: startDate,
@@ -204,6 +244,7 @@ const Filter = () => {
 							/>
 							<DateDropdown
 								props={{
+									background: "white",
 									title: "Select end date",
 									label: "Select End Date",
 									date: endDate,
@@ -215,8 +256,10 @@ const Filter = () => {
 								}}
 							/>
 							<RoundButton
+								background="#2052B5"
+								color="white"
 								text="Add documents"
-								height="6vh"
+								height="100%"
 								width="100%"
 								fontSize={styles.fontSize}
 								onClick={() => {
@@ -239,9 +282,10 @@ const Filter = () => {
 								display: "flex",
 								flexDirection: "column",
 								justifyContent: "flex-start",
+								// background: "pink",
 								background: theme.palette.primary.main,
-								height: "100%",
-								flex: 1,
+								height: "47.5%",
+								mb: 1,
 								borderRadius: 3,
 								color: "black",
 								overflow: "auto",
@@ -250,13 +294,12 @@ const Filter = () => {
 									width: "14px",
 								},
 								"&::-webkit-scrollbar-track": {
-									backgroundColor:
-										theme.palette.primary.light,
+									backgroundColor: theme.palette.primary.dark,
 								},
 								"&::-webkit-scrollbar-thumb": {
-									background: theme.palette.primary.dark,
+									background: theme.palette.primary.light,
 									borderRadius: "16px",
-									border: `4px solid ${theme.palette.primary.light}`,
+									border: `4px solid ${theme.palette.primary.dark}`,
 								},
 								"&::-webkit-scrollbar-button": {
 									display: "none",
@@ -277,7 +320,7 @@ const Filter = () => {
 									>
 										<Typography
 											textAlign="left"
-											variant="caption"
+											variant="body1"
 											whiteSpace="nowrap"
 											textOverflow="ellipsis"
 											overflow="clip"
@@ -309,23 +352,34 @@ const Filter = () => {
 								))}
 							</Box>
 						</Box>
+						<Box
+							sx={{
+								display: "flex",
+								justifyContent: "center",
+								height: "7vh",
+							}}
+						>
+							<RoundButton
+								background="#2052B5"
+								color="white"
+								text="Start your conversation"
+								height="100%"
+								width={styles.barWidth + "vh"}
+								fontSize={styles.fontSize}
+								onClick={() => {
+									if (selectedPDFs.length === 0) {
+										alert(
+											"Please select at least one document to start a chat session."
+										);
+										return;
+									}
+									createSession();
+								}}
+							/>
+						</Box>
 					</Box>
 				</Box>
-				<RoundButton
-					text="Start your conversation"
-					height="6vh"
-					width={styles.barWidth + "vh"}
-					fontSize={styles.fontSize}
-					onClick={() => {
-						if (selectedPDFs.length === 0) {
-							alert(
-								"Please select at least one document to start a chat session."
-							);
-							return;
-						}
-						createSession();
-					}}
-				/>
+
 				<Footer />
 			</Box>
 		</LocalizationProvider>
