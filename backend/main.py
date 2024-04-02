@@ -1,9 +1,13 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from durag import pipeline
 from DuRAG.generator import Generator
+from DuRAG.pipelines.rag_pipeline import RAGpipeline
 from typing import Annotated, List
 from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
@@ -12,18 +16,20 @@ from sql_app import crud, schemas
 from sql_app.database import SessionLocal
 import pytz
 
+
 import os
-from dotenv import load_dotenv
+
 
 from hash import verify_password, hash_password
 
-load_dotenv()
+
 
 SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 app = FastAPI()
+rag = RAGpipeline()
 
 origins = [
     "http://localhost:3000",
@@ -219,17 +225,18 @@ async def query(query: schemas.UserQuery, token: Annotated[str, Depends(get_logi
         crud.update_session_name(db, query.session_id, generated_session_name);
     crud.create_chat_message(db, schemas.ChatMessageCreation(session_id=query.session_id, role="user", message=query.query))
 
+
     pdf_ids = [item[0] for item in crud.get_pdf_ids(db, query.session_id)]
-    # rag_response = pipeline(query.query, [item[0] for item in crud.get_pdf_ids(db, query.session_id)])
-    rag_response = {'message': "Dhanush and Chia Yu hurry up",
-                    "chunks": [
-                        {"text": "dummy text hehehehehehe", "page_num": 1, 'pdf_id': 245, "chat_history_id": 261, "score": 5, "pdf_name": "dummy pdf name 1"},
-                        {"text": "dummy text hehehehehehe", "page_num": 2, 'pdf_id': 245, "chat_history_id": 261, "score": 4, "pdf_name": "dummy pdf name 1"},
-                        {"text": "dummy text hehehehehehe", "page_num": 3, 'pdf_id': 245, "chat_history_id": 261, "score": 3, "pdf_name": "dummy pdf name 1"},
-                        {"text": "dummy text hehehehehehe", "page_num": 4, 'pdf_id': 245, "chat_history_id": 261, "score": 2, "pdf_name": "dummy pdf name 1"},
-                        {"text": "dummy text hehehehehehe", "page_num": 5, 'pdf_id': 245, "chat_history_id": 261, "score": 1, "pdf_name": "dummy pdf name 1"},
-                        ]
-                    }
+    rag_response = pipeline(rag, query.query, pdf_ids)
+    # rag_response = {'message': "Dhanush and Chia Yu hurry up",
+    #                 "chunks": [
+    #                     {"text": "dummy text hehehehehehe", "page_num": 1, 'pdf_id': 245, "chat_history_id": 261, "score": 5, "pdf_name": "dummy pdf name 1"},
+    #                     {"text": "dummy text hehehehehehe", "page_num": 2, 'pdf_id': 245, "chat_history_id": 261, "score": 4, "pdf_name": "dummy pdf name 1"},
+    #                     {"text": "dummy text hehehehehehe", "page_num": 3, 'pdf_id': 245, "chat_history_id": 261, "score": 3, "pdf_name": "dummy pdf name 1"},
+    #                     {"text": "dummy text hehehehehehe", "page_num": 4, 'pdf_id': 245, "chat_history_id": 261, "score": 2, "pdf_name": "dummy pdf name 1"},
+    #                     {"text": "dummy text hehehehehehe", "page_num": 5, 'pdf_id': 245, "chat_history_id": 261, "score": 1, "pdf_name": "dummy pdf name 1"},
+    #                     ]
+    #                 }
 
     bot_message = crud.create_chat_message(db, schemas.ChatMessageCreation(session_id=query.session_id, role="bot", message=rag_response["message"]))
     for chunk in rag_response["chunks"]:
