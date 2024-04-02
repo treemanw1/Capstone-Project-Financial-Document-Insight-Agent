@@ -40,12 +40,15 @@ const Footer = () => {
 						Privacy Policy
 					</Typography>
 				</Box>
-				<Typography
-					align="right"
-					sx={{ fontSize: "13px", width: "400px" }}
-				>
-					Powered by Handshakes
-				</Typography>
+				<Box sx={{ display: "flex", alignItems: "center" }}>
+					<Typography
+						align="right"
+						sx={{ fontSize: "13px", width: "400px", mr: 1 }}
+					>
+						Powered by
+					</Typography>
+					<img height={13} src="/handshakes.png"></img>
+				</Box>
 			</Box>
 		</Box>
 	);

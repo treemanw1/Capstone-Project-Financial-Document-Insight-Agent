@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, TextField, Typography, Link } from "@mui/material";
 
 import { useRouter } from "next/navigation";
 import NextLink from "next/link";
+import style from "./layout.module.css";
 
 const Login = () => {
 	const router = useRouter();
@@ -42,7 +43,10 @@ const Login = () => {
 				justifyContent: "center",
 				alignItems: "center",
 				height: "100vh",
+				fontWeight: "400",
+				// fontFamily: "Source Sans 3 Variable",
 			}}
+			// className={style.test}
 		>
 			<Typography variant="h3" fontWeight="bold">
 				Login

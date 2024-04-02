@@ -3,6 +3,7 @@
 import React, { ReactNode } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
+import "@fontsource-variable/source-sans-3";
 
 interface ThemeWrapperProps {
 	children: ReactNode;
@@ -16,6 +17,13 @@ const ThemeWrapper: React.FC<ThemeWrapperProps> = ({ children }) => {
 	const [mode, setMode] = React.useState<PaletteMode>("light");
 
 	const getDesignTokens = (mode: PaletteMode) => ({
+		// typography: {
+		// 	fontFamily: ["Source Sans 3"].join(","),
+		// },
+		typography: {
+			// fontFamily: ["Chilanka", "cursive"].join(","),
+			fontFamily: ["Source Sans 3"].join(","),
+		},
 		palette: {
 			mode,
 			...(mode === "light"

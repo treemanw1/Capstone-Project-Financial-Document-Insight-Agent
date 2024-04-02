@@ -1,14 +1,17 @@
 "use client";
 
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import styles from "../app/layout.module.css";
 
 interface MyComponentProps {
 	text: string;
 	height?: string;
 	width: string;
 	fontSize?: string;
+	background?: string;
+	color?: string;
 	onClick?: () => void;
 }
 
@@ -17,6 +20,8 @@ const RoundButton: React.FC<MyComponentProps> = ({
 	height = "7.5vh",
 	width,
 	fontSize = "1.75vh",
+	background,
+	color,
 	onClick,
 }) => {
 	const theme = useTheme();
@@ -31,9 +36,11 @@ const RoundButton: React.FC<MyComponentProps> = ({
 				width: width,
 				// fontSize: fontSize,
 				// fontWeight: "bold",
-				backgroundColor: theme.palette.primary.dark,
-				borderRadius: "25px",
-				color: "black",
+				backgroundColor: background
+					? background
+					: theme.palette.primary.dark,
+				borderRadius: "30px",
+				color: color ? color : "black",
 				textTransform: "none",
 				py: 1,
 				px: 2,
@@ -44,7 +51,7 @@ const RoundButton: React.FC<MyComponentProps> = ({
 			}}
 			onClick={onClick}
 		>
-			{text}
+			<Typography className={styles.font}>{text}</Typography>
 		</Button>
 	);
 };

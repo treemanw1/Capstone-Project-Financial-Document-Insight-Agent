@@ -3,8 +3,9 @@ import { Box, Button, Typography } from "@mui/material";
 
 import { useTheme } from "@mui/material";
 import { globalStyles } from "styles";
-
 import { PDF } from "interfaces";
+
+import style from "../../layout.module.css";
 
 interface MyComponentProps {
 	pdfs: PDF[] | null;

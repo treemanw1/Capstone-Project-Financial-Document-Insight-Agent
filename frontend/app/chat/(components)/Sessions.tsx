@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { globalStyles, fontStyles, lightStyles, darkStyles } from "styles";
 import { Session, SessionDisplay } from "interfaces";
 import { useRouter } from "next/navigation";
 import SessionButton from "./SessionButton";
 import { useTheme } from "@mui/material/styles";
+import style from "../../layout.module.css";
+
+import { ArrowBack } from "@mui/icons-material";
 
 import {
 	isToday,
@@ -108,28 +111,37 @@ const Sessions: React.FC<MyComponentProps> = ({
 					height: globalStyles.headerHeight,
 					borderColor: theme.palette.text.primary,
 					px: styles.outsideButtonPx,
+					// background: "pink",
 				}}
 			>
 				<Button
 					sx={{
 						height: "5vh",
 						textTransform: "none",
-						background: "transparent",
+						// background: "transparent",
+						background: "#2052B5",
+						// background: "pink",
 						justifyContent: "flex-start",
-						color: theme.palette.text.primary,
+						// color: theme.palette.text.primary,
+						color: "white",
 						"&:hover": {
-							backgroundColor: theme.palette.primary.dark,
+							backgroundColor: theme.palette.secondary.main,
+							// background: "#0E4F7A",
 						},
 						py: 0.5,
 						px: styles.insideButtonPx,
-						width: "100%",
+						width: "70%",
 					}}
 					onClick={() => {
 						router.push("/filter");
 					}}
 				>
+					<ArrowBack
+						sx={{ fontSize: "24px", color: "white", mr: 1 }}
+					/>
 					<Typography
-						variant="body2"
+						className={style.font}
+						variant="body1"
 						style={{
 							overflow: "hidden",
 							textOverflow: "ellipsis",
@@ -154,6 +166,7 @@ const Sessions: React.FC<MyComponentProps> = ({
 				{sessionDisplay.today.length > 0 ? (
 					<>
 						<Typography
+							fontWeight="500"
 							variant="caption"
 							sx={{
 								color: theme.palette.text.primary,
@@ -181,7 +194,7 @@ const Sessions: React.FC<MyComponentProps> = ({
 				{sessionDisplay.yesterday.length > 0 ? (
 					<>
 						<Typography
-							variant="caption"
+							variant="body2"
 							sx={{
 								color: theme.palette.text.primary,
 								px: styles.outsideButtonPx,
@@ -208,7 +221,7 @@ const Sessions: React.FC<MyComponentProps> = ({
 				{sessionDisplay.lastWeek.length > 0 ? (
 					<>
 						<Typography
-							variant="caption"
+							variant="body2"
 							sx={{
 								color: theme.palette.text.primary,
 								px: styles.outsideButtonPx,
@@ -235,7 +248,7 @@ const Sessions: React.FC<MyComponentProps> = ({
 				{sessionDisplay.lastMonth.length > 0 ? (
 					<>
 						<Typography
-							variant="caption"
+							variant="body2"
 							sx={{
 								color: theme.palette.text.primary,
 								px: styles.outsideButtonPx,
@@ -262,7 +275,7 @@ const Sessions: React.FC<MyComponentProps> = ({
 				{sessionDisplay.lastYear.length > 0 ? (
 					<>
 						<Typography
-							variant="caption"
+							variant="body2"
 							sx={{
 								color: theme.palette.text.primary,
 								px: styles.outsideButtonPx,

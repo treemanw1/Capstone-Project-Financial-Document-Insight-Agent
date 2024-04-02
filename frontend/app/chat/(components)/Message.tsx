@@ -75,7 +75,14 @@ const Message: React.FC<MyComponentProps> = ({
 						}}
 					/>
 					<Box sx={{ display: "flex", flexDirection: "column" }}>
-						<Typography fontWeight="bold">You</Typography>
+						<Typography
+							textAlign="right"
+							variant="h6"
+							fontWeight="bold"
+							sx={{ mb: -0.5 }}
+						>
+							You
+						</Typography>
 						<Typography
 							variant="body2"
 							sx={{ color: theme.palette.text.secondary }}
@@ -97,7 +104,7 @@ const Message: React.FC<MyComponentProps> = ({
 						borderBottomRightRadius: 0,
 					}}
 				>
-					<Typography variant="body2">{message.message}</Typography>
+					<Typography variant="body1">{message.message}</Typography>
 				</Box>
 			</Box>
 		);
@@ -123,7 +130,13 @@ const Message: React.FC<MyComponentProps> = ({
 						sx={{ fontSize: 45, color: "secondary", mr: 1 }}
 					/>
 					<Box sx={{ display: "flex", flexDirection: "column" }}>
-						<Typography fontWeight="bold">FELX AI</Typography>
+						<Typography
+							variant="h6"
+							fontWeight="bold"
+							sx={{ mb: -0.5 }}
+						>
+							FELX AI
+						</Typography>
 						<Typography
 							variant="body2"
 							sx={{ color: theme.palette.text.secondary }}
@@ -147,10 +160,11 @@ const Message: React.FC<MyComponentProps> = ({
 						borderBottomRightRadius: 10,
 					}}
 				>
-					<Typography variant="body2">{message.message}</Typography>
+					<Typography variant="body1">{message.message}</Typography>
 					{chunks.length == 5 ? (
 						<>
 							<Typography
+								fontSize={18}
 								fontWeight="bold"
 								sx={{
 									textDecoration: "underline",

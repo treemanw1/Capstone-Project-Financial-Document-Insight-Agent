@@ -10,6 +10,7 @@ interface MyComponentProps {
 	fontSize: string;
 	options?: string[];
 	onSelect: (newValue: string) => void;
+	background?: string;
 }
 
 const CustomPaper = (props: PaperProps) => {
@@ -33,6 +34,7 @@ const SearchField = ({
 	options = ["dummy1", "dummy2", "dummy3"],
 	// setSelected,
 	onSelect,
+	background,
 }: MyComponentProps) => {
 	const theme = useTheme();
 
@@ -43,9 +45,11 @@ const SearchField = ({
 		<Autocomplete
 			disableCloseOnSelect
 			options={options}
+			size="small"
 			sx={{
 				width: width,
 				height: "fit-content",
+				// height: height,
 				// background: "pink",
 			}}
 			PaperComponent={CustomPaper}
@@ -62,20 +66,19 @@ const SearchField = ({
 			renderInput={(params) => (
 				<TextField
 					sx={{
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
 						// background: "lightblue",
-						background: theme.palette.primary.main,
+						background: background
+							? background
+							: theme.palette.primary.main,
 						// height: height,
-						borderColor: "transparent",
+						// borderColor: "transparent",
 						borderRadius: "25px",
 						"& fieldset": { border: "none" },
-						"&:hover": { color: "black" },
-						"& .Mui-focused": {
-							color: "black",
-							borderColor: "transparent",
-						},
+						// "&:hover": { color: "black" },
+						// "& .Mui-focused": {
+						// 	color: "black",
+						// 	borderColor: "transparent",
+						// },
 					}}
 					{...params}
 					InputLabelProps={{

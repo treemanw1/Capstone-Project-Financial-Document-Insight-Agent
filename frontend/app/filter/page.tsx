@@ -120,7 +120,7 @@ const Filter = () => {
 						// background: "pink",
 					}}
 				>
-					<Typography variant="h2">
+					<Typography variant="h2" fontWeight={500}>
 						Find documents within minutes
 					</Typography>
 					<Typography>

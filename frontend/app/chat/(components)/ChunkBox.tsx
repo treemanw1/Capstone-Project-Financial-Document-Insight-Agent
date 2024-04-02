@@ -2,6 +2,7 @@ import React from "react";
 import { Box, ButtonBase, Typography } from "@mui/material";
 import { useTheme } from "@mui/material";
 import { Chunk } from "interfaces";
+import style from "../../layout.module.css";
 
 interface MyComponentProps {
 	pdf_name: string;
@@ -37,7 +38,7 @@ const ChunkBox: React.FC<MyComponentProps> = ({
 				<Box
 					sx={{
 						display: "flex",
-						background: "#0E4F7A",
+						background: "#2052B5",
 						// background: "#2052B5",
 						// background: "pink",
 						borderTopLeftRadius: 10,
@@ -68,6 +69,7 @@ const ChunkBox: React.FC<MyComponentProps> = ({
 						}}
 					>
 						<Typography
+							className={style.font}
 							fontWeight="bold"
 							variant="body2"
 							sx={{
@@ -79,13 +81,18 @@ const ChunkBox: React.FC<MyComponentProps> = ({
 						>
 							{pdf_name}
 						</Typography>
-						<Typography sx={{ minWidth: "2vw" }} variant="caption">
+						<Typography
+							className={style.font}
+							sx={{ minWidth: "2vw" }}
+							variant="caption"
+						>
 							p. {page_num + 1}
 						</Typography>
 					</Box>
 					<Typography
+						className={style.font}
 						textAlign="left"
-						variant="caption"
+						variant="body2"
 						style={{
 							display: "-webkit-box",
 							WebkitLineClamp: 3,

@@ -25,7 +25,7 @@ const PDFDropdown: React.FC<MyComponentProps> = ({
 	pdf,
 }) => {
 	useEffect(() => {
-		if (pdfs) {
+		if (pdfs && pdfs.length > 0) {
 			setDisplayPDF(pdfs[0].id.toString());
 		}
 	}, [pdfs]);
@@ -36,7 +36,7 @@ const PDFDropdown: React.FC<MyComponentProps> = ({
 		<Box sx={{ width: "70%", overflow: "clip", m: 2 }}>
 			<FormControl sx={{ width: "100%" }}>
 				<Select
-					sx={{ background: "white" }}
+					sx={{ height: "5vh", background: "white" }}
 					MenuProps={{
 						PaperProps: {
 							style: {

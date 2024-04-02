@@ -123,9 +123,11 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 				sx={{
 					display: "flex",
 					alignItems: "center",
+					// height: "10px",
 					height: globalStyles.headerHeight,
 					// background: theme.palette.primary.main,
-					// background: "lightblue",
+					// background: "pink",
+					justifyContent: "center",
 				}}
 			>
 				<PDFDropdown
@@ -138,12 +140,14 @@ const PDFViewer: React.FC<MyComponentProps> = ({
 						display: "flex",
 						justifyContent: "center",
 						width: "60px",
-						height: "40px",
+						height: "5vh",
 						border: 1,
-						borderColor: theme.palette.text.primary,
+						// borderColor: theme.palette.text.primary,
+						borderColor: "#C4C4C4",
+						borderRadius: "4px",
 						// background: theme.palette.primary.light,
 						background: "white",
-						// background: "pink",
+						// background: "lightblue",
 						// borderRadius: 2,
 						"& fieldset": { border: "none" },
 					}}

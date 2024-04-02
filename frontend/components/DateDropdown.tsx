@@ -12,6 +12,7 @@ interface MyObjectProp {
 	mt: string;
 	fontSize: string;
 	onChange: (date: Date | null) => void;
+	background?: string;
 }
 
 interface MyComponentProps {
@@ -28,66 +29,38 @@ const DateDropdown: React.FC<MyComponentProps> = ({ props }) => {
 			onChange={props.onChange}
 			renderInput={(params) => (
 				<TextField
-					InputLabelProps={{ shrink: false }}
+					size="small"
+					InputLabelProps={{
+						shrink: false,
+					}}
 					sx={{
+						height: "5px",
 						fontSize: props.fontSize,
 						width: props.width,
 						// background: "pink",
 						"& fieldset": { border: "none" },
-						"&:hover": { background: "" },
 						"& .MuiOutlinedInput-root": {
-							background: theme.palette.primary.main,
+							background: props.background
+								? props.background
+								: theme.palette.primary.main,
 							borderColor: "transparent",
 							borderRadius: "25px",
-							// height: `calc(100% - ${props.fontSize} - 10px)`,
 							// fontSize: props.fontSize,
 						},
-						"& .MuiFormLabel-root": {
-							// ml: "6px",
-							// color: "#333333",
-						},
-						"& .MuiInputBase-inputAdornedEnd": {
-							height: "100%",
-							// ml: "6px",
-							// color: "#333333",
-						},
+						// "& .MuiFormLabel-root": {
+						// 	// ml: "6px",
+						// 	// color: "#333333",
+						// },
+						// "& .MuiInputBase-inputAdornedEnd": {
+						// 	height: "100%",
+						// 	// ml: "6px",
+						// 	// color: "#333333",
+						// },
 					}}
 					{...params}
 				/>
 			)}
 		/>
-		// <Box sx={{ background: "", height: props.height }}>
-		// 	<DatePicker
-		// 		label={props.date == null ? props.label : ""}
-		// 		value={props.date}
-		// 		onChange={props.onChange}
-		// 		renderInput={(params) => (
-		// 			<TextField
-		// 				InputLabelProps={{ shrink: false }}
-		// 				sx={{
-		// 					fontSize: props.fontSize,
-		// 					width: props.width,
-		// 					height: "100%",
-		// 					"& .MuiOutlinedInput-root": {
-		// 						// borderRadius: "30px",
-		// 						// height: `calc(100% - ${props.fontSize} - 10px)`,
-		// 						fontSize: props.fontSize,
-		// 					},
-		// 					"& .MuiFormLabel-root": {
-		// 						// ml: "6px",
-		// 						// color: "#333333",
-		// 					},
-		// 					"& .MuiInputBase-inputAdornedEnd": {
-		// 						height: "100%",
-		// 						// ml: "6px",
-		// 						// color: "#333333",
-		// 					},
-		// 				}}
-		// 				{...params}
-		// 			/>
-		// 		)}
-		// 	/>
-		// </Box>
 	);
 };
 

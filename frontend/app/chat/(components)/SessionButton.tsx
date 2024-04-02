@@ -13,6 +13,8 @@ import { MoreHoriz } from "@mui/icons-material";
 
 import { get } from "utils/rest_utils";
 
+import style from "../../layout.module.css";
+
 interface MyComponentProps {
 	currentSessionId: number | null;
 	session: Session;
@@ -73,11 +75,8 @@ const SessionButton: React.FC<MyComponentProps> = ({
 				justifyContent: "space-between",
 				borderRadius: 2,
 				transition: ".1s",
-				"&:hover": { background: theme.palette.primary.dark },
-				background:
-					session.id == currentSessionId
-						? theme.palette.primary.dark
-						: "",
+				"&:hover": { background: "#D9D9D9" },
+				background: session.id == currentSessionId ? "#D9D9D9" : "",
 			}}
 		>
 			<Button
@@ -107,13 +106,15 @@ const SessionButton: React.FC<MyComponentProps> = ({
 				}}
 			>
 				<Typography
-					variant="body2"
+					className={style.font}
+					variant="body1"
 					textAlign="left"
 					style={{
 						overflow: "hidden",
 						textOverflow: "ellipsis",
 						whiteSpace: "nowrap",
 						// fontSize: 15,
+						color: "black",
 					}}
 				>
 					{session.name}
