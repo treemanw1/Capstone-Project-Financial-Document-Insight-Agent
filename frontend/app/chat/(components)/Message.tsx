@@ -117,7 +117,7 @@ const Message: React.FC<MyComponentProps> = ({
 					flexDirection: "column",
 					p: 2,
 					pb: 4,
-					background: "",
+					// background: "pink",
 				}}
 			>
 				<Box
@@ -183,6 +183,7 @@ const Message: React.FC<MyComponentProps> = ({
 							>
 								<Box
 									sx={{
+										width: "100%",
 										display: "flex",
 										// background: "pink",
 										justifyContent: "space-between",

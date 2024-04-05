@@ -24,6 +24,7 @@ const ChunkBox: React.FC<MyComponentProps> = ({
 			sx={{
 				display: "flex",
 				flex: 1,
+				// background: "red",
 			}}
 			onClick={() => onClickChunk()}
 		>
@@ -39,13 +40,12 @@ const ChunkBox: React.FC<MyComponentProps> = ({
 					sx={{
 						display: "flex",
 						background: "#2052B5",
-						// background: "#2052B5",
 						// background: "pink",
 						borderTopLeftRadius: 10,
 						borderBottomLeftRadius: 10,
-						width: "10px",
+						width: "3px",
 					}}
-				></Box>
+				/>
 				<Box
 					sx={{
 						display: "flex",
@@ -89,24 +89,27 @@ const ChunkBox: React.FC<MyComponentProps> = ({
 							p. {page_num + 1}
 						</Typography>
 					</Box>
-					<Typography
-						className={style.font}
-						textAlign="left"
-						variant="body2"
-						style={{
-							display: "-webkit-box",
-							WebkitLineClamp: 3,
-							WebkitBoxOrient: "vertical",
-							overflow: "hidden",
-							textOverflow: "ellipsis",
-							// // whiteSpace: "nowrap",
-							// lineClamp: 5,
-							// // overflow: "clip",
-							// textOverflow: "ellipsis",
+					<Box
+						sx={{
+							display: "flex",
+							// background: "pink",
+							overflow: "clip",
+							width: "130px",
 						}}
 					>
-						{chunk_text}
-					</Typography>
+						<Typography
+							className={style.font}
+							textAlign="left"
+							variant="caption"
+							style={{
+								// textOverflow: "ellipsis",
+								overflow: "clip",
+								height: "40px",
+							}}
+						>
+							{chunk_text}
+						</Typography>
+					</Box>
 				</Box>
 			</Box>
 		</ButtonBase>
